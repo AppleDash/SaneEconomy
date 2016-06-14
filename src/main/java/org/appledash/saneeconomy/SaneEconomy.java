@@ -2,6 +2,7 @@ package org.appledash.saneeconomy;
 
 import org.appledash.saneeconomy.command.SaneEconomyCommand;
 import org.appledash.saneeconomy.command.type.BalanceCommand;
+import org.appledash.saneeconomy.command.type.EconomyAdminCommand;
 import org.appledash.saneeconomy.command.type.PayCommand;
 import org.appledash.saneeconomy.economy.Currency;
 import org.appledash.saneeconomy.economy.EconomyManager;
@@ -25,7 +26,7 @@ public class SaneEconomy extends JavaPlugin {
 
     private static final Map<String, SaneEconomyCommand> COMMANDS = new HashMap<String, SaneEconomyCommand>() {{
         put("balance", new BalanceCommand());
-        put("ecoadmin", new BalanceCommand());
+        put("ecoadmin", new EconomyAdminCommand());
         put("pay", new PayCommand());
     }};
 

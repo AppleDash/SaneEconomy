@@ -47,8 +47,6 @@ public class BalanceCommand extends SaneEconomyCommand {
             return;
         }
 
-        MessageUtils.sendMessage(sender, "Balance of %s is %s.", playerName, SaneEconomy.getInstance().getEconomyManager().getFormattedBalance(player));
-
-        return;
+        MessageUtils.sendMessage(sender, "Balance for %s is %s.", playerName, SaneEconomy.getInstance().getEconomyManager().getFormattedBalance(player));
     }
 }
