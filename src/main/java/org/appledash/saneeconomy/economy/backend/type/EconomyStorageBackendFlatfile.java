@@ -63,6 +63,11 @@ public class EconomyStorageBackendFlatfile implements EconomyStorageBackend {
     }
 
     @Override
+    public boolean accountExists(Player player) {
+        return playerBalances.containsKey(player.getUniqueId());
+    }
+
+    @Override
     public double getBalance(Player player) {
         if (!playerBalances.containsKey(player.getUniqueId())) {
             return 0.0D;

@@ -36,6 +36,15 @@ public class EconomyManager {
     }
 
     /**
+     * Check whether a player has used the economy system before.
+     * @param player Player to check
+     * @return True if they have used the economy system before, false otherwise
+     */
+    public boolean accountExists(Player player) {
+        return backend.accountExists(player);
+    }
+
+    /**
      * Get a player's balance.
      * @param targetPlayer Player to get balance of
      * @return Player's balance

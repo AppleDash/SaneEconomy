@@ -9,3 +9,6 @@ currency:
 
 chat:
   prefix: '&b[&9SaneEcon&b]&r '
+
+economy:
+  start-balance: 1000.0

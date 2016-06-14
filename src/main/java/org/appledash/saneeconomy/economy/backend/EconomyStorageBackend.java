@@ -10,6 +10,13 @@ import org.bukkit.entity.Player;
  */
 public interface EconomyStorageBackend {
     /**
+     * Check whether a player has used the economy system before.
+     * @param player Player
+     * @return True if they have, false otherwise.
+     */
+    boolean accountExists(Player player);
+
+    /**
      * Get the balance of a player.
      * @param player Player
      * @return Player's current balance

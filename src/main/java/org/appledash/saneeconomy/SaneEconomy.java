@@ -6,6 +6,7 @@ import org.appledash.saneeconomy.economy.Currency;
 import org.appledash.saneeconomy.economy.EconomyManager;
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendFlatfile;
+import org.appledash.saneeconomy.listeners.JoinQuitListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -29,15 +30,15 @@ public class SaneEconomy extends JavaPlugin {
         new File(getDataFolder(), "config.yml").delete();
         saveDefaultConfig();
         getLogger().setLevel(Level.ALL);
-        getLogger().fine("Initializing currency...");
+        getLogger().info("Initializing currency...");
 
         Currency currency = Currency.fromConfig(getConfig(), "currency");
 
-        getLogger().fine("Initialized currency: " + currency.getPluralName());
+        getLogger().info("Initialized currency: " + currency.getPluralName());
 
         EconomyStorageBackend backend;
 
-        getLogger().fine("Initializing economy storage backend...");
+        getLogger().info("Initializing economy storage backend...");
         String backendType = getConfig().getString("backend.type");
 
         /* Flatfile database, currently only supported. */
@@ -45,7 +46,7 @@ public class SaneEconomy extends JavaPlugin {
             String backendFileName = getConfig().getString("backend.file", "economy.db");
             File backendFile = new File(getDataFolder(), backendFileName);
             backend = new EconomyStorageBackendFlatfile(backendFile);
-            getLogger().fine("Initialized flatfile backend with file " + backendFile.getAbsolutePath());
+            getLogger().info("Initialized flatfile backend with file " + backendFile.getAbsolutePath());
         } else {
             getLogger().severe("Unknown storage backend " + backendType + "!");
             shutdown();
@@ -55,10 +56,14 @@ public class SaneEconomy extends JavaPlugin {
 
         economyManager = new EconomyManager(currency, backend);
 
-        getLogger().fine("Initializing commands...");
+        getLogger().info("Initializing commands...");
         getCommand("balance").setExecutor(new BalanceCommand());
         getCommand("ecoadmin").setExecutor(new EconomyAdminCommand());
-        getLogger().fine("Commands initialized!");
+        getLogger().info("Commands initialized!");
+
+        getLogger().info("Initializing listeners...");
+        getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
+        getLogger().info("Initialized listeners!");
     }
 
     private void shutdown(){
