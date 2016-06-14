@@ -53,7 +53,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
         Player targetPlayer = Bukkit.getServer().getPlayer(sTargetPlayer);
 
         if (targetPlayer == null) {
-            MessageUtils.sendMessage(sender, "That player is not online!");
+            MessageUtils.sendMessage(sender, "That player is not online.");
             return true;
         }
 
@@ -61,12 +61,11 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
 
         try {
             amount = Double.valueOf(sAmount);
-        } catch (NumberFormatException e) {
-            MessageUtils.sendMessage(sender, "%s is not a number!", sAmount);
-            return true;
-        }
 
-        if (amount < 0) {
+            if (amount < 0) {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException e) {
             MessageUtils.sendMessage(sender, "%s is not a positive number.", sAmount);
             return true;
         }
@@ -74,12 +73,20 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
         if (subCommand.equalsIgnoreCase("give")) {
             double newAmount = SaneEconomy.getInstance().getEconomyManager().addBalance(targetPlayer, amount);
 
-            MessageUtils.sendMessage(sender, "New balance for %s is %s", sTargetPlayer, SaneEconomy.getInstance().getEconomyManager().getCurrency().formatAmount(newAmount));
+            MessageUtils.sendMessage(sender, "Added %s to %s. Their balance is now %s.",
+                    SaneEconomy.getInstance().getEconomyManager().getCurrency().formatAmount(amount),
+                    sTargetPlayer,
+                    SaneEconomy.getInstance().getEconomyManager().getCurrency().formatAmount(newAmount)
+            );
             return true;
         } else if (subCommand.equalsIgnoreCase("take")) {
             double newAmount = SaneEconomy.getInstance().getEconomyManager().subtractBalance(targetPlayer, amount);
 
-            MessageUtils.sendMessage(sender, "New balance for %s is %s", sTargetPlayer, SaneEconomy.getInstance().getEconomyManager().getCurrency().formatAmount(newAmount));
+            MessageUtils.sendMessage(sender, "Took %s from %s. Their balance is now %s.",
+                    SaneEconomy.getInstance().getEconomyManager().getCurrency().formatAmount(amount),
+                    sTargetPlayer,
+                    SaneEconomy.getInstance().getEconomyManager().getCurrency().formatAmount(newAmount)
+            );
             return true;
         } else if (subCommand.equalsIgnoreCase("set")) {
             SaneEconomy.getInstance().getEconomyManager().setBalance(targetPlayer, amount);

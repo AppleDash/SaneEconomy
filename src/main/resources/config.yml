@@ -8,7 +8,7 @@ currency:
   format: '0.00'
 
 chat:
-  prefix: '&b[&9SaneEcon&b]&r '
+  prefix: '&b[&9Economy&b]&r '
 
 economy:
   start-balance: 1000.0

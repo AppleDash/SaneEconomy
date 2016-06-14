@@ -22,6 +22,7 @@ public class JoinQuitListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent evt) {
         Player player = evt.getPlayer();
         double startBalance = plugin.getConfig().getDouble("economy.start-balance", 0.0D);
+        
         /* A starting balance is configured AND they haven't been given it yet. */
         if (startBalance > 0 && !plugin.getEconomyManager().accountExists(player)) {
             plugin.getEconomyManager().setBalance(player, startBalance);
