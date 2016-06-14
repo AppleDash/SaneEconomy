@@ -96,7 +96,7 @@ public class EconomyStorageBackendMySQL implements EconomyStorageBackend {
 
     @Override
     public synchronized void setBalance(final Player player, final double newBalance) {
-        final double oldBalance = playerBalances.get(player.getUniqueId());
+        final double oldBalance = getBalance(player);
         playerBalances.put(player.getUniqueId(), newBalance);
 
         Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(SaneEconomy.getInstance(), () -> {
