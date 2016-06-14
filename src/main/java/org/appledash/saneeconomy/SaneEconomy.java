@@ -56,8 +56,7 @@ public class SaneEconomy extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
-
+        vaultHook.unhook();
     }
 
     private void loadConfig() {

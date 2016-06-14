@@ -57,10 +57,10 @@ public class PayCommand extends SaneEconomyCommand {
         }
 
         String sAmount = args[1];
-        double amount = NumberUtils.parsePositiveDouble(sAmount);
+        double amount = NumberUtils.parseAndFilter(sAmount);
 
-        if (amount == -1) {
-            MessageUtils.sendMessage(sender, "%s is not a positive number.", sAmount);
+        if (amount <= 0) {
+            MessageUtils.sendMessage(sender, "%s is not a positive number.", (amount == -1 ? sAmount : amount + ""));
             return;
         }
 

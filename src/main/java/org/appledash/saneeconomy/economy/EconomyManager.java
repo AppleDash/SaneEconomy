@@ -1,6 +1,7 @@
 package org.appledash.saneeconomy.economy;
 
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
+import org.appledash.saneeconomy.utils.NumberUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -73,6 +74,8 @@ public class EconomyManager {
      * @throws IllegalArgumentException If amount is negative
      */
     public double addBalance(OfflinePlayer targetPlayer, double amount) {
+        amount = NumberUtils.filterAmount(amount);
+
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot add a negative amount!");
         }
@@ -89,6 +92,8 @@ public class EconomyManager {
      * @throws IllegalArgumentException If amount is negative
      */
     public double subtractBalance(OfflinePlayer targetPlayer, double amount) {
+        amount = NumberUtils.filterAmount(amount);
+
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot subtract a negative amount!");
         }
@@ -109,6 +114,8 @@ public class EconomyManager {
      * @throws IllegalArgumentException If amount is negative
      */
     public void setBalance(OfflinePlayer targetPlayer, double amount) {
+        amount = NumberUtils.filterAmount(amount);
+
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot set balance to a negative value!");
         }
@@ -125,6 +132,8 @@ public class EconomyManager {
      * @throws IllegalArgumentException If amount is negative
      */
     public boolean transfer(OfflinePlayer fromPlayer, Player toPlayer, double amount) {
+        amount = NumberUtils.filterAmount(amount);
+
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot transfer a negative amount!");
         }
