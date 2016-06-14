@@ -51,6 +51,11 @@ public class PayCommand extends SaneEconomyCommand {
             return;
         }
 
+        if (toPlayer.getUniqueId().equals(fromPlayer.getUniqueId())) {
+            MessageUtils.sendMessage(sender, "You cannot pay yourself.");
+            return;
+        }
+
         String sAmount = args[1];
         double amount = NumberUtils.parsePositiveDouble(sAmount);
 

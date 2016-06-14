@@ -1,6 +1,6 @@
 name: SaneEconomy
 main: org.appledash.saneeconomy.SaneEconomy
-version: 0.1.5
+version: 0.1.6
 commands:
   balance:
     aliases: [bal]
