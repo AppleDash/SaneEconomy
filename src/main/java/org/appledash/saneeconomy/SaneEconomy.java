@@ -1,7 +1,8 @@
 package org.appledash.saneeconomy;
 
+import org.appledash.saneeconomy.command.SaneEconomyCommand;
 import org.appledash.saneeconomy.command.type.BalanceCommand;
-import org.appledash.saneeconomy.command.type.EconomyAdminCommand;
+import org.appledash.saneeconomy.command.type.PayCommand;
 import org.appledash.saneeconomy.economy.Currency;
 import org.appledash.saneeconomy.economy.EconomyManager;
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
@@ -10,6 +11,8 @@ import org.appledash.saneeconomy.listeners.JoinQuitListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,6 +23,12 @@ import java.util.logging.Logger;
 public class SaneEconomy extends JavaPlugin {
     private static SaneEconomy instance;
     private EconomyManager economyManager;
+
+    private static final Map<String, SaneEconomyCommand> COMMANDS = new HashMap<String, SaneEconomyCommand>() {{
+        put("balance", new BalanceCommand());
+        put("ecoadmin", new BalanceCommand());
+        put("pay", new PayCommand());
+    }};
 
     public SaneEconomy() {
         instance = this;
@@ -56,14 +65,17 @@ public class SaneEconomy extends JavaPlugin {
 
         economyManager = new EconomyManager(currency, backend);
 
-        getLogger().info("Initializing commands...");
-        getCommand("balance").setExecutor(new BalanceCommand());
-        getCommand("ecoadmin").setExecutor(new EconomyAdminCommand());
-        getLogger().info("Commands initialized!");
+        loadCommands();
 
         getLogger().info("Initializing listeners...");
         getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
         getLogger().info("Initialized listeners!");
+    }
+
+    private void loadCommands() {
+        getLogger().info("Initializing commands...");
+        COMMANDS.forEach((name, command) -> getCommand(name).setExecutor(command));
+        getLogger().info("Commands initialized!");
     }
 
     private void shutdown(){

@@ -8,6 +8,7 @@ import org.appledash.saneeconomy.command.exception.type.usage.NeedPlayerExceptio
 import org.appledash.saneeconomy.command.exception.type.usage.TooFewArgumentsException;
 import org.appledash.saneeconomy.economy.EconomyManager;
 import org.appledash.saneeconomy.utils.MessageUtils;
+import org.appledash.saneeconomy.utils.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -58,15 +59,9 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
             return;
         }
 
-        double amount;
+        double amount = NumberUtils.parsePositiveDouble(sAmount);
 
-        try {
-            amount = Double.valueOf(sAmount);
-
-            if (amount < 0) {
-                throw new NumberFormatException();
-            }
-        } catch (NumberFormatException e) {
+        if (amount == -1) {
             MessageUtils.sendMessage(sender, "%s is not a positive number.", sAmount);
             return;
         }
