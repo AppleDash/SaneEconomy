@@ -21,10 +21,10 @@ public class EconomyStorageBackendFlatfile implements EconomyStorageBackend {
 
     public EconomyStorageBackendFlatfile(File file) {
         this.file = file;
-        loadDatabase();
     }
 
-    private void loadDatabase() {
+    @Override
+    public void reloadDatabase() {
         if (!file.exists()) {
             return;
         }

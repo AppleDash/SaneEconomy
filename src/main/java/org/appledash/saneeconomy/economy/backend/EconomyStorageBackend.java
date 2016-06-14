@@ -45,4 +45,9 @@ public interface EconomyStorageBackend {
      * @return Player's new balance
      */
     double subtractBalance(Player player, double amount);
+
+    /**
+     * Reload this backend's database from disk.
+     */
+    void reloadDatabase();
 }

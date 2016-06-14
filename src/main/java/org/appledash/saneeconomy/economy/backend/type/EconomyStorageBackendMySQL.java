@@ -61,7 +61,8 @@ public class EconomyStorageBackendMySQL implements EconomyStorageBackend {
         }
     }
 
-    public void reloadData() {
+    @Override
+    public void reloadDatabase() {
         Connection conn = openConnection();
         try {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM `player_balances`");

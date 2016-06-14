@@ -20,7 +20,7 @@ import org.bukkit.entity.Player;
 public class EconomyAdminCommand extends SaneEconomyCommand {
     @Override
     public String getPermission() {
-        return "saneeconomy.admin";
+        return "saneeconomy.ecoadmin";
     }
 
     @Override

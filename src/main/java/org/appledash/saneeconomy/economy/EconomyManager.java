@@ -137,4 +137,8 @@ public class EconomyManager {
 
         return true;
     }
+
+    public EconomyStorageBackend getBackend() {
+        return backend;
+    }
 }

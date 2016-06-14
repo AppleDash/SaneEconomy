@@ -4,6 +4,7 @@ import org.appledash.saneeconomy.command.SaneEconomyCommand;
 import org.appledash.saneeconomy.command.type.BalanceCommand;
 import org.appledash.saneeconomy.command.type.EconomyAdminCommand;
 import org.appledash.saneeconomy.command.type.PayCommand;
+import org.appledash.saneeconomy.command.type.SaneEcoCommand;
 import org.appledash.saneeconomy.economy.Currency;
 import org.appledash.saneeconomy.economy.EconomyManager;
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
@@ -29,6 +30,7 @@ public class SaneEconomy extends JavaPlugin {
         put("balance", new BalanceCommand());
         put("ecoadmin", new EconomyAdminCommand());
         put("pay", new PayCommand());
+        put("saneeconomy", new SaneEcoCommand());
     }};
 
     public SaneEconomy() {
@@ -99,13 +101,14 @@ public class SaneEconomy extends JavaPlugin {
             }
 
             getLogger().info("Connection successful!");
-            getLogger().info("Performing initial data load...");
-            mySQLBackend.reloadData();
-            getLogger().info("Data loaded!");
         } else {
             getLogger().severe("Unknown storage backend " + backendType + "!");
             return false;
         }
+
+        getLogger().info("Performing initial data load...");
+        backend.reloadDatabase();
+        getLogger().info("Data loaded!");
 
         economyManager = new EconomyManager(currency, backend);
 

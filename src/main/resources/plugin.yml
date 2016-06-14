@@ -1,6 +1,6 @@
 name: SaneEconomy
 main: org.appledash.saneeconomy.SaneEconomy
-version: 0.3.0
+version: 0.3.1
 commands:
   balance:
     aliases: [bal]
@@ -17,3 +17,8 @@ commands:
     description: Give some of your money to another player.
     usage: /<command> <player> <amount>
     permission: saneeconomy.pay
+  saneeconomy:
+    aliases: [saneeco]
+    description: Various admin commands for SaneEconomy.
+    usage: /command reload-database
+    pernission: saneeconomy.admin
