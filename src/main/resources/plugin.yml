@@ -1,0 +1,14 @@
+name: SaneEconomy
+main: org.appledash.saneeconomy.SaneEconomy
+version: 0.1.2
+commands:
+  balance:
+    aliases: [bal]
+    description: Get your current balance.
+    usage: /<command> [player name]
+    permission: saneeconomy.balance
+  ecoadmin:
+    aliases: [eco]
+    description: Administer the economy.
+    usage: /<command> <give/take/set> <player name> <amount>
+    permission: saneeconomy.ecoadmin

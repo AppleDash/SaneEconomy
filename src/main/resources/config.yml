@@ -1,0 +1,11 @@
+backend:
+  type: flatfile
+
+currency:
+  name:
+    singular: 'bit'
+    plural: 'bits'
+  format: '0.00'
+
+chat:
+  prefix: '&b[&9SaneEcon&b]&r '

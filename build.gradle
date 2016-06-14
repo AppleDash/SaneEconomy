@@ -1,0 +1,48 @@
+group 'org.appledash'
+version '0.1.3-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+
+shadowJar {
+    dependencies {
+        include(dependency('org.mcstats.bukkit:.*'))
+    }
+}
+
+repositories {
+    mavenCentral()
+
+    // Spigot/Bukkit
+    maven {
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+
+    // PluginMetrics
+    maven {
+        url 'http://repo.mcstats.org/content/repositories/public'
+    }
+
+    // Sonatype
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+}
+
+dependencies {
+    compile group: 'org.spigotmc', name: 'spigot-api', version: '1.9-R0.1-SNAPSHOT'
+    compile group: 'org.bukkit', name: 'bukkit', version: '1.9-R0.1-SNAPSHOT'
+    compile group: 'org.mcstats.bukkit', name: 'metrics', version: 'R7'
+}

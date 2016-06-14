@@ -1,0 +1,13 @@
+gradle/
+.gradle/
+gradlew*
+.idea/
+.metadata/
+.settings/
+bin/
+build/
+.classpath
+.project
+RemoteSystemsTempFiles/.project
+*.iml
+*.eml
