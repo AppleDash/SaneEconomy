@@ -99,6 +99,9 @@ public class SaneEconomy extends JavaPlugin {
             }
 
             getLogger().info("Connection successful!");
+            getLogger().info("Performing initial data load...");
+            mySQLBackend.reloadData();
+            getLogger().info("Data loaded!");
         } else {
             getLogger().severe("Unknown storage backend " + backendType + "!");
             return false;
