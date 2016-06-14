@@ -13,7 +13,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -36,17 +35,35 @@ public class SaneEconomy extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        new File(getDataFolder(), "config.yml").delete();
+        loadConfig();
+
+        if (!loadEconomyBackend()) { /* Invalid backend type or connection error of some sort */
+            shutdown();
+            return;
+        }
+
+        loadCommands();
+        loadListeners();
+    }
+
+    private void loadConfig() {
+        File configFile = new File(getDataFolder(), "config.yml");
+
+        if (configFile.exists() && getConfig().getBoolean("debug", false)) {
+            configFile.delete();
+            getLogger().info("Resetting configuration to default since debug == true.");
+        }
+
         saveDefaultConfig();
-        getLogger().setLevel(Level.ALL);
+        reloadConfig();
+    }
+
+    private boolean loadEconomyBackend() {
         getLogger().info("Initializing currency...");
-
         Currency currency = Currency.fromConfig(getConfig(), "currency");
-
         getLogger().info("Initialized currency: " + currency.getPluralName());
 
         EconomyStorageBackend backend;
-
         getLogger().info("Initializing economy storage backend...");
         String backendType = getConfig().getString("backend.type");
 
@@ -58,24 +75,24 @@ public class SaneEconomy extends JavaPlugin {
             getLogger().info("Initialized flatfile backend with file " + backendFile.getAbsolutePath());
         } else {
             getLogger().severe("Unknown storage backend " + backendType + "!");
-            shutdown();
-
-            return;
+            return false;
         }
 
         economyManager = new EconomyManager(currency, backend);
 
-        loadCommands();
-
-        getLogger().info("Initializing listeners...");
-        getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
-        getLogger().info("Initialized listeners!");
+        return true;
     }
 
     private void loadCommands() {
         getLogger().info("Initializing commands...");
         COMMANDS.forEach((name, command) -> getCommand(name).setExecutor(command));
-        getLogger().info("Commands initialized!");
+        getLogger().info("Initialized commands.");
+    }
+
+    private void loadListeners() {
+        getLogger().info("Initializing listeners...");
+        getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
+        getLogger().info("Initialized listeners.");
     }
 
     private void shutdown(){
