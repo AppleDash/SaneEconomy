@@ -36,6 +36,8 @@ public class SaneEcoCommand extends SaneEconomyCommand {
             MessageUtils.sendMessage(sender, "Reloading database...");
             SaneEconomy.getInstance().getEconomyManager().getBackend().reloadDatabase();
             MessageUtils.sendMessage(sender, "Database reloaded.");
+        } else {
+            throw new InvalidUsageException();
         }
     }
 }
