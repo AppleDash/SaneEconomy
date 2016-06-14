@@ -27,7 +27,7 @@ public class BalanceCommand extends SaneEconomyCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, String[] args) throws CommandException {
+    public void onCommand(CommandSender sender, String[] args) throws CommandException {
         String playerName;
 
         if (args.length == 0) {
@@ -44,11 +44,11 @@ public class BalanceCommand extends SaneEconomyCommand {
 
         if (player == null) {
             MessageUtils.sendMessage(sender, "That player is not online.");
-            return true;
+            return;
         }
 
         MessageUtils.sendMessage(sender, "Balance of %s is %s.", playerName, SaneEconomy.getInstance().getEconomyManager().getFormattedBalance(player));
 
-        return true;
+        return;
     }
 }

@@ -20,7 +20,7 @@ public abstract class SaneEconomyCommand implements CommandExecutor {
                 throw new NoPermissionException();
             }
 
-            return onCommand(sender, args);
+            onCommand(sender, args);
         } catch (UsageException e) {
             /* Invalid usage in some way, print out exactly what went wrong along with the proper usage. */
             MessageUtils.sendMessage(sender, e.getMessage());
@@ -28,12 +28,11 @@ public abstract class SaneEconomyCommand implements CommandExecutor {
             for (String s : getUsage()) {
                 MessageUtils.sendMessage(sender, String.format("Usage: %s", s.replace("<command>", label)));
             }
-            
-            return true;
         } catch (CommandException e) {
             MessageUtils.sendMessage(sender, e.getMessage());
-            return true;
         }
+
+        return true;
     }
 
     /**
@@ -49,5 +48,5 @@ public abstract class SaneEconomyCommand implements CommandExecutor {
      */
     public abstract String[] getUsage();
 
-    protected abstract boolean onCommand(CommandSender sender, String[] args) throws CommandException;
+    protected abstract void onCommand(CommandSender sender, String[] args) throws CommandException;
 }

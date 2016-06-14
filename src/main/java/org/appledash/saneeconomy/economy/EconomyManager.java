@@ -10,8 +10,8 @@ import org.bukkit.entity.Player;
  * Represents our EconomyManager, which manages players' balances.
  */
 public class EconomyManager {
-    private Currency currency;
-    private EconomyStorageBackend backend;
+    private final Currency currency;
+    private final EconomyStorageBackend backend;
 
     public EconomyManager(Currency currency, EconomyStorageBackend backend) {
         this.currency = currency;

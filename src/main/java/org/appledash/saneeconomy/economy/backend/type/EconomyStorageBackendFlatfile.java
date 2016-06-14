@@ -16,7 +16,7 @@ import java.util.UUID;
 public class EconomyStorageBackendFlatfile implements EconomyStorageBackend {
     private static final int SCHEMA_VERSION = 1;
 
-    private File file;
+    private final File file;
     private Map<UUID, Double> playerBalances = new HashMap<>();
 
     public EconomyStorageBackendFlatfile(File file) {

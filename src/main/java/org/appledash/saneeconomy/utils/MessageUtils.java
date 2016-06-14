@@ -18,6 +18,6 @@ public class MessageUtils {
      */
     public static void sendMessage(CommandSender target, String fmt, String... args) {
         String prefix = ChatColor.translateAlternateColorCodes('&', SaneEconomy.getInstance().getConfig().getString("chat.prefix", ""));
-        target.sendMessage(prefix + String.format(fmt, args));
+        target.sendMessage(prefix + String.format(fmt, (Object[])args));
     }
 }

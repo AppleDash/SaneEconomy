@@ -11,11 +11,11 @@ import java.text.DecimalFormat;
  * Represents an in-game currency.
  */
 public class Currency {
-    private String nameSingular;
-    private String namePlural;
-    private DecimalFormat format;
+    private final String nameSingular;
+    private final String namePlural;
+    private final DecimalFormat format;
 
-    public Currency(String nameSingular, String namePlural, DecimalFormat format) {
+    private Currency(String nameSingular, String namePlural, DecimalFormat format) {
         this.nameSingular = nameSingular;
         this.namePlural = namePlural;
         this.format = format;

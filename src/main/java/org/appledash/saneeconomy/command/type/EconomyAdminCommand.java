@@ -30,7 +30,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, String[] args) throws CommandException {
+    public void onCommand(CommandSender sender, String[] args) throws CommandException {
         if (args.length < 2) {
             throw new TooFewArgumentsException();
         }
@@ -55,7 +55,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
 
         if (targetPlayer == null) {
             MessageUtils.sendMessage(sender, "That player is not online.");
-            return true;
+            return;
         }
 
         double amount;
@@ -68,7 +68,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
             }
         } catch (NumberFormatException e) {
             MessageUtils.sendMessage(sender, "%s is not a positive number.", sAmount);
-            return true;
+            return;
         }
 
         EconomyManager ecoMan = SaneEconomy.getInstance().getEconomyManager();
@@ -81,7 +81,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
                     sTargetPlayer,
                     ecoMan.getCurrency().formatAmount(newAmount)
             );
-            return true;
+            return;
         } else if (subCommand.equalsIgnoreCase("take")) {
             double newAmount = ecoMan.subtractBalance(targetPlayer, amount);
 
@@ -90,11 +90,11 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
                     sTargetPlayer,
                     ecoMan.getCurrency().formatAmount(newAmount)
             );
-            return true;
+            return;
         } else if (subCommand.equalsIgnoreCase("set")) {
             ecoMan.setBalance(targetPlayer, amount);
             MessageUtils.sendMessage(sender, "Balance for %s set to %s", sTargetPlayer, ecoMan.getCurrency().formatAmount(amount));
-            return true;
+            return;
         }
 
         throw new InvalidUsageException();
