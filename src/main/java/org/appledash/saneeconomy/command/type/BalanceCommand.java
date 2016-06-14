@@ -3,7 +3,7 @@ package org.appledash.saneeconomy.command.type;
 import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.command.SaneEconomyCommand;
 import org.appledash.saneeconomy.command.exception.CommandException;
-import org.appledash.saneeconomy.command.exception.NeedPlayerException;
+import org.appledash.saneeconomy.command.exception.type.usage.NeedPlayerException;
 import org.appledash.saneeconomy.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

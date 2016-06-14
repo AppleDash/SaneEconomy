@@ -1,4 +1,6 @@
-package org.appledash.saneeconomy.command.exception;
+package org.appledash.saneeconomy.command.exception.type;
+
+import org.appledash.saneeconomy.command.exception.CommandException;
 
 /**
  * Created by AppleDash on 6/13/2016.
