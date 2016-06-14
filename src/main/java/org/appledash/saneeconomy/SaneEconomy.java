@@ -51,12 +51,16 @@ public class SaneEconomy extends JavaPlugin {
         File configFile = new File(getDataFolder(), "config.yml");
 
         if (configFile.exists() && getConfig().getBoolean("debug", false)) {
-            configFile.delete();
             getLogger().info("Resetting configuration to default since debug == true.");
+            configFile.delete();
+            saveDefaultConfig();
+            reloadConfig();
+            getConfig().set("debug", true);
+            saveConfig();
+        } else {
+            saveDefaultConfig();
+            reloadConfig();
         }
-
-        saveDefaultConfig();
-        reloadConfig();
     }
 
     private boolean loadEconomyBackend() {

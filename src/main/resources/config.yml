@@ -3,8 +3,8 @@ backend:
 
 currency:
   name:
-    singular: bit
-    plural: bits
+    singular: dollar
+    plural: dollars
   format: '0.00'
 
 chat:
@@ -13,4 +13,4 @@ chat:
 economy:
   start-balance: 1000.0
 
-debug: true
+debug: false
