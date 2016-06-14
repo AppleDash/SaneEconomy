@@ -6,6 +6,7 @@ import org.appledash.saneeconomy.command.exception.CommandException;
 import org.appledash.saneeconomy.command.exception.InvalidUsageException;
 import org.appledash.saneeconomy.command.exception.NeedPlayerException;
 import org.appledash.saneeconomy.command.exception.TooFewArgumentsException;
+import org.appledash.saneeconomy.economy.EconomyManager;
 import org.appledash.saneeconomy.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -70,27 +71,29 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
             return true;
         }
 
+        EconomyManager ecoMan = SaneEconomy.getInstance().getEconomyManager();
+
         if (subCommand.equalsIgnoreCase("give")) {
-            double newAmount = SaneEconomy.getInstance().getEconomyManager().addBalance(targetPlayer, amount);
+            double newAmount = ecoMan.addBalance(targetPlayer, amount);
 
             MessageUtils.sendMessage(sender, "Added %s to %s. Their balance is now %s.",
-                    SaneEconomy.getInstance().getEconomyManager().getCurrency().formatAmount(amount),
+                    ecoMan.getCurrency().formatAmount(amount),
                     sTargetPlayer,
-                    SaneEconomy.getInstance().getEconomyManager().getCurrency().formatAmount(newAmount)
+                    ecoMan.getCurrency().formatAmount(newAmount)
             );
             return true;
         } else if (subCommand.equalsIgnoreCase("take")) {
-            double newAmount = SaneEconomy.getInstance().getEconomyManager().subtractBalance(targetPlayer, amount);
+            double newAmount = ecoMan.subtractBalance(targetPlayer, amount);
 
             MessageUtils.sendMessage(sender, "Took %s from %s. Their balance is now %s.",
-                    SaneEconomy.getInstance().getEconomyManager().getCurrency().formatAmount(amount),
+                    ecoMan.getCurrency().formatAmount(amount),
                     sTargetPlayer,
-                    SaneEconomy.getInstance().getEconomyManager().getCurrency().formatAmount(newAmount)
+                    ecoMan.getCurrency().formatAmount(newAmount)
             );
             return true;
         } else if (subCommand.equalsIgnoreCase("set")) {
-            SaneEconomy.getInstance().getEconomyManager().setBalance(targetPlayer, amount);
-            MessageUtils.sendMessage(sender, "Balance for %s set to %s", sTargetPlayer, SaneEconomy.getInstance().getEconomyManager().getCurrency().formatAmount(amount));
+            ecoMan.setBalance(targetPlayer, amount);
+            MessageUtils.sendMessage(sender, "Balance for %s set to %s", sTargetPlayer, ecoMan.getCurrency().formatAmount(amount));
             return true;
         }
 
