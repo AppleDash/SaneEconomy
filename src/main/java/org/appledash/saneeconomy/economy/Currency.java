@@ -59,4 +59,12 @@ public class Currency {
     public String getPluralName() {
         return namePlural;
     }
+
+    /**
+     * Get this currency's number format.
+     * @return DecimalFormat instance
+     */
+    public DecimalFormat getFormat() {
+        return format;
+    }
 }
