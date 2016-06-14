@@ -63,12 +63,12 @@ public class EconomyStorageBackendFlatfile implements EconomyStorageBackend {
     }
 
     @Override
-    public boolean accountExists(Player player) {
+    public synchronized boolean accountExists(Player player) {
         return playerBalances.containsKey(player.getUniqueId());
     }
 
     @Override
-    public double getBalance(Player player) {
+    public synchronized double getBalance(Player player) {
         if (!playerBalances.containsKey(player.getUniqueId())) {
             return 0.0D;
         }
@@ -77,13 +77,13 @@ public class EconomyStorageBackendFlatfile implements EconomyStorageBackend {
     }
 
     @Override
-    public void setBalance(Player player, double newBalance) {
+    public synchronized void setBalance(Player player, double newBalance) {
         playerBalances.put(player.getUniqueId(), newBalance);
         saveDatabase();
     }
 
     @Override
-    public double addBalance(Player player, double amount) {
+    public synchronized double addBalance(Player player, double amount) {
         double newAmount = getBalance(player) + amount;
 
         setBalance(player, newAmount);
@@ -92,7 +92,7 @@ public class EconomyStorageBackendFlatfile implements EconomyStorageBackend {
     }
 
     @Override
-    public double subtractBalance(Player player, double amount) {
+    public synchronized double subtractBalance(Player player, double amount) {
         double newAmount = getBalance(player) - amount;
 
         setBalance(player, newAmount);

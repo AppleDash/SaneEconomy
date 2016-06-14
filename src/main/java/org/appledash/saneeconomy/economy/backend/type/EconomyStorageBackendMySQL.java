@@ -56,12 +56,12 @@ public class EconomyStorageBackendMySQL implements EconomyStorageBackend {
     }
 
     @Override
-    public boolean accountExists(Player player) {
+    public synchronized boolean accountExists(Player player) {
         return accountExists(player, openConnection());
     }
 
     @Override
-    public double getBalance(Player player) {
+    public synchronized double getBalance(Player player) {
         Connection conn = openConnection();
         try {
             PreparedStatement statement = conn.prepareStatement("SELECT balance FROM `player_balances` WHERE `player_uuid` = ?");
@@ -84,7 +84,7 @@ public class EconomyStorageBackendMySQL implements EconomyStorageBackend {
     }
 
     @Override
-    public void setBalance(Player player, double newBalance) {
+    public synchronized void setBalance(Player player, double newBalance) {
         Connection conn = openConnection();
         ensureAccountExists(player, conn);
         try {
@@ -99,7 +99,7 @@ public class EconomyStorageBackendMySQL implements EconomyStorageBackend {
     }
 
     @Override
-    public double addBalance(Player player, double amount) {
+    public synchronized double addBalance(Player player, double amount) {
         // TODO: Optimize?
         double curBalance = getBalance(player);
         double newBalance = curBalance + amount;
@@ -110,7 +110,7 @@ public class EconomyStorageBackendMySQL implements EconomyStorageBackend {
     }
 
     @Override
-    public double subtractBalance(Player player, double amount) {
+    public synchronized double subtractBalance(Player player, double amount) {
         // TODO: Optimize?
         double curBalance = getBalance(player);
         double newBalance = curBalance - amount;
