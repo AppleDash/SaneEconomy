@@ -38,6 +38,11 @@ public class BalanceCommand extends SaneEconomyCommand {
             playerName = sender.getName();
         } else {
             playerName = args[0];
+
+            if (!sender.hasPermission("saneeconomy.balance.other")) {
+                MessageUtils.sendMessage(sender, "You don't have permission to check the balance of %s.", playerName);
+                return;
+            }
         }
 
         Player player = Bukkit.getServer().getPlayer(playerName);
