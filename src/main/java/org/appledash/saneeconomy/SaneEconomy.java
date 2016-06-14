@@ -8,6 +8,7 @@ import org.appledash.saneeconomy.economy.Currency;
 import org.appledash.saneeconomy.economy.EconomyManager;
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendFlatfile;
+import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendMySQL;
 import org.appledash.saneeconomy.listeners.JoinQuitListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -78,6 +79,26 @@ public class SaneEconomy extends JavaPlugin {
             File backendFile = new File(getDataFolder(), backendFileName);
             backend = new EconomyStorageBackendFlatfile(backendFile);
             getLogger().info("Initialized flatfile backend with file " + backendFile.getAbsolutePath());
+        } else if (backendType.equalsIgnoreCase("mysql")) {
+            String backendHost = getConfig().getString("backend.host");
+            int backendPort = getConfig().getInt("backend.port", 3306);
+            String backendDb = getConfig().getString("backend.database");
+            String backendUser = getConfig().getString("backend.username");
+            String backendPass = getConfig().getString("backend.password");
+
+            String jdbcUrl = String.format("jdbc:mysql://%s:%d/%s", backendHost, backendPort, backendDb);
+
+            EconomyStorageBackendMySQL mySQLBackend = new EconomyStorageBackendMySQL(jdbcUrl, backendUser, backendPass);
+            backend = mySQLBackend;
+
+            getLogger().info("Initialized MySQL backend to host " + backendHost);
+            getLogger().info("Testing connection...");
+            if (!mySQLBackend.testConnection()) {
+                getLogger().severe("MySQL connection failed - cannot continue!");
+                return false;
+            }
+
+            getLogger().info("Connection successful!");
         } else {
             getLogger().severe("Unknown storage backend " + backendType + "!");
             return false;
