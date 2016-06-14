@@ -1,6 +1,6 @@
 package org.appledash.saneeconomy.economy.backend;
 
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 
 /**
  * Created by AppleDash on 6/13/2016.
@@ -14,21 +14,21 @@ public interface EconomyStorageBackend {
      * @param player Player
      * @return True if they have, false otherwise.
      */
-    boolean accountExists(Player player);
+    boolean accountExists(OfflinePlayer player);
 
     /**
      * Get the balance of a player.
      * @param player Player
      * @return Player's current balance
      */
-    double getBalance(Player player);
+    double getBalance(OfflinePlayer player);
 
     /**
      * Set the balance of a player, overwriting the old balance.
      * @param player Player
      * @param newBalance Player's new balance
      */
-    void setBalance(Player player, double newBalance);
+    void setBalance(OfflinePlayer player, double newBalance);
 
     /**
      * Add to a player's balance.
@@ -36,7 +36,7 @@ public interface EconomyStorageBackend {
      * @param amount Amount to add to the balance
      * @return Player's new balance
      */
-    double addBalance(Player player, double amount);
+    double addBalance(OfflinePlayer player, double amount);
 
     /**
      * Subtract from a player's balance.
@@ -44,7 +44,7 @@ public interface EconomyStorageBackend {
      * @param amount Amount to subtract from the balance
      * @return Player's new balance
      */
-    double subtractBalance(Player player, double amount);
+    double subtractBalance(OfflinePlayer player, double amount);
 
     /**
      * Reload this backend's database from disk.

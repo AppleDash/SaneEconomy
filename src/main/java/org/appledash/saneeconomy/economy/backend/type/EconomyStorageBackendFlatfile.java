@@ -2,7 +2,7 @@ package org.appledash.saneeconomy.economy.backend.type;
 
 import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 
 import java.io.*;
 import java.util.HashMap;
@@ -63,12 +63,12 @@ public class EconomyStorageBackendFlatfile implements EconomyStorageBackend {
     }
 
     @Override
-    public synchronized boolean accountExists(Player player) {
+    public synchronized boolean accountExists(OfflinePlayer player) {
         return playerBalances.containsKey(player.getUniqueId());
     }
 
     @Override
-    public synchronized double getBalance(Player player) {
+    public synchronized double getBalance(OfflinePlayer player) {
         if (!playerBalances.containsKey(player.getUniqueId())) {
             return 0.0D;
         }
@@ -77,13 +77,13 @@ public class EconomyStorageBackendFlatfile implements EconomyStorageBackend {
     }
 
     @Override
-    public synchronized void setBalance(Player player, double newBalance) {
+    public synchronized void setBalance(OfflinePlayer player, double newBalance) {
         playerBalances.put(player.getUniqueId(), newBalance);
         saveDatabase();
     }
 
     @Override
-    public synchronized double addBalance(Player player, double amount) {
+    public synchronized double addBalance(OfflinePlayer player, double amount) {
         double newAmount = getBalance(player) + amount;
 
         setBalance(player, newAmount);
@@ -92,7 +92,7 @@ public class EconomyStorageBackendFlatfile implements EconomyStorageBackend {
     }
 
     @Override
-    public synchronized double subtractBalance(Player player, double amount) {
+    public synchronized double subtractBalance(OfflinePlayer player, double amount) {
         double newAmount = getBalance(player) - amount;
 
         setBalance(player, newAmount);

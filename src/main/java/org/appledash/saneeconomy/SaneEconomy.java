@@ -11,6 +11,7 @@ import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendFlatfile;
 import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendMySQL;
 import org.appledash.saneeconomy.listeners.JoinQuitListener;
+import org.appledash.saneeconomy.vault.VaultHook;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -25,6 +26,7 @@ import java.util.logging.Logger;
 public class SaneEconomy extends JavaPlugin {
     private static SaneEconomy instance;
     private EconomyManager economyManager;
+    private VaultHook vaultHook;
 
     private static final Map<String, SaneEconomyCommand> COMMANDS = new HashMap<String, SaneEconomyCommand>() {{
         put("balance", new BalanceCommand());
@@ -48,6 +50,14 @@ public class SaneEconomy extends JavaPlugin {
 
         loadCommands();
         loadListeners();
+        vaultHook = new VaultHook(this);
+        vaultHook.hook();
+    }
+
+    @Override
+    public void onDisable() {
+
+
     }
 
     private void loadConfig() {

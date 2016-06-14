@@ -1,6 +1,7 @@
 package org.appledash.saneeconomy.economy;
 
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -40,7 +41,7 @@ public class EconomyManager {
      * @param player Player to check
      * @return True if they have used the economy system before, false otherwise
      */
-    public boolean accountExists(Player player) {
+    public boolean accountExists(OfflinePlayer player) {
         return backend.accountExists(player);
     }
 
@@ -49,9 +50,10 @@ public class EconomyManager {
      * @param targetPlayer Player to get balance of
      * @return Player's balance
      */
-    public double getBalance(Player targetPlayer) {
+    public double getBalance(OfflinePlayer targetPlayer) {
         return backend.getBalance(targetPlayer);
     }
+
 
     /**
      * Check if a player has a certain amount of money.
@@ -59,7 +61,7 @@ public class EconomyManager {
      * @param requiredBalance How much money we're checking for
      * @return True if they have requiredBalance or more, false otherwise
      */
-    public boolean hasBalance(Player targetPlayer, double requiredBalance) {
+    public boolean hasBalance(OfflinePlayer targetPlayer, double requiredBalance) {
         return getBalance(targetPlayer) >= requiredBalance;
     }
 
@@ -70,7 +72,7 @@ public class EconomyManager {
      * @return Player's new balance
      * @throws IllegalArgumentException If amount is negative
      */
-    public double addBalance(Player targetPlayer, double amount) {
+    public double addBalance(OfflinePlayer targetPlayer, double amount) {
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot add a negative amount!");
         }
@@ -86,7 +88,7 @@ public class EconomyManager {
      * @return Player's new balance
      * @throws IllegalArgumentException If amount is negative
      */
-    public double subtractBalance(Player targetPlayer, double amount) {
+    public double subtractBalance(OfflinePlayer targetPlayer, double amount) {
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot subtract a negative amount!");
         }
@@ -106,7 +108,7 @@ public class EconomyManager {
      * @param amount Amount to set balance to
      * @throws IllegalArgumentException If amount is negative
      */
-    public void setBalance(Player targetPlayer, double amount) {
+    public void setBalance(OfflinePlayer targetPlayer, double amount) {
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot set balance to a negative value!");
         }
@@ -122,7 +124,7 @@ public class EconomyManager {
      * @return True if success, false if fromPlayer has insufficient funds.
      * @throws IllegalArgumentException If amount is negative
      */
-    public boolean transfer(Player fromPlayer, Player toPlayer, double amount) {
+    public boolean transfer(OfflinePlayer fromPlayer, Player toPlayer, double amount) {
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot transfer a negative amount!");
         }
