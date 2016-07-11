@@ -6,10 +6,10 @@
     <parent>
         <groupId>org.appledash</groupId>
         <artifactId>SaneEconomy</artifactId>
-        <version>0.5.2-SNAPSHOT</version>
+        <version>0.5.3-SNAPSHOT</version>
     </parent>
     <artifactId>SaneEconomyCore</artifactId>
-    <version>0.5.2-SNAPSHOT</version>
+    <version>0.5.3-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
@@ -20,7 +20,7 @@
     </dependencies>
 
     <build>
-        <finalName>${project.artifactId}</finalName>
+        <finalName>${project.artifactId}-${project.version}</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -49,12 +49,7 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
-                                    <include>com.zaxxer:HikariCP</include>
-                                    <include>com.google.code.gson:gson</include>
-                                    <include>org.reflections:reflections</include>
-                                    <include>org.javassist:javassist</include>
-                                    <include>org.slf4j:slf4j-api</include>
-                                    <include>org.slf4j:slf4j-nop</include>
+                                    <include>org.mcstats.bukkit:metrics</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

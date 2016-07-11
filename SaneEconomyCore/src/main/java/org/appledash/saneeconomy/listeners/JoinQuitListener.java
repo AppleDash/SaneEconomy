@@ -1,6 +1,7 @@
 package org.appledash.saneeconomy.listeners;
 
 import org.appledash.saneeconomy.SaneEconomy;
+import org.appledash.saneeconomy.updates.GithubVersionChecker;
 import org.appledash.saneeconomy.utils.MessageUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,6 +28,11 @@ public class JoinQuitListener implements Listener {
         if (startBalance > 0 && !plugin.getEconomyManager().accountExists(player)) {
             plugin.getEconomyManager().setBalance(player, startBalance);
             MessageUtils.sendMessage(player, "You've been issued a starting balance of %s!", plugin.getEconomyManager().getCurrency().formatAmount(startBalance));
+        }
+
+        /* Update notification */
+        if (player.hasPermission("saneeconomy.update-notify") && GithubVersionChecker.isUpdateAvailable()) {
+            MessageUtils.sendMessage(player, "An update is available! The current version is %s, but the newest available is %s. Please go to %s to update!", plugin.getDescription().getVersion(), GithubVersionChecker.getNewestVersion(), GithubVersionChecker.DOWNLOAD_URL);
         }
     }
 }

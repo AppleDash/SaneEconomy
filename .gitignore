@@ -13,3 +13,4 @@ RemoteSystemsTempFiles/.project
 *.eml
 out/
 target/
+dependency-reduced-pom.xml

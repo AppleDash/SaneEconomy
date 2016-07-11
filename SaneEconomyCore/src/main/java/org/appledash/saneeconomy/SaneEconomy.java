@@ -11,6 +11,7 @@ import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendFlatfile;
 import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendMySQL;
 import org.appledash.saneeconomy.listeners.JoinQuitListener;
+import org.appledash.saneeconomy.updates.GithubVersionChecker;
 import org.appledash.saneeconomy.vault.VaultHook;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -50,13 +51,23 @@ public class SaneEconomy extends JavaPlugin {
 
         loadCommands();
         loadListeners();
-        vaultHook = new VaultHook(this);
-        vaultHook.hook();
+
+        if (getServer().getPluginManager().isPluginEnabled("Vault")) {
+            vaultHook = new VaultHook(this);
+            vaultHook.hook();
+            getLogger().info("Hooked into Vault.");
+        } else {
+            getLogger().info("Not hooking into Vault because it isn't loaded.");
+        }
+
+        getServer().getScheduler().scheduleAsyncDelayedTask(this, GithubVersionChecker::checkUpdateAvailable);
     }
 
     @Override
     public void onDisable() {
-        vaultHook.unhook();
+        if (vaultHook != null) {
+            vaultHook.unhook();
+        }
     }
 
     private void loadConfig() {

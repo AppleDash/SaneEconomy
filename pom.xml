@@ -6,7 +6,7 @@
 
     <groupId>org.appledash</groupId>
     <artifactId>SaneEconomy</artifactId>
-    <version>0.5.2-SNAPSHOT</version>
+    <version>0.5.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -23,6 +23,11 @@
             <id>vault</id>
             <name>Vault</name>
             <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
+        </repository>
+        <repository>
+            <id>mcstats</id>
+            <name>MCStats</name>
+            <url>http://repo.mcstats.org/content/repositories/public</url>
         </repository>
     </repositories>
 
