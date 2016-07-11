@@ -14,6 +14,7 @@ I decided that it was time for a change. I wanted a working, updated economy plu
 
 ## Development
 
-Our dependencies are managed with Gradle instead of Maven. Other than that, it's a pretty standard development workflow.
+We manage dependencies with Maven.
 We try to stick to [SemVer](http://semver.org/), but it's rather difficult with a Bukkit plugin so in reality our version numbers are almost meaningless.
 Generally, new releases should be built against the latest Spigot/Bukkit at the time the release is published.
+
