@@ -11,6 +11,6 @@ chat:
   prefix: '&b[&9Economy&b]&r '
 
 economy:
-  start-balance: 1000.0
+  start-balance: 0.0
 
 debug: false
