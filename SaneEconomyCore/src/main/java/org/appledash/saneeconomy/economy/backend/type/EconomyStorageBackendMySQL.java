@@ -127,28 +127,6 @@ public class EconomyStorageBackendMySQL implements EconomyStorageBackend {
     }
 
     @Override
-    public synchronized double addBalance(OfflinePlayer player, double amount) {
-        // TODO: Optimize?
-        double curBalance = getBalance(player);
-        double newBalance = curBalance + amount;
-
-        setBalance(player, newBalance);
-
-        return newBalance;
-    }
-
-    @Override
-    public synchronized double subtractBalance(OfflinePlayer player, double amount) {
-        // TODO: Optimize?
-        double curBalance = getBalance(player);
-        double newBalance = curBalance - amount;
-
-        setBalance(player, newBalance);
-
-        return newBalance;
-    }
-
-    @Override
     public Map<UUID, Double> getTopBalances(int amount) {
         return MapUtil.takeFromMap(topBalances, amount);
     }

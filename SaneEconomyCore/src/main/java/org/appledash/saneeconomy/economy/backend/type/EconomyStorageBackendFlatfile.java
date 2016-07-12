@@ -91,24 +91,6 @@ public class EconomyStorageBackendFlatfile implements EconomyStorageBackend {
     }
 
     @Override
-    public synchronized double addBalance(OfflinePlayer player, double amount) {
-        double newAmount = getBalance(player) + amount;
-
-        setBalance(player, newAmount);
-
-        return newAmount;
-    }
-
-    @Override
-    public synchronized double subtractBalance(OfflinePlayer player, double amount) {
-        double newAmount = getBalance(player) - amount;
-
-        setBalance(player, newAmount);
-
-        return newAmount;
-    }
-
-    @Override
     public Map<UUID, Double> getTopBalances(int amount) {
         return MapUtil.takeFromMap(topBalances, amount);
     }

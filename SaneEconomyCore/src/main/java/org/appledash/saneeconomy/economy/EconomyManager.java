@@ -85,7 +85,11 @@ public class EconomyManager {
             throw new IllegalArgumentException("Cannot add a negative amount!");
         }
 
-        return backend.addBalance(targetPlayer, amount);
+        double newAmount = backend.getBalance(targetPlayer) + amount;
+
+        backend.setBalance(targetPlayer, newAmount);
+
+        return newAmount;
     }
 
     /**
@@ -103,13 +107,17 @@ public class EconomyManager {
             throw new IllegalArgumentException("Cannot subtract a negative amount!");
         }
 
+        double newAmount = backend.getBalance(targetPlayer) - amount;
+
+
         /* Subtracting that much would result in a negative balance - don't do that */
-        if (backend.getBalance(targetPlayer) - amount <= 0.0D) {
-            backend.setBalance(targetPlayer, 0.0D);
-            return 0.0D;
+        if (newAmount <= 0.0D) {
+            newAmount = 0.0D;
         }
 
-        return backend.subtractBalance(targetPlayer, amount);
+        backend.setBalance(targetPlayer, newAmount);
+
+        return newAmount;
     }
 
     /**

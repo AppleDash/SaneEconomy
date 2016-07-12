@@ -34,22 +34,6 @@ public interface EconomyStorageBackend {
     void setBalance(OfflinePlayer player, double newBalance);
 
     /**
-     * Add to a player's balance.
-     * @param player Player
-     * @param amount Amount to add to the balance
-     * @return Player's new balance
-     */
-    double addBalance(OfflinePlayer player, double amount);
-
-    /**
-     * Subtract from a player's balance.
-     * @param player Player
-     * @param amount Amount to subtract from the balance
-     * @return Player's new balance
-     */
-    double subtractBalance(OfflinePlayer player, double amount);
-
-    /**
      * Get the UUIDs of the players who have the most money, along with how much money they have.
      * @param amount Maximum number to get.
      * @return Map of player UUIDs to amounts.
