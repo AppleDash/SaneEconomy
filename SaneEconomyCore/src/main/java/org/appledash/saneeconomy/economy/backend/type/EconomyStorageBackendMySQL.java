@@ -2,11 +2,14 @@ package org.appledash.saneeconomy.economy.backend.type;
 
 import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
+import org.appledash.saneeconomy.utils.MapUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import java.sql.*;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -19,6 +22,8 @@ public class EconomyStorageBackendMySQL implements EconomyStorageBackend {
     private final String dbPassword;
 
     private final HashMap<UUID, Double> playerBalances = new HashMap<>();
+    private Map<UUID, Double> topBalances = new LinkedHashMap<>();
+
 
     public EconomyStorageBackendMySQL(String dbUrl, String dbUser, String dbPassword) {
         this.dbUrl = dbUrl;
@@ -80,6 +85,10 @@ public class EconomyStorageBackendMySQL implements EconomyStorageBackend {
         }
     }
 
+    @Override
+    public void reloadTopBalances() {
+        topBalances = MapUtil.sortByValue(playerBalances);
+    }
 
     @Override
     public boolean accountExists(OfflinePlayer player) {
@@ -137,6 +146,11 @@ public class EconomyStorageBackendMySQL implements EconomyStorageBackend {
         setBalance(player, newBalance);
 
         return newBalance;
+    }
+
+    @Override
+    public Map<UUID, Double> getTopBalances(int amount) {
+        return MapUtil.takeFromMap(topBalances, amount);
     }
 
     private void ensureAccountExists(OfflinePlayer player, Connection conn) {

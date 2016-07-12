@@ -2,6 +2,9 @@ package org.appledash.saneeconomy.economy.backend;
 
 import org.bukkit.OfflinePlayer;
 
+import java.util.Map;
+import java.util.UUID;
+
 /**
  * Created by AppleDash on 6/13/2016.
  * Blackjack is still best pony.
@@ -47,7 +50,19 @@ public interface EconomyStorageBackend {
     double subtractBalance(OfflinePlayer player, double amount);
 
     /**
+     * Get the UUIDs of the players who have the most money, along with how much money they have.
+     * @param amount Maximum number to get.
+     * @return Map of player UUIDs to amounts.
+     */
+    Map<UUID, Double> getTopBalances(int amount);
+
+    /**
      * Reload this backend's database from disk.
      */
     void reloadDatabase();
+
+    /**
+     * Reload this backend's top balances.
+     */
+    void reloadTopBalances();
 }

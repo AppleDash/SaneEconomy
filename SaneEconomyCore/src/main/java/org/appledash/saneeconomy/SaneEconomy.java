@@ -1,10 +1,7 @@
 package org.appledash.saneeconomy;
 
 import org.appledash.saneeconomy.command.SaneEconomyCommand;
-import org.appledash.saneeconomy.command.type.BalanceCommand;
-import org.appledash.saneeconomy.command.type.EconomyAdminCommand;
-import org.appledash.saneeconomy.command.type.PayCommand;
-import org.appledash.saneeconomy.command.type.SaneEcoCommand;
+import org.appledash.saneeconomy.command.type.*;
 import org.appledash.saneeconomy.economy.Currency;
 import org.appledash.saneeconomy.economy.EconomyManager;
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
@@ -34,6 +31,7 @@ public class SaneEconomy extends JavaPlugin {
         put("ecoadmin", new EconomyAdminCommand());
         put("pay", new PayCommand());
         put("saneeconomy", new SaneEcoCommand());
+        put("balancetop", new BalanceTopCommand());
     }};
 
     public SaneEconomy() {
@@ -61,6 +59,10 @@ public class SaneEconomy extends JavaPlugin {
         }
 
         getServer().getScheduler().scheduleAsyncDelayedTask(this, GithubVersionChecker::checkUpdateAvailable);
+
+        getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
+            economyManager.getBackend().reloadTopBalances();
+        }, 0, (20 * 300) /* Update baltop every 5 minutes */);
     }
 
     @Override

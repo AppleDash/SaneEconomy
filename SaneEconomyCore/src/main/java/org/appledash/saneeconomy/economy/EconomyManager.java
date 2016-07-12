@@ -2,8 +2,13 @@ package org.appledash.saneeconomy.economy;
 
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.utils.NumberUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by AppleDash on 6/13/2016.
@@ -147,6 +152,20 @@ public class EconomyManager {
         addBalance(toPlayer, amount);
 
         return true;
+    }
+
+    /**
+     * Get the players who have the most money.
+     * @param amount Maximum number of players to show.
+     * @return Map of OfflinePlayer to Double
+     */
+    public Map<OfflinePlayer, Double> getTopBalances(int amount) {
+        Map<UUID, Double> uuidBalances = backend.getTopBalances(amount);
+        Map<OfflinePlayer, Double> playerBalances = new LinkedHashMap<>();
+
+        uuidBalances.forEach((uuid, balance) -> playerBalances.put(Bukkit.getServer().getOfflinePlayer(uuid), balance));
+
+        return playerBalances;
     }
 
     public EconomyStorageBackend getBackend() {

@@ -2,10 +2,12 @@ package org.appledash.saneeconomy.economy.backend.type;
 
 import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
+import org.appledash.saneeconomy.utils.MapUtil;
 import org.bukkit.OfflinePlayer;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -18,6 +20,7 @@ public class EconomyStorageBackendFlatfile implements EconomyStorageBackend {
 
     private final File file;
     private Map<UUID, Double> playerBalances = new HashMap<>();
+    private Map<UUID, Double> topBalances = new LinkedHashMap<>();
 
     public EconomyStorageBackendFlatfile(File file) {
         this.file = file;
@@ -45,6 +48,11 @@ public class EconomyStorageBackendFlatfile implements EconomyStorageBackend {
             SaneEconomy.logger().severe("Failed to load flatfile database!");
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void reloadTopBalances() {
+        topBalances = MapUtil.sortByValue(playerBalances);
     }
 
     private void saveDatabase() {
@@ -98,5 +106,10 @@ public class EconomyStorageBackendFlatfile implements EconomyStorageBackend {
         setBalance(player, newAmount);
 
         return newAmount;
+    }
+
+    @Override
+    public Map<UUID, Double> getTopBalances(int amount) {
+        return MapUtil.takeFromMap(topBalances, amount);
     }
 }
