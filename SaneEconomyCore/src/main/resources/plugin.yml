@@ -29,3 +29,23 @@ commands:
     description: Show the players who have the most money on the server.
     usage: /<command>
     permission: saneeconomy.balancetop
+
+permissions:
+  saneeconomy.balance:
+    description: Allows you to check your balance.
+    default: true
+  saneeconomy.balance.other:
+    description: Allows you to check other players' balances.
+    default: op
+  saneeconomy.ecoadmin:
+    description: Allows you to edit players' balances.
+    default: op
+  saneeconomy.pay:
+    description: Allows you to pay money to other players.
+    default: true
+  saneeconomy.admin:
+    description: Allows you to administrate the plugin.
+    default: op
+  saneeconomy.balancetop:
+    description: Allows you to view the players on the server who have the most money.
+    default: true
