@@ -51,6 +51,10 @@ public class EconomySaneEconomy implements Economy {
 
     @Override
     public boolean hasAccount(String playerName) {
+        if (Bukkit.getServer().getPlayer(playerName) == null) {
+            return false;
+        }
+
         return SaneEconomy.getInstance().getEconomyManager().accountExists(Bukkit.getServer().getPlayer(playerName));
     }
 
