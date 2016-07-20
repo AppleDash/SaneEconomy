@@ -1,8 +1,8 @@
 package org.appledash.saneeconomy.economy.backend.type;
 
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
+import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.utils.MapUtil;
-import org.bukkit.OfflinePlayer;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -14,30 +14,38 @@ import java.util.UUID;
  * Blackjack is still best pony.
  */
 public abstract class EconomyStorageBackendCaching implements EconomyStorageBackend {
-    protected HashMap<UUID, Double> playerBalances = new HashMap<>();
-    protected Map<UUID, Double> topBalances = new LinkedHashMap<>();
+    protected HashMap<String, Double> balances = new HashMap<>();
+    protected Map<UUID, Double> topPlayerBalances = new LinkedHashMap<>();
 
     @Override
-    public boolean accountExists(OfflinePlayer player) {
-        return playerBalances.containsKey(player.getUniqueId());
+    public boolean accountExists(Economable economable) {
+        return balances.containsKey(economable.getUniqueIdentifier());
     }
 
     @Override
-    public synchronized double getBalance(OfflinePlayer player) {
-        if (!accountExists(player)) {
+    public synchronized double getBalance(Economable economable) {
+        if (!accountExists(economable)) {
             return 0.0D;
         }
 
-        return playerBalances.get(player.getUniqueId());
+        return balances.get(economable.getUniqueIdentifier());
     }
 
     @Override
-    public Map<UUID, Double> getTopBalances(int amount) {
-        return MapUtil.takeFromMap(topBalances, amount);
+    public Map<UUID, Double> getTopPlayerBalances(int amount) {
+        return MapUtil.takeFromMap(topPlayerBalances, amount);
     }
 
     @Override
-    public void reloadTopBalances() {
-        topBalances = MapUtil.sortByValue(playerBalances);
+    public void reloadTopPlayerBalances() {
+        Map<UUID, Double> playerBalances = new HashMap<>();
+
+        balances.forEach((identifier, balance) -> {
+            if (identifier.startsWith("player:")) { // FIXME: Come on now...
+                playerBalances.put(UUID.fromString(identifier.substring("player:".length())), balance);
+            }
+        });
+
+        topPlayerBalances = MapUtil.sortByValue(playerBalances);
     }
 }

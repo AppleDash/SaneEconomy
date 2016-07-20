@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.appledash.saneeconomy.SaneEconomy;
+import org.appledash.saneeconomy.economy.economable.Economable;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
@@ -51,13 +52,20 @@ public class EconomySaneEconomy implements Economy {
 
     @Override
     public boolean hasAccount(String playerName) {
-        return validatePlayer(playerName) && SaneEconomy.getInstance().getEconomyManager().accountExists(Bukkit.getServer().getPlayer(playerName));
+        Economable economable;
+        if (validatePlayer(playerName)) {
+            economable = Economable.wrap(Bukkit.getPlayer(playerName));
+        } else {
+            economable = Economable.wrap(playerName);
+        }
+
+        return SaneEconomy.getInstance().getEconomyManager().accountExists(economable);
 
     }
 
     @Override
     public boolean hasAccount(OfflinePlayer offlinePlayer) {
-        return SaneEconomy.getInstance().getEconomyManager().accountExists(offlinePlayer);
+        return SaneEconomy.getInstance().getEconomyManager().accountExists(Economable.wrap(offlinePlayer));
     }
 
     @Override
@@ -71,17 +79,20 @@ public class EconomySaneEconomy implements Economy {
     }
 
     @Override
-    public double getBalance(String s) {
-        if (!validatePlayer(s)) {
-            return 0.0;
+    public double getBalance(String playerName) {
+        Economable economable;
+        if (validatePlayer(playerName)) {
+            economable = Economable.wrap(Bukkit.getPlayer(playerName));
+        } else {
+            economable = Economable.wrap(playerName);
         }
 
-        return SaneEconomy.getInstance().getEconomyManager().getBalance(Bukkit.getPlayer(s));
+        return SaneEconomy.getInstance().getEconomyManager().getBalance(economable);
     }
 
     @Override
     public double getBalance(OfflinePlayer offlinePlayer) {
-        return SaneEconomy.getInstance().getEconomyManager().getBalance(offlinePlayer);
+        return SaneEconomy.getInstance().getEconomyManager().getBalance(Economable.wrap(offlinePlayer));
     }
 
     @Override
@@ -96,15 +107,19 @@ public class EconomySaneEconomy implements Economy {
 
     @Override
     public boolean has(String playerName, double v) {
-        if (!validatePlayer(playerName)) {
-            return false;
+        Economable economable;
+        if (validatePlayer(playerName)) {
+            economable = Economable.wrap(Bukkit.getPlayer(playerName));
+        } else {
+            economable = Economable.wrap(playerName);
         }
-        return SaneEconomy.getInstance().getEconomyManager().hasBalance(Bukkit.getPlayer(playerName), v);
+
+        return SaneEconomy.getInstance().getEconomyManager().hasBalance(economable, v);
     }
 
     @Override
     public boolean has(OfflinePlayer offlinePlayer, double v) {
-        return SaneEconomy.getInstance().getEconomyManager().hasBalance(offlinePlayer, v);
+        return SaneEconomy.getInstance().getEconomyManager().hasBalance(Economable.wrap(offlinePlayer), v);
     }
 
     @Override
@@ -119,16 +134,19 @@ public class EconomySaneEconomy implements Economy {
 
     @Override
     public EconomyResponse withdrawPlayer(String playerName, double v) {
-        if (!validatePlayer(playerName)) {
-            return new EconomyResponse(0.0, 0.0, EconomyResponse.ResponseType.FAILURE, "Invalid player name supplied!");
+        Economable economable;
+        if (validatePlayer(playerName)) {
+            economable = Economable.wrap(Bukkit.getPlayer(playerName));
+        } else {
+            economable = Economable.wrap(playerName);
         }
 
-        return new EconomyResponse(v, SaneEconomy.getInstance().getEconomyManager().subtractBalance(Bukkit.getPlayer(playerName), v), EconomyResponse.ResponseType.SUCCESS, null);
+        return new EconomyResponse(v, SaneEconomy.getInstance().getEconomyManager().subtractBalance(economable, v), EconomyResponse.ResponseType.SUCCESS, null);
     }
 
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, double v) {
-        return new EconomyResponse(v, SaneEconomy.getInstance().getEconomyManager().subtractBalance(offlinePlayer, v), EconomyResponse.ResponseType.SUCCESS, null);
+        return new EconomyResponse(v, SaneEconomy.getInstance().getEconomyManager().subtractBalance(Economable.wrap(offlinePlayer), v), EconomyResponse.ResponseType.SUCCESS, null);
     }
 
     @Override
@@ -143,16 +161,19 @@ public class EconomySaneEconomy implements Economy {
 
     @Override
     public EconomyResponse depositPlayer(String playerName, double v) {
-        if (!validatePlayer(playerName)) {
-            return new EconomyResponse(0.0, 0.0, EconomyResponse.ResponseType.FAILURE, "Invalid player name supplied!");
+        Economable economable;
+        if (validatePlayer(playerName)) {
+            economable = Economable.wrap(Bukkit.getPlayer(playerName));
+        } else {
+            economable = Economable.wrap(playerName);
         }
 
-        return new EconomyResponse(v, SaneEconomy.getInstance().getEconomyManager().addBalance(Bukkit.getPlayer(playerName), v), EconomyResponse.ResponseType.SUCCESS, null);
+        return new EconomyResponse(v, SaneEconomy.getInstance().getEconomyManager().addBalance(economable, v), EconomyResponse.ResponseType.SUCCESS, null);
     }
 
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, double v) {
-        return new EconomyResponse(v, SaneEconomy.getInstance().getEconomyManager().addBalance(offlinePlayer, v), EconomyResponse.ResponseType.SUCCESS, null);
+        return new EconomyResponse(v, SaneEconomy.getInstance().getEconomyManager().addBalance(Economable.wrap(offlinePlayer), v), EconomyResponse.ResponseType.SUCCESS, null);
     }
 
     @Override
@@ -246,12 +267,6 @@ public class EconomySaneEconomy implements Economy {
     }
 
     private boolean validatePlayer(String playerName) {
-        boolean valid = Bukkit.getServer().getPlayer(playerName) != null;
-
-        if (!valid) {
-            SaneEconomy.getInstance().getLogger().warning("Some plugin has passed an invalid player name to a Vault API method! (Name: " + playerName + ")");
-        }
-
-        return valid;
+        return Bukkit.getServer().getPlayer(playerName) != null;
     }
 }

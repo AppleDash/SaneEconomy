@@ -34,7 +34,7 @@ public class BalanceTopCommand extends SaneEconomyCommand {
             throw new TooManyArgumentsException();
         }
 
-        Map<OfflinePlayer, Double> topBalances = SaneEconomy.getInstance().getEconomyManager().getTopBalances(10);
+        Map<OfflinePlayer, Double> topBalances = SaneEconomy.getInstance().getEconomyManager().getTopPlayerBalances(10);
         AtomicInteger index = new AtomicInteger(1); /* I know it's stupid, but you can't do some_int++ from within the lambda. */
 
         MessageUtils.sendMessage(sender, "Top %d players:", topBalances.size());

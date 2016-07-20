@@ -61,7 +61,7 @@ public class SaneEconomy extends JavaPlugin {
         getServer().getScheduler().scheduleAsyncDelayedTask(this, GithubVersionChecker::checkUpdateAvailable);
 
         getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
-            economyManager.getBackend().reloadTopBalances();
+            economyManager.getBackend().reloadTopPlayerBalances();
         }, 0, (20 * 300) /* Update baltop every 5 minutes */);
     }
 

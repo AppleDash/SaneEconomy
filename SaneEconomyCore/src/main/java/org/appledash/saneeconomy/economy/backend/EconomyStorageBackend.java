@@ -1,6 +1,6 @@
 package org.appledash.saneeconomy.economy.backend;
 
-import org.bukkit.OfflinePlayer;
+import org.appledash.saneeconomy.economy.economable.Economable;
 
 import java.util.Map;
 import java.util.UUID;
@@ -17,28 +17,28 @@ public interface EconomyStorageBackend {
      * @param player Player
      * @return True if they have, false otherwise.
      */
-    boolean accountExists(OfflinePlayer player);
+    boolean accountExists(Economable player);
 
     /**
      * Get the balance of a player.
      * @param player Player
      * @return Player's current balance
      */
-    double getBalance(OfflinePlayer player);
+    double getBalance(Economable player);
 
     /**
      * Set the balance of a player, overwriting the old balance.
      * @param player Player
      * @param newBalance Player's new balance
      */
-    void setBalance(OfflinePlayer player, double newBalance);
+    void setBalance(Economable player, double newBalance);
 
     /**
      * Get the UUIDs of the players who have the most money, along with how much money they have.
      * @param amount Maximum number to get.
      * @return Map of player UUIDs to amounts.
      */
-    Map<UUID, Double> getTopBalances(int amount);
+    Map<UUID, Double> getTopPlayerBalances(int amount);
 
     /**
      * Reload this backend's database from disk.
@@ -48,5 +48,5 @@ public interface EconomyStorageBackend {
     /**
      * Reload this backend's top balances.
      */
-    void reloadTopBalances();
+    void reloadTopPlayerBalances();
 }

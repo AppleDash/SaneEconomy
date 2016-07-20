@@ -4,6 +4,7 @@ import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.command.SaneEconomyCommand;
 import org.appledash.saneeconomy.command.exception.CommandException;
 import org.appledash.saneeconomy.command.exception.type.usage.NeedPlayerException;
+import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.utils.MessageUtils;
 import org.appledash.saneeconomy.utils.PlayerUtils;
 import org.bukkit.OfflinePlayer;
@@ -53,6 +54,6 @@ public class BalanceCommand extends SaneEconomyCommand {
             return;
         }
 
-        MessageUtils.sendMessage(sender, "Balance for %s is %s.", playerName, SaneEconomy.getInstance().getEconomyManager().getFormattedBalance(player));
+        MessageUtils.sendMessage(sender, "Balance for %s is %s.", playerName, SaneEconomy.getInstance().getEconomyManager().getFormattedBalance(Economable.wrap(player)));
     }
 }

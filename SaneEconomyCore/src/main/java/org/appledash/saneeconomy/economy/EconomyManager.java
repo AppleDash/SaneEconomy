@@ -1,10 +1,10 @@
 package org.appledash.saneeconomy.economy;
 
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
+import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.utils.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -38,7 +38,7 @@ public class EconomyManager {
      * @param player Player
      * @return Formatted balance
      */
-    public String getFormattedBalance(OfflinePlayer player) {
+    public String getFormattedBalance(Economable player) {
         return currency.formatAmount(backend.getBalance(player));
     }
 
@@ -47,7 +47,7 @@ public class EconomyManager {
      * @param player Player to check
      * @return True if they have used the economy system before, false otherwise
      */
-    public boolean accountExists(OfflinePlayer player) {
+    public boolean accountExists(Economable player) {
         return backend.accountExists(player);
     }
 
@@ -56,7 +56,7 @@ public class EconomyManager {
      * @param targetPlayer Player to get balance of
      * @return Player's balance
      */
-    public double getBalance(OfflinePlayer targetPlayer) {
+    public double getBalance(Economable targetPlayer) {
         return backend.getBalance(targetPlayer);
     }
 
@@ -67,7 +67,7 @@ public class EconomyManager {
      * @param requiredBalance How much money we're checking for
      * @return True if they have requiredBalance or more, false otherwise
      */
-    public boolean hasBalance(OfflinePlayer targetPlayer, double requiredBalance) {
+    public boolean hasBalance(Economable targetPlayer, double requiredBalance) {
         return getBalance(targetPlayer) >= requiredBalance;
     }
 
@@ -78,7 +78,7 @@ public class EconomyManager {
      * @return Player's new balance
      * @throws IllegalArgumentException If amount is negative
      */
-    public double addBalance(OfflinePlayer targetPlayer, double amount) {
+    public double addBalance(Economable targetPlayer, double amount) {
         amount = NumberUtils.filterAmount(amount);
 
         if (amount < 0) {
@@ -100,7 +100,7 @@ public class EconomyManager {
      * @return Player's new balance
      * @throws IllegalArgumentException If amount is negative
      */
-    public double subtractBalance(OfflinePlayer targetPlayer, double amount) {
+    public double subtractBalance(Economable targetPlayer, double amount) {
         amount = NumberUtils.filterAmount(amount);
 
         if (amount < 0) {
@@ -126,7 +126,7 @@ public class EconomyManager {
      * @param amount Amount to set balance to
      * @throws IllegalArgumentException If amount is negative
      */
-    public void setBalance(OfflinePlayer targetPlayer, double amount) {
+    public void setBalance(Economable targetPlayer, double amount) {
         amount = NumberUtils.filterAmount(amount);
 
         if (amount < 0) {
@@ -144,7 +144,7 @@ public class EconomyManager {
      * @return True if success, false if fromPlayer has insufficient funds.
      * @throws IllegalArgumentException If amount is negative
      */
-    public boolean transfer(OfflinePlayer fromPlayer, Player toPlayer, double amount) {
+    public boolean transfer(Economable fromPlayer, Economable toPlayer, double amount) {
         amount = NumberUtils.filterAmount(amount);
 
         if (amount < 0) {
@@ -167,8 +167,8 @@ public class EconomyManager {
      * @param amount Maximum number of players to show.
      * @return Map of OfflinePlayer to Double
      */
-    public Map<OfflinePlayer, Double> getTopBalances(int amount) {
-        Map<UUID, Double> uuidBalances = backend.getTopBalances(amount);
+    public Map<OfflinePlayer, Double> getTopPlayerBalances(int amount) {
+        Map<UUID, Double> uuidBalances = backend.getTopPlayerBalances(amount);
         Map<OfflinePlayer, Double> playerBalances = new LinkedHashMap<>();
 
         uuidBalances.forEach((uuid, balance) -> playerBalances.put(Bukkit.getServer().getOfflinePlayer(uuid), balance));

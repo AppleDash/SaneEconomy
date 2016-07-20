@@ -7,6 +7,7 @@ import org.appledash.saneeconomy.command.exception.type.usage.InvalidUsageExcept
 import org.appledash.saneeconomy.command.exception.type.usage.NeedPlayerException;
 import org.appledash.saneeconomy.command.exception.type.usage.TooFewArgumentsException;
 import org.appledash.saneeconomy.economy.EconomyManager;
+import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.utils.MessageUtils;
 import org.appledash.saneeconomy.utils.NumberUtils;
 import org.appledash.saneeconomy.utils.PlayerUtils;
@@ -60,6 +61,8 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
             return;
         }
 
+        Economable economable = Economable.wrap(targetPlayer);
+
         double amount = NumberUtils.parseAndFilter(sAmount);
 
         if (amount <= 0) {
@@ -70,7 +73,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
         EconomyManager ecoMan = SaneEconomy.getInstance().getEconomyManager();
 
         if (subCommand.equalsIgnoreCase("give")) {
-            double newAmount = ecoMan.addBalance(targetPlayer, amount);
+            double newAmount = ecoMan.addBalance(economable, amount);
 
             MessageUtils.sendMessage(sender, "Added %s to %s. Their balance is now %s.",
                     ecoMan.getCurrency().formatAmount(amount),
@@ -79,7 +82,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
             );
             return;
         } else if (subCommand.equalsIgnoreCase("take")) {
-            double newAmount = ecoMan.subtractBalance(targetPlayer, amount);
+            double newAmount = ecoMan.subtractBalance(economable, amount);
 
             MessageUtils.sendMessage(sender, "Took %s from %s. Their balance is now %s.",
                     ecoMan.getCurrency().formatAmount(amount),
@@ -88,7 +91,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
             );
             return;
         } else if (subCommand.equalsIgnoreCase("set")) {
-            ecoMan.setBalance(targetPlayer, amount);
+            ecoMan.setBalance(economable, amount);
             MessageUtils.sendMessage(sender, "Balance for %s set to %s", sTargetPlayer, ecoMan.getCurrency().formatAmount(amount));
             return;
         }
