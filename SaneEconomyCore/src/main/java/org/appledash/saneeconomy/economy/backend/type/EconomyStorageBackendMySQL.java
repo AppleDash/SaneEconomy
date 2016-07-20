@@ -58,7 +58,7 @@ public class EconomyStorageBackendMySQL implements EconomyStorageBackend {
     private void createTable() {
         Connection conn = openConnection();
         try {
-            PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS `player_balances` (player_uuid CHAR(38), balance DECIMAL(18, 2))");
+            PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS `player_balances` (player_uuid CHAR(36), balance DECIMAL(18, 2))");
             ps.executeUpdate();
             conn.close();
         } catch (SQLException e) {
