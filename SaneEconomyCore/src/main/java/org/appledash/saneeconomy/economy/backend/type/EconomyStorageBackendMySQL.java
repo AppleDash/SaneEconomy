@@ -144,32 +144,32 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
     }
 
     @Override
-    public synchronized void setBalance(final Economable player, final double newBalance) {
-        final double oldBalance = getBalance(player);
-        balances.put(player.getUniqueIdentifier(), newBalance);
+    public synchronized void setBalance(final Economable economable, final double newBalance) {
+        final double oldBalance = getBalance(economable);
+        balances.put(economable.getUniqueIdentifier(), newBalance);
 
         Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(SaneEconomy.getInstance(), () -> {
             Connection conn = openConnection();
-            ensureAccountExists(player, conn);
+            ensureAccountExists(economable, conn);
             try {
-                PreparedStatement statement = conn.prepareStatement("UPDATE `player_balances` SET balance = ? WHERE `player_uuid` = ?");
+                PreparedStatement statement = conn.prepareStatement("UPDATE `saneeconomy_balances` SET balance = ? WHERE `unique_identifier` = ?");
                 statement.setDouble(1, newBalance);
-                statement.setString(2, player.getUniqueIdentifier().toString());
+                statement.setString(2, economable.getUniqueIdentifier());
                 statement.executeUpdate();
                 conn.close();
             } catch (SQLException e) {
                 /* Roll it back */
-                balances.put(player.getUniqueIdentifier(), oldBalance);
+                balances.put(economable.getUniqueIdentifier(), oldBalance);
                 throw new RuntimeException("SQL error has occurred.", e);
             }
         });
     }
 
-    private void ensureAccountExists(Economable player, Connection conn) {
-        if (!accountExists(player, conn)) {
+    private void ensureAccountExists(Economable economable, Connection conn) {
+        if (!accountExists(economable, conn)) {
             try {
-                PreparedStatement statement = conn.prepareStatement("INSERT INTO `player_balances` (player_uuid, balance) VALUES (?, 0.0)");
-                statement.setString(1, player.getUniqueIdentifier());
+                PreparedStatement statement = conn.prepareStatement("INSERT INTO `saneeconomy_balances` (unique_identifier, balance) VALUES (?, 0.0)");
+                statement.setString(1, economable.getUniqueIdentifier());
                 statement.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException("SQL error has occurred.", e);
@@ -177,10 +177,10 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         }
     }
 
-    private boolean accountExists(Economable player, Connection conn) {
+    private boolean accountExists(Economable economable, Connection conn) {
         try {
-            PreparedStatement statement = conn.prepareStatement("SELECT 1 FROM `player_balances` WHERE `player_uuid` = ?");
-            statement.setString(1, player.getUniqueIdentifier());
+            PreparedStatement statement = conn.prepareStatement("SELECT 1 FROM `saneeconomy_balances` WHERE `unique_identifier` = ?");
+            statement.setString(1, economable.getUniqueIdentifier());
 
             ResultSet rs = statement.executeQuery();
 
