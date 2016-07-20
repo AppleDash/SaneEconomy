@@ -14,6 +14,10 @@ public interface Economable {
     }
 
     static Economable wrap(String identifier) {
+        if (identifier.startsWith("faction-")) {
+            return new EconomableFaction(identifier.replace("faction-", ""));
+        }
+
         return new EconomableGeneric("generic:" + identifier);
     }
 }

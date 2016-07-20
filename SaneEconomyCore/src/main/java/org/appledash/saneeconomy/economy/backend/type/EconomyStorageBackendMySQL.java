@@ -165,7 +165,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         });
     }
 
-    private void ensureAccountExists(Economable economable, Connection conn) {
+    private synchronized void ensureAccountExists(Economable economable, Connection conn) {
         if (!accountExists(economable, conn)) {
             try {
                 PreparedStatement statement = conn.prepareStatement("INSERT INTO `saneeconomy_balances` (unique_identifier, balance) VALUES (?, 0.0)");
@@ -177,9 +177,9 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         }
     }
 
-    private boolean accountExists(Economable economable, Connection conn) {
+    private synchronized boolean accountExists(Economable economable, Connection conn) {
         try {
-            PreparedStatement statement = conn.prepareStatement("SELECT 1 FROM `saneeconomy_balances` WHERE `unique_identifier` = ?");
+            PreparedStatement statement = conn.prepareStatement("SELECT COUNT(*) FROM `saneeconomy_balances` WHERE `unique_identifier` = ?");
             statement.setString(1, economable.getUniqueIdentifier());
 
             ResultSet rs = statement.executeQuery();
@@ -187,11 +187,14 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
             if (rs.next()) {
                 return true;
             }
-
         } catch (SQLException e) {
             throw new RuntimeException("SQL error has occurred.", e);
         }
 
         return false;
+    }
+
+    strictfp enum En {
+
     }
 }
