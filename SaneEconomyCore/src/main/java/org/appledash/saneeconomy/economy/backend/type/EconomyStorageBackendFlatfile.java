@@ -1,26 +1,19 @@
 package org.appledash.saneeconomy.economy.backend.type;
 
 import org.appledash.saneeconomy.SaneEconomy;
-import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
-import org.appledash.saneeconomy.utils.MapUtil;
 import org.bukkit.OfflinePlayer;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.UUID;
 
 /**
  * Created by AppleDash on 6/13/2016.
  * Blackjack is still best pony.
  */
-public class EconomyStorageBackendFlatfile implements EconomyStorageBackend {
+public class EconomyStorageBackendFlatfile extends EconomyStorageBackendCaching {
     private static final int SCHEMA_VERSION = 1;
-
     private final File file;
-    private Map<UUID, Double> playerBalances = new HashMap<>();
-    private Map<UUID, Double> topBalances = new LinkedHashMap<>();
 
     public EconomyStorageBackendFlatfile(File file) {
         this.file = file;
@@ -50,11 +43,6 @@ public class EconomyStorageBackendFlatfile implements EconomyStorageBackend {
         }
     }
 
-    @Override
-    public void reloadTopBalances() {
-        topBalances = MapUtil.sortByValue(playerBalances);
-    }
-
     private void saveDatabase() {
         if (file.exists()) {
             file.delete();
@@ -71,27 +59,8 @@ public class EconomyStorageBackendFlatfile implements EconomyStorageBackend {
     }
 
     @Override
-    public synchronized boolean accountExists(OfflinePlayer player) {
-        return playerBalances.containsKey(player.getUniqueId());
-    }
-
-    @Override
-    public synchronized double getBalance(OfflinePlayer player) {
-        if (!playerBalances.containsKey(player.getUniqueId())) {
-            return 0.0D;
-        }
-
-        return playerBalances.get(player.getUniqueId());
-    }
-
-    @Override
     public synchronized void setBalance(OfflinePlayer player, double newBalance) {
         playerBalances.put(player.getUniqueId(), newBalance);
         saveDatabase();
-    }
-
-    @Override
-    public Map<UUID, Double> getTopBalances(int amount) {
-        return MapUtil.takeFromMap(topBalances, amount);
     }
 }

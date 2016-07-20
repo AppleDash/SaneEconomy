@@ -5,7 +5,8 @@ import org.appledash.saneeconomy.command.SaneEconomyCommand;
 import org.appledash.saneeconomy.command.exception.CommandException;
 import org.appledash.saneeconomy.command.exception.type.usage.NeedPlayerException;
 import org.appledash.saneeconomy.utils.MessageUtils;
-import org.bukkit.Bukkit;
+import org.appledash.saneeconomy.utils.PlayerUtils;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -45,10 +46,10 @@ public class BalanceCommand extends SaneEconomyCommand {
             }
         }
 
-        Player player = Bukkit.getServer().getPlayer(playerName);
+        OfflinePlayer player = PlayerUtils.getOfflinePlayer(playerName);
 
         if (player == null) {
-            MessageUtils.sendMessage(sender, "That player is not online.");
+            MessageUtils.sendMessage(sender, "That player does not exist.");
             return;
         }
 

@@ -38,7 +38,7 @@ public class EconomyManager {
      * @param player Player
      * @return Formatted balance
      */
-    public String getFormattedBalance(Player player) {
+    public String getFormattedBalance(OfflinePlayer player) {
         return currency.formatAmount(backend.getBalance(player));
     }
 

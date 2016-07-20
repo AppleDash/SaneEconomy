@@ -1,29 +1,20 @@
 package org.appledash.saneeconomy.economy.backend.type;
 
 import org.appledash.saneeconomy.SaneEconomy;
-import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
-import org.appledash.saneeconomy.utils.MapUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import java.sql.*;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.UUID;
 
 /**
  * Created by AppleDash on 6/14/2016.
  * Blackjack is still best pony.
  */
-public class EconomyStorageBackendMySQL implements EconomyStorageBackend {
+public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
     private final String dbUrl;
     private final String dbUser;
     private final String dbPassword;
-
-    private final HashMap<UUID, Double> playerBalances = new HashMap<>();
-    private Map<UUID, Double> topBalances = new LinkedHashMap<>();
-
 
     public EconomyStorageBackendMySQL(String dbUrl, String dbUser, String dbPassword) {
         this.dbUrl = dbUrl;
@@ -86,25 +77,6 @@ public class EconomyStorageBackendMySQL implements EconomyStorageBackend {
     }
 
     @Override
-    public void reloadTopBalances() {
-        topBalances = MapUtil.sortByValue(playerBalances);
-    }
-
-    @Override
-    public boolean accountExists(OfflinePlayer player) {
-        return playerBalances.containsKey(player.getUniqueId());
-    }
-
-    @Override
-    public synchronized double getBalance(OfflinePlayer player) {
-        if (!accountExists(player)) {
-            return 0.0D;
-        }
-
-        return playerBalances.get(player.getUniqueId());
-    }
-
-    @Override
     public synchronized void setBalance(final OfflinePlayer player, final double newBalance) {
         final double oldBalance = getBalance(player);
         playerBalances.put(player.getUniqueId(), newBalance);
@@ -124,11 +96,6 @@ public class EconomyStorageBackendMySQL implements EconomyStorageBackend {
                 throw new RuntimeException("SQL error has occurred.", e);
             }
         });
-    }
-
-    @Override
-    public Map<UUID, Double> getTopBalances(int amount) {
-        return MapUtil.takeFromMap(topBalances, amount);
     }
 
     private void ensureAccountExists(OfflinePlayer player, Connection conn) {

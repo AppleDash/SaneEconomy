@@ -9,7 +9,8 @@ import org.appledash.saneeconomy.command.exception.type.usage.TooFewArgumentsExc
 import org.appledash.saneeconomy.economy.EconomyManager;
 import org.appledash.saneeconomy.utils.MessageUtils;
 import org.appledash.saneeconomy.utils.NumberUtils;
-import org.bukkit.Bukkit;
+import org.appledash.saneeconomy.utils.PlayerUtils;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -52,10 +53,10 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
             sAmount = args[2];
         }
 
-        Player targetPlayer = Bukkit.getServer().getPlayer(sTargetPlayer);
+        OfflinePlayer targetPlayer = PlayerUtils.getOfflinePlayer(sTargetPlayer);
 
         if (targetPlayer == null) {
-            MessageUtils.sendMessage(sender, "That player is not online.");
+            MessageUtils.sendMessage(sender, "That player does not exist.");
             return;
         }
 
