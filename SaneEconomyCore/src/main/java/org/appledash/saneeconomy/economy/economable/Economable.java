@@ -13,7 +13,7 @@ public interface Economable {
         return new EconomablePlayer(player);
     }
 
-    static Economable wrap(String playerName) {
-        return () -> "wtf:" + playerName;
+    static Economable wrap(String identifier) {
+        return new EconomableGeneric("generic:" + identifier);
     }
 }
