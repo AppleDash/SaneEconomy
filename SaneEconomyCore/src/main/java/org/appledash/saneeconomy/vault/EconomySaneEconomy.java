@@ -141,11 +141,19 @@ public class EconomySaneEconomy implements Economy {
             economable = Economable.wrap(playerName);
         }
 
+        if (!has(playerName, v)) {
+            return new EconomyResponse(v, getBalance(playerName), EconomyResponse.ResponseType.FAILURE, "Insufficient funds.");
+        }
+
         return new EconomyResponse(v, SaneEconomy.getInstance().getEconomyManager().subtractBalance(economable, v), EconomyResponse.ResponseType.SUCCESS, null);
     }
 
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, double v) {
+        if (!has(offlinePlayer, v)) {
+            return new EconomyResponse(v, getBalance(offlinePlayer), EconomyResponse.ResponseType.FAILURE, "Insufficient funds.");
+        }
+
         return new EconomyResponse(v, SaneEconomy.getInstance().getEconomyManager().subtractBalance(Economable.wrap(offlinePlayer), v), EconomyResponse.ResponseType.SUCCESS, null);
     }
 
