@@ -11,6 +11,7 @@
 
     <modules>
         <module>SaneEconomyCore</module>
+        <module>SaneEconomySignShop</module>
     </modules>
 
     <repositories>
@@ -36,6 +37,11 @@
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.10-R0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>net.milkbowl.vault</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.5</version>
         </dependency>
     </dependencies>
 </project>
