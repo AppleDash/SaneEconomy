@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.text.DecimalFormat;
+import java.util.Locale;
 
 /**
  * Created by AppleDash on 7/29/2016.
@@ -28,5 +29,17 @@ public class NumberUtilsTest {
         Currency currency = new Currency(null, null, new DecimalFormat("0.00"));
 
         Assert.assertEquals(NumberUtils.filterAmount(currency, 1337.420D), 1337.42, 0.0);
+    }
+
+    @Test
+    public void testFilterFrench() {
+        Locale old = Locale.getDefault();
+        Locale.setDefault(Locale.FRANCE);
+        try {
+            testFilter();
+        } catch (Throwable e) {
+            Locale.setDefault(old);
+            throw e;
+        }
     }
 }

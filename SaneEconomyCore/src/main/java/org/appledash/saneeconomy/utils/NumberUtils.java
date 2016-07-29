@@ -3,6 +3,9 @@ package org.appledash.saneeconomy.utils;
 import com.google.common.base.Strings;
 import org.appledash.saneeconomy.economy.Currency;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+
 /**
  * Created by AppleDash on 6/14/2016.
  * Blackjack is still best pony.
@@ -20,7 +23,13 @@ public class NumberUtils {
                 throw new NumberFormatException();
             }
 
-            double doub = Double.valueOf(sDouble);
+            double doub;
+
+            try {
+                doub = NumberFormat.getInstance().parse(sDouble).doubleValue();
+            } catch (ParseException e) {
+                throw new NumberFormatException();
+            }
 
             if (doub < 0) {
                 throw new NumberFormatException();
@@ -33,7 +42,11 @@ public class NumberUtils {
     }
 
     public static double filterAmount(Currency currency, double amount) {
-        return Double.valueOf(currency.getFormat().format(amount));
+        try {
+            return NumberFormat.getInstance().parse(currency.getFormat().format(amount)).doubleValue();
+        } catch (ParseException e) {
+            throw new NumberFormatException();
+        }
     }
 
     public static double parseAndFilter(Currency currency, String sDouble) {
