@@ -23,7 +23,7 @@ commands:
     aliases: [saneeco]
     description: Various admin commands for SaneEconomy.
     usage: /<command> reload-database
-    pernission: saneeconomy.admin
+    permission: saneeconomy.admin
   balancetop:
     aliases: [baltop, topbal]
     description: Show the players who have the most money on the server.
