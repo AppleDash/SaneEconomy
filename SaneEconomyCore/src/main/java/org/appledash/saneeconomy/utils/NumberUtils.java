@@ -1,7 +1,7 @@
 package org.appledash.saneeconomy.utils;
 
 import com.google.common.base.Strings;
-import org.appledash.saneeconomy.SaneEconomy;
+import org.appledash.saneeconomy.economy.Currency;
 
 /**
  * Created by AppleDash on 6/14/2016.
@@ -32,11 +32,11 @@ public class NumberUtils {
         }
     }
 
-    public static double filterAmount(double amount) {
-        return Double.valueOf(SaneEconomy.getInstance().getEconomyManager().getCurrency().getFormat().format(amount));
+    public static double filterAmount(Currency currency, double amount) {
+        return Double.valueOf(currency.getFormat().format(amount));
     }
 
-    public static double parseAndFilter(String sDouble) {
-        return filterAmount(parsePositiveDouble(sDouble));
+    public static double parseAndFilter(Currency currency, String sDouble) {
+        return filterAmount(currency, parsePositiveDouble(sDouble));
     }
 }

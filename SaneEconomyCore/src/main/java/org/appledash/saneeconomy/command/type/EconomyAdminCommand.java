@@ -61,16 +61,15 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
             return;
         }
 
+        EconomyManager ecoMan = SaneEconomy.getInstance().getEconomyManager();
         Economable economable = Economable.wrap(targetPlayer);
 
-        double amount = NumberUtils.parseAndFilter(sAmount);
+        double amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount);
 
         if (amount <= 0) {
             MessageUtils.sendMessage(sender, "%s is not a positive number.", (amount == -1 ? sAmount : amount + ""));
             return;
         }
-
-        EconomyManager ecoMan = SaneEconomy.getInstance().getEconomyManager();
 
         if (subCommand.equalsIgnoreCase("give")) {
             double newAmount = ecoMan.addBalance(economable, amount);

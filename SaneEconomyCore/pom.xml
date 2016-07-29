@@ -11,6 +11,15 @@
     <artifactId>SaneEconomyCore</artifactId>
     <version>0.6.2-SNAPSHOT</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
         <resources>

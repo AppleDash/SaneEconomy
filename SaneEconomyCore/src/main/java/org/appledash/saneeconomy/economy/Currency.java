@@ -15,7 +15,7 @@ public class Currency {
     private final String namePlural;
     private final DecimalFormat format;
 
-    private Currency(String nameSingular, String namePlural, DecimalFormat format) {
+    public Currency(String nameSingular, String namePlural, DecimalFormat format) {
         this.nameSingular = nameSingular;
         this.namePlural = namePlural;
         this.format = format;

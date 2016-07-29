@@ -42,6 +42,7 @@ public class PayCommand extends SaneEconomyCommand {
             throw new NeedPlayerException();
         }
 
+        EconomyManager ecoMan = SaneEconomy.getInstance().getEconomyManager();
         Player fromPlayer = (Player) sender;
 
         String sToPlayer = args[0];
@@ -58,14 +59,12 @@ public class PayCommand extends SaneEconomyCommand {
         }
 
         String sAmount = args[1];
-        double amount = NumberUtils.parseAndFilter(sAmount);
+        double amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount);
 
         if (amount <= 0) {
             MessageUtils.sendMessage(sender, "%s is not a positive number.", (amount == -1 ? sAmount : amount + ""));
             return;
         }
-
-        EconomyManager ecoMan = SaneEconomy.getInstance().getEconomyManager();
 
         /* Perform the actual transfer. False == They didn't have enough money */
         boolean result = ecoMan.transfer(Economable.wrap(fromPlayer), Economable.wrap(toPlayer), amount);
