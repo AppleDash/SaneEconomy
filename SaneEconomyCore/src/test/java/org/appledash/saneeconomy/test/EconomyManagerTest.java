@@ -47,9 +47,19 @@ public class EconomyManagerTest {
         // Ensure that balance addition and subtraction works...
         Assert.assertEquals(economyManager.subtractBalance(playerOne, 25.0), 25.0, 0.0);
         Assert.assertEquals(economyManager.addBalance(playerOne, 25.0), 50.0, 0.0);
+        Assert.assertEquals(economyManager.subtractBalance(playerTwo, Double.MAX_VALUE), 0.0, 0.0);
 
         // Ensure that hasBalance works
         Assert.assertTrue(economyManager.hasBalance(playerOne, 50.0));
         Assert.assertFalse(economyManager.hasBalance(playerOne, 51.0));
+
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNegativeBalance() {
+        EconomyManager economyManager = new EconomyManager(new Currency("test dollar", "test dollars", new DecimalFormat("0.00")), new MockEconomyStorageBackend());
+        Economable economable = Economable.wrap(new MockOfflinePlayer("Bob"));
+        economyManager.setBalance(economable, -1.0);
     }
 }
