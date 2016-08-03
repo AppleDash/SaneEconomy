@@ -11,7 +11,7 @@ commands:
     permission: saneeconomy.balance
   ecoadmin:
     aliases: [eco]
-    description: Administer the economy.
+    description: Edit players' balances.
     usage: /<command> <give/take/set> <player name> <amount>
     permission: saneeconomy.ecoadmin
   pay:
@@ -21,7 +21,7 @@ commands:
     permission: saneeconomy.pay
   saneeconomy:
     aliases: [saneeco]
-    description: Various admin commands for SaneEconomy.
+    description: Various administrative commands for SaneEconomy.
     usage: /<command> reload-database
     permission: saneeconomy.admin
   balancetop:
