@@ -2,7 +2,7 @@ name: SaneEconomy
 author: AppleDash
 main: org.appledash.saneeconomy.SaneEconomy
 version: 0.6.4
-softdepends: [Vault]
+softdepend: [Vault]
 commands:
   balance:
     aliases: [bal]
