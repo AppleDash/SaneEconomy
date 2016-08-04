@@ -40,6 +40,8 @@ public class NumberUtilsTest {
         } catch (Throwable e) {
             Locale.setDefault(old);
             throw e;
+        } finally {
+            Locale.setDefault(old);
         }
     }
 }
