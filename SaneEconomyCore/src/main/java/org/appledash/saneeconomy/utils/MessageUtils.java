@@ -1,7 +1,7 @@
 package org.appledash.saneeconomy.utils;
 
-import net.md_5.bungee.api.ChatColor;
 import org.appledash.saneeconomy.SaneEconomy;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
