@@ -5,7 +5,7 @@ version: 0.6.6
 softdepend: [Vault]
 commands:
   balance:
-    aliases: [bal]
+    aliases: [bal, money]
     description: Get the balance of yourself or another player.
     usage: /<command> [player name]
     permission: saneeconomy.balance
