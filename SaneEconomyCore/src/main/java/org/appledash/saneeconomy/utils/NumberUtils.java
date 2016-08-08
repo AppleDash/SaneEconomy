@@ -11,34 +11,32 @@ import java.text.ParseException;
  * Blackjack is still best pony.
  */
 public class NumberUtils {
+    private static final double INVALID_DOUBLE = -1;
+
     public static double parsePositiveDouble(String sDouble) {
-        try {
-            if (Strings.isNullOrEmpty(sDouble)) {
-                throw new NumberFormatException();
-            }
-
-            sDouble = sDouble.trim();
-
-            if (sDouble.equalsIgnoreCase("nan") || sDouble.equalsIgnoreCase("infinity") || sDouble.equalsIgnoreCase("-infinity")) {
-                throw new NumberFormatException();
-            }
-
-            double doub;
-
-            try {
-                doub = NumberFormat.getInstance().parse(sDouble).doubleValue();
-            } catch (ParseException e) {
-                throw new NumberFormatException();
-            }
-
-            if (doub < 0) {
-                throw new NumberFormatException();
-            }
-
-            return doub;
-        } catch (NumberFormatException e) {
-            return -1;
+        if (Strings.isNullOrEmpty(sDouble)) {
+            return INVALID_DOUBLE;
         }
+
+        sDouble = sDouble.trim();
+
+        if (sDouble.equalsIgnoreCase("nan") || sDouble.equalsIgnoreCase("infinity") || sDouble.equalsIgnoreCase("-infinity")) {
+            return INVALID_DOUBLE;
+        }
+
+        double doub;
+
+        try {
+            doub = NumberFormat.getInstance().parse(sDouble).doubleValue();
+        } catch (ParseException | NumberFormatException e) {
+            return INVALID_DOUBLE;
+        }
+
+        if (doub < 0) {
+            return INVALID_DOUBLE;
+        }
+
+        return doub;
     }
 
     public static double filterAmount(Currency currency, double amount) {

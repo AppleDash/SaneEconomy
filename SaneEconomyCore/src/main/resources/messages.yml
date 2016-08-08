@@ -1,0 +1,23 @@
+# How to use this file:
+# Add a translation to the messages you wish to change, like this:
+# - message: That player is not online.
+#   translation: Ce joueur est pas en ligne.
+messages:
+  - message: You don't have permission to check the balance of %s.
+  - message: That player is not online.
+  - message: You cannot pay yourself.
+  - message: "Usage: %s"
+  - message: That player does not exist.
+  - message: Balance for %s is %s.
+  - message: "Top %d players:"
+  - message: That player does not exist.
+  - message: "%s is not a positive number."
+  - message: Added %s to %s. Their balance is now %s.
+  - message: Took %s from %s. Their balance is now %s.
+  - message: Balance for %s set to %s
+  - message: You do not have enough money to transfer %s to %s.
+  - message: You have transferred %s to %s.
+  - message: You have received %s from %s.
+  - message: Reloading database...
+  - message: Database reloaded.
+  - message: You've been issued a starting balance of %s!

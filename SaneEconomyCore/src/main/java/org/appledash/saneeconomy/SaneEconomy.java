@@ -9,6 +9,7 @@ import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendFlatf
 import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendMySQL;
 import org.appledash.saneeconomy.listeners.JoinQuitListener;
 import org.appledash.saneeconomy.updates.GithubVersionChecker;
+import org.appledash.saneeconomy.utils.I18n;
 import org.appledash.saneeconomy.vault.VaultHook;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -63,6 +64,7 @@ public class SaneEconomy extends JavaPlugin {
         getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
             economyManager.getBackend().reloadTopPlayerBalances();
         }, 0, (20 * 300) /* Update baltop every 5 minutes */);
+        I18n.getInstance().loadTranslations();
     }
 
     @Override
