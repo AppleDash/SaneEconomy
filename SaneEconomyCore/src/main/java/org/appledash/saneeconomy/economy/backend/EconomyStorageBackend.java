@@ -49,4 +49,15 @@ public interface EconomyStorageBackend {
      * Reload this backend's top balances.
      */
     void reloadTopPlayerBalances();
+
+    /**
+     * Get the balances of all entities in this database.
+     * @return Map of unique identifiers to balances.
+     */
+    Map<String, Double> getAllBalances();
+
+    /**
+     * Wait until all of the data in memory has been written out to disk.
+     */
+    void waitUntilFlushed();
 }

@@ -5,9 +5,12 @@ import org.appledash.saneeconomy.economy.economable.Economable;
 import org.bukkit.Bukkit;
 
 import java.sql.*;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by AppleDash on 6/14/2016.
@@ -17,6 +20,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
     private final String dbUrl;
     private final String dbUser;
     private final String dbPassword;
+    private final Set<String> writingUsers = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     public EconomyStorageBackendMySQL(String dbUrl, String dbUser, String dbPassword) {
         this.dbUrl = dbUrl;
@@ -142,6 +146,8 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         balances.put(economable.getUniqueIdentifier(), newBalance);
 
         Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(SaneEconomy.getInstance(), () -> {
+            waitForSlot(); // Don't run too many database operations at once.
+            writingUsers.add(economable.getUniqueIdentifier());
             try (Connection conn = openConnection()) {
                 ensureAccountExists(economable, conn);
                 PreparedStatement statement = conn.prepareStatement("UPDATE `saneeconomy_balances` SET balance = ? WHERE `unique_identifier` = ?");
@@ -152,6 +158,8 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
                 /* Roll it back */
                 balances.put(economable.getUniqueIdentifier(), oldBalance);
                 throw new RuntimeException("SQL error has occurred.", e);
+            } finally {
+                writingUsers.remove(economable.getUniqueIdentifier());
             }
         });
     }
@@ -171,5 +179,26 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         ResultSet rs = statement.executeQuery();
 
         return rs.next();
+    }
+
+    private void waitForSlot() {
+        while (writingUsers.size() >= 5) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void waitUntilFlushed() {
+        while (!writingUsers.isEmpty()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

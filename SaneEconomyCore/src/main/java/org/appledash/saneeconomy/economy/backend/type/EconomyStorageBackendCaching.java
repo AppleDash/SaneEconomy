@@ -1,5 +1,6 @@
 package org.appledash.saneeconomy.economy.backend.type;
 
+import com.google.common.collect.ImmutableMap;
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.utils.MapUtil;
@@ -47,5 +48,10 @@ public abstract class EconomyStorageBackendCaching implements EconomyStorageBack
         });
 
         topPlayerBalances = MapUtil.sortByValue(playerBalances);
+    }
+
+    @Override
+    public Map<String, Double> getAllBalances() {
+        return ImmutableMap.copyOf(balances);
     }
 }

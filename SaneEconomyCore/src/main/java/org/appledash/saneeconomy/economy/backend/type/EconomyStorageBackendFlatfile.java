@@ -101,4 +101,9 @@ public class EconomyStorageBackendFlatfile extends EconomyStorageBackendCaching 
         balances.put(player.getUniqueIdentifier(), newBalance);
         saveDatabase();
     }
+
+    @Override
+    public void waitUntilFlushed() {
+        // Do nothing, database is automatically flushed on every write.
+    }
 }
