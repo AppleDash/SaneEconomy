@@ -49,8 +49,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
     }
 
     private void createTables() {
-        Connection conn = openConnection();
-        try {
+        try (Connection conn = openConnection()) {
             int schemaVersion;
             if (!checkTableExists("saneeconomy_schema")) {
                 if (checkTableExists("player_balances")) {
@@ -78,8 +77,6 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
                 conn.prepareStatement("CREATE TABLE IF NOT EXISTS `saneeconomy_schema` (`key` VARCHAR(32) PRIMARY KEY, `val` TEXT)").executeUpdate();
                 upgradeSchema1To2(conn);
             }
-
-            conn.close();
         } catch (SQLException e) {
             throw new RuntimeException("Failed to create tables!", e);
         }
@@ -110,8 +107,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
     }
 
     private boolean checkTableExists(String tableName) {
-        Connection conn = openConnection();
-        try {
+        try (Connection conn = openConnection()) {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM information_schema.tables WHERE table_schema = ? AND table_name = ? LIMIT 1");
             ps.setString(1, dbUrl.substring("jdbc:mysql://".length()).split("/")[1]); // FIXME: There has to be a better way.
             ps.setString(2, tableName);
@@ -126,8 +122,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
 
     @Override
     public void reloadDatabase() {
-        Connection conn = openConnection();
-        try {
+        try (Connection conn = openConnection()) {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM `saneeconomy_balances`");
             ResultSet rs = ps.executeQuery();
 
@@ -136,8 +131,6 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
             while (rs.next()) {
                 balances.put(rs.getString("unique_identifier"), rs.getDouble("balance"));
             }
-
-            conn.close();
         } catch (SQLException e) {
             throw new RuntimeException("Failed to reload data from SQL.", e);
         }
@@ -149,14 +142,12 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         balances.put(economable.getUniqueIdentifier(), newBalance);
 
         Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(SaneEconomy.getInstance(), () -> {
-            Connection conn = openConnection();
-            ensureAccountExists(economable, conn);
-            try {
+            try (Connection conn = openConnection()) {
+                ensureAccountExists(economable, conn);
                 PreparedStatement statement = conn.prepareStatement("UPDATE `saneeconomy_balances` SET balance = ? WHERE `unique_identifier` = ?");
                 statement.setDouble(1, newBalance);
                 statement.setString(2, economable.getUniqueIdentifier());
                 statement.executeUpdate();
-                conn.close();
             } catch (SQLException e) {
                 /* Roll it back */
                 balances.put(economable.getUniqueIdentifier(), oldBalance);
@@ -165,36 +156,20 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         });
     }
 
-    private synchronized void ensureAccountExists(Economable economable, Connection conn) {
+    private synchronized void ensureAccountExists(Economable economable, Connection conn) throws SQLException {
         if (!accountExists(economable, conn)) {
-            try {
-                PreparedStatement statement = conn.prepareStatement("INSERT INTO `saneeconomy_balances` (unique_identifier, balance) VALUES (?, 0.0)");
-                statement.setString(1, economable.getUniqueIdentifier());
-                statement.executeUpdate();
-            } catch (SQLException e) {
-                throw new RuntimeException("SQL error has occurred.", e);
-            }
-        }
-    }
-
-    private synchronized boolean accountExists(Economable economable, Connection conn) {
-        try {
-            PreparedStatement statement = conn.prepareStatement("SELECT COUNT(*) FROM `saneeconomy_balances` WHERE `unique_identifier` = ?");
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO `saneeconomy_balances` (unique_identifier, balance) VALUES (?, 0.0)");
             statement.setString(1, economable.getUniqueIdentifier());
-
-            ResultSet rs = statement.executeQuery();
-
-            if (rs.next()) {
-                return true;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("SQL error has occurred.", e);
+            statement.executeUpdate();
         }
-
-        return false;
     }
 
-    strictfp enum En {
+    private synchronized boolean accountExists(Economable economable, Connection conn) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement("SELECT COUNT(*) FROM `saneeconomy_balances` WHERE `unique_identifier` = ?");
+        statement.setString(1, economable.getUniqueIdentifier());
 
+        ResultSet rs = statement.executeQuery();
+
+        return rs.next();
     }
 }
