@@ -176,6 +176,6 @@ public class SaneEconomy extends JavaPlugin {
      * @return Plugin logger.
      */
     public static Logger logger(){
-        return getInstance().getLogger();
+        return instance.getLogger();
     }
 }

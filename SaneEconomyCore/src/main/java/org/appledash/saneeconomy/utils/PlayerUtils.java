@@ -21,7 +21,7 @@ public class PlayerUtils {
             player = Bukkit.getServer().getOfflinePlayer(playerName);
         }
 
-        if (player != null && !player.hasPlayedBefore()) {
+        if ((player != null) && !player.hasPlayedBefore()) {
             return null;
         }
 

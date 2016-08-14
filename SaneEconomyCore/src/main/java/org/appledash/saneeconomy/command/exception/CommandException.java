@@ -17,6 +17,6 @@ public class CommandException extends Exception {
      * @return The right exception
      */
     public static CommandException makeArgumentException(int expectedCount, int actualCount) {
-        return actualCount > expectedCount ? new TooManyArgumentsException() : new TooFewArgumentsException();
+        return (actualCount > expectedCount) ? new TooManyArgumentsException() : new TooFewArgumentsException();
     }
 }

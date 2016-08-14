@@ -10,8 +10,8 @@ import org.bukkit.plugin.ServicePriority;
  * Blackjack is still best pony.
  */
 public class VaultHook {
-    private SaneEconomy plugin;
-    private EconomySaneEconomy provider = new EconomySaneEconomy();
+    private final SaneEconomy plugin;
+    private final Economy provider = new EconomySaneEconomy();
 
     public VaultHook(SaneEconomy plugin) {
         this.plugin = plugin;

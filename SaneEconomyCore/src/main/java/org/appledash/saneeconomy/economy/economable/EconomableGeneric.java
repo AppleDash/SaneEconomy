@@ -5,7 +5,7 @@ package org.appledash.saneeconomy.economy.economable;
  * Blackjack is still best pony.
  */
 public class EconomableGeneric implements Economable {
-    private String uniqueIdentifier;
+    private final String uniqueIdentifier;
 
     public EconomableGeneric(String uniqueIdentifier) {
         this.uniqueIdentifier = uniqueIdentifier;

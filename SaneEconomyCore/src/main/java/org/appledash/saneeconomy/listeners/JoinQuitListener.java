@@ -27,14 +27,14 @@ public class JoinQuitListener implements Listener {
         double startBalance = plugin.getConfig().getDouble("economy.start-balance", 0.0D);
 
         /* A starting balance is configured AND they haven't been given it yet. */
-        if (startBalance > 0 && !plugin.getEconomyManager().accountExists(economable)) {
+        if ((startBalance > 0) && !plugin.getEconomyManager().accountExists(economable)) {
             plugin.getEconomyManager().setBalance(economable, startBalance);
             MessageUtils.sendMessage(player, "You've been issued a starting balance of %s!", plugin.getEconomyManager().getCurrency().formatAmount(startBalance));
         }
 
         /* Update notification */
         if (player.hasPermission("saneeconomy.update-notify") && GithubVersionChecker.isUpdateAvailable()) {
-            MessageUtils.sendMessage(player, "An update is available! The current version is %s, but the newest available is %s. Please go to %s to update!", plugin.getDescription().getVersion(), GithubVersionChecker.getNewestVersion(), GithubVersionChecker.DOWNLOAD_URL);
+            MessageUtils.sendMessage(player, "An update is available! The currently-installed version is %s, but the newest available is %s. Please go to %s to update!", plugin.getDescription().getVersion(), GithubVersionChecker.getNewestVersion(), GithubVersionChecker.DOWNLOAD_URL);
         }
     }
 }

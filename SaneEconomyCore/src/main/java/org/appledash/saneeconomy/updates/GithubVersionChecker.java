@@ -14,8 +14,8 @@ import org.appledash.saneeconomy.utils.WebUtils;
 public class GithubVersionChecker {
     public static final String DOWNLOAD_URL = "https://github.com/AppleDash/SaneEconomy/releases";
     private static final String RELEASES_URL = "https://api.github.com/repos/AppleDash/SaneEconomy/releases";
-    private static boolean updateChecked = false;
-    private static boolean updateAvailable = false;
+    private static boolean updateChecked;
+    private static boolean updateAvailable;
     private static String newestVersion;
 
     public static void checkUpdateAvailable() {
@@ -30,6 +30,12 @@ public class GithubVersionChecker {
         for (JsonElement elem : array) {
             if (elem instanceof JsonObject) {
                 JsonObject releaseObj = (JsonObject)elem;
+                boolean isPrerelease = releaseObj.get("prerelease").getAsBoolean();
+
+                if (isPrerelease) { // Don't tell them to update to prereleases, which I might release for individual users to test.
+                    continue;
+                }
+
                 String versionStr = releaseObj.get("tag_name").getAsString();
                 int version = releaseToInt(versionStr);
 

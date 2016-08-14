@@ -7,7 +7,7 @@ import org.bukkit.OfflinePlayer;
  * Blackjack is still best pony.
  */
 public class EconomablePlayer implements Economable {
-    private OfflinePlayer handle;
+    private final OfflinePlayer handle;
 
     public EconomablePlayer(OfflinePlayer handle) {
         this.handle = handle;
@@ -15,6 +15,6 @@ public class EconomablePlayer implements Economable {
 
     @Override
     public String getUniqueIdentifier() {
-        return "player:" + handle.getUniqueId().toString();
+        return "player:" + handle.getUniqueId();
     }
 }

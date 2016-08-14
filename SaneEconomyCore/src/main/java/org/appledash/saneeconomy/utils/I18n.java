@@ -17,16 +17,12 @@ import java.util.Map;
  * Blackjack is still best pony.
  */
 public class I18n {
-    private static I18n INSTANCE = new I18n(SaneEconomy.getInstance());
-    private SaneEconomy plugin;
-    private Map<String, String> translations = new HashMap<>();
+    private static final I18n INSTANCE = new I18n(SaneEconomy.getInstance());
+    private final SaneEconomy plugin;
+    private final Map<String, String> translations = new HashMap<>();
 
-    public I18n(SaneEconomy plugin) {
+    private I18n(SaneEconomy plugin) {
         this.plugin = plugin;
-    }
-
-    public String translate(String input) {
-        return translations.containsKey(input) ? translations.get(input) : input;
     }
 
     public void loadTranslations() {
@@ -70,6 +66,10 @@ public class I18n {
         configFileYaml.getMapList("messages").stream().filter(map -> map.containsKey("translation")).forEach(map -> {
             translations.put(map.get("message").toString(), map.get("translation").toString());
         });
+    }
+
+    private String translate(String input) {
+        return translations.containsKey(input) ? translations.get(input) : input;
     }
 
     public static String _(String s) {

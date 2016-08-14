@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Created by AppleDash on 6/14/2016.
@@ -38,8 +39,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
     }
 
     public boolean testConnection() {
-        try {
-            openConnection().close();
+        try (Connection conn = openConnection()) {
             createTables();
             return true;
         } catch (Exception e) {
@@ -96,7 +96,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
             oldBalances.put(rs.getString("player_uuid"), rs.getDouble("balance"));
         }
 
-        for (Map.Entry<String, Double> e : oldBalances.entrySet()) {
+        for (Entry<String, Double> e : oldBalances.entrySet()) {
             ps = conn.prepareStatement("INSERT INTO `saneeconomy_balances` (unique_identifier, balance) VALUES (?, ?)");
             ps.setString(1, "player:" + e.getKey());
             ps.setDouble(2, e.getValue());
@@ -148,6 +148,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
                 statement.setDouble(1, newBalance);
                 statement.setString(2, economable.getUniqueIdentifier());
                 statement.executeUpdate();
+                SaneEconomy.logger().info("Updated.");
             } catch (SQLException e) {
                 /* Roll it back */
                 balances.put(economable.getUniqueIdentifier(), oldBalance);
@@ -157,7 +158,9 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
     }
 
     private synchronized void ensureAccountExists(Economable economable, Connection conn) throws SQLException {
+        SaneEconomy.logger().info("Ensuring account exists.");
         if (!accountExists(economable, conn)) {
+            SaneEconomy.logger().info("It didn't, creating it.");
             PreparedStatement statement = conn.prepareStatement("INSERT INTO `saneeconomy_balances` (unique_identifier, balance) VALUES (?, 0.0)");
             statement.setString(1, economable.getUniqueIdentifier());
             statement.executeUpdate();
@@ -165,7 +168,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
     }
 
     private synchronized boolean accountExists(Economable economable, Connection conn) throws SQLException {
-        PreparedStatement statement = conn.prepareStatement("SELECT COUNT(*) FROM `saneeconomy_balances` WHERE `unique_identifier` = ?");
+        PreparedStatement statement = conn.prepareStatement("SELECT 1 FROM `saneeconomy_balances` WHERE `unique_identifier` = ?");
         statement.setString(1, economable.getUniqueIdentifier());
 
         ResultSet rs = statement.executeQuery();

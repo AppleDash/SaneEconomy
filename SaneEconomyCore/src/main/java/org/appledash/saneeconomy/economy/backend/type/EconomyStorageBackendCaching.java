@@ -15,7 +15,7 @@ import java.util.UUID;
  */
 public abstract class EconomyStorageBackendCaching implements EconomyStorageBackend {
     protected HashMap<String, Double> balances = new HashMap<>();
-    protected Map<UUID, Double> topPlayerBalances = new LinkedHashMap<>();
+    private Map<UUID, Double> topPlayerBalances = new LinkedHashMap<>();
 
     @Override
     public boolean accountExists(Economable economable) {

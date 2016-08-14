@@ -5,7 +5,7 @@ package org.appledash.saneeconomy.economy.economable;
  * Blackjack is still best pony.
  */
 public class EconomableFaction implements Economable {
-    private String factionUuid;
+    private final String factionUuid;
 
     public EconomableFaction(String factionUuid) {
         this.factionUuid = factionUuid;
