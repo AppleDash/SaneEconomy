@@ -148,7 +148,6 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
                 statement.setDouble(1, newBalance);
                 statement.setString(2, economable.getUniqueIdentifier());
                 statement.executeUpdate();
-                SaneEconomy.logger().info("Updated.");
             } catch (SQLException e) {
                 /* Roll it back */
                 balances.put(economable.getUniqueIdentifier(), oldBalance);
@@ -158,9 +157,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
     }
 
     private synchronized void ensureAccountExists(Economable economable, Connection conn) throws SQLException {
-        SaneEconomy.logger().info("Ensuring account exists.");
         if (!accountExists(economable, conn)) {
-            SaneEconomy.logger().info("It didn't, creating it.");
             PreparedStatement statement = conn.prepareStatement("INSERT INTO `saneeconomy_balances` (unique_identifier, balance) VALUES (?, 0.0)");
             statement.setString(1, economable.getUniqueIdentifier());
             statement.executeUpdate();
