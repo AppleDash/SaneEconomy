@@ -9,6 +9,7 @@ import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendFlatfile;
 import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendMySQL;
 import org.appledash.saneeconomy.economy.economable.EconomableGeneric;
+import org.appledash.saneeconomy.economy.logger.TransactionLogger;
 import org.appledash.saneeconomy.listeners.JoinQuitListener;
 import org.appledash.saneeconomy.updates.GithubVersionChecker;
 import org.appledash.saneeconomy.utils.I18n;
@@ -28,6 +29,7 @@ public class SaneEconomy extends JavaPlugin {
     private static SaneEconomy instance;
     private EconomyManager economyManager;
     private VaultHook vaultHook;
+    private TransactionLogger transactionLogger;
 
     private static final Map<String, SaneEconomyCommand> COMMANDS = new HashMap<String, SaneEconomyCommand>() {{
         put("balance", new BalanceCommand());
@@ -199,6 +201,22 @@ public class SaneEconomy extends JavaPlugin {
      */
     public EconomyManager getEconomyManager() {
         return economyManager;
+    }
+
+    /**
+     * Check whether transactions should be logged.
+     * @return True if transactions should be logged, false otherwise.
+     */
+    public boolean shouldLogTransactions() {
+        return transactionLogger != null;
+    }
+
+    /**
+     * Get the active TransactionLogger.
+     * @return TransactionLogger, if there is one.
+     */
+    public TransactionLogger getTransactionLogger() {
+        return transactionLogger;
     }
 
     /**

@@ -1,5 +1,6 @@
 package org.appledash.saneeconomy.economy;
 
+import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.utils.NumberUtils;
@@ -133,7 +134,17 @@ public class EconomyManager {
             throw new IllegalArgumentException("Cannot set balance to a negative value!");
         }
 
+        double oldAmount = backend.getBalance(targetPlayer);
+
         backend.setBalance(targetPlayer, amount);
+
+        if (SaneEconomy.getInstance().shouldLogTransactions() && reason != TransactionReason.PLAYER_PAY) { // Player pay is handled in the transfer() method.
+            if (oldAmount > amount) { // Lower amount now
+                SaneEconomy.getInstance().getTransactionLogger().logSubtraction(targetPlayer, amount, reason);
+            } else if (oldAmount < amount) { // Higher amount now
+                SaneEconomy.getInstance().getTransactionLogger().logAddition(targetPlayer, amount, reason);
+            }
+        }
     }
 
     /**
@@ -158,6 +169,10 @@ public class EconomyManager {
         /* Perform the actual transfer. TODO: Maybe return their new balances in some way? */
         subtractBalance(from, amount, TransactionReason.PLAYER_PAY);
         addBalance(to, amount, TransactionReason.PLAYER_PAY);
+
+        if (SaneEconomy.getInstance().shouldLogTransactions()) {
+            SaneEconomy.getInstance().getTransactionLogger().logTransfer(from, to, amount, TransactionReason.PLAYER_PAY);
+        }
 
         return true;
     }
