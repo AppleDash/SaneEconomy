@@ -7,6 +7,7 @@ import org.appledash.saneeconomy.command.exception.type.usage.InvalidUsageExcept
 import org.appledash.saneeconomy.command.exception.type.usage.NeedPlayerException;
 import org.appledash.saneeconomy.command.exception.type.usage.TooFewArgumentsException;
 import org.appledash.saneeconomy.economy.EconomyManager;
+import org.appledash.saneeconomy.economy.TransactionReason;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.utils.MessageUtils;
 import org.appledash.saneeconomy.utils.NumberUtils;
@@ -74,7 +75,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
         }
 
         if (subCommand.equalsIgnoreCase("give")) {
-            double newAmount = ecoMan.addBalance(economable, amount);
+            double newAmount = ecoMan.addBalance(economable, amount, TransactionReason.ADMIN);
 
             MessageUtils.sendMessage(sender, _("Added %s to %s. Their balance is now %s."),
                     ecoMan.getCurrency().formatAmount(amount),
@@ -85,7 +86,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
         }
 
         if (subCommand.equalsIgnoreCase("take")) {
-            double newAmount = ecoMan.subtractBalance(economable, amount);
+            double newAmount = ecoMan.subtractBalance(economable, amount, TransactionReason.ADMIN);
 
             MessageUtils.sendMessage(sender, _("Took %s from %s. Their balance is now %s."),
                     ecoMan.getCurrency().formatAmount(amount),
@@ -96,7 +97,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
         }
 
         if (subCommand.equalsIgnoreCase("set")) {
-            ecoMan.setBalance(economable, amount);
+            ecoMan.setBalance(economable, amount, TransactionReason.ADMIN);
             MessageUtils.sendMessage(sender, _("Balance for %s set to %s."), sTargetPlayer, ecoMan.getCurrency().formatAmount(amount));
             return;
         }

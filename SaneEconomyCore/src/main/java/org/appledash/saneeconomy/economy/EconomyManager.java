@@ -78,7 +78,7 @@ public class EconomyManager {
      * @return Player's new balance
      * @throws IllegalArgumentException If amount is negative
      */
-    public double addBalance(Economable targetPlayer, double amount) {
+    public double addBalance(Economable targetPlayer, double amount, TransactionReason reason) {
         amount = NumberUtils.filterAmount(currency, amount);
 
         if (amount < 0) {
@@ -87,7 +87,7 @@ public class EconomyManager {
 
         double newAmount = backend.getBalance(targetPlayer) + amount;
 
-        backend.setBalance(targetPlayer, newAmount);
+        setBalance(targetPlayer, newAmount, reason);
 
         return newAmount;
     }
@@ -100,7 +100,7 @@ public class EconomyManager {
      * @return Player's new balance
      * @throws IllegalArgumentException If amount is negative
      */
-    public double subtractBalance(Economable targetPlayer, double amount) {
+    public double subtractBalance(Economable targetPlayer, double amount, TransactionReason reason) {
         amount = NumberUtils.filterAmount(currency, amount);
 
         if (amount < 0) {
@@ -115,7 +115,7 @@ public class EconomyManager {
             newAmount = 0.0D;
         }
 
-        backend.setBalance(targetPlayer, newAmount);
+        setBalance(targetPlayer, newAmount, reason);
 
         return newAmount;
     }
@@ -126,7 +126,7 @@ public class EconomyManager {
      * @param amount Amount to set balance to
      * @throws IllegalArgumentException If amount is negative
      */
-    public void setBalance(Economable targetPlayer, double amount) {
+    public void setBalance(Economable targetPlayer, double amount, TransactionReason reason) {
         amount = NumberUtils.filterAmount(currency, amount);
 
         if (amount < 0) {
@@ -137,27 +137,27 @@ public class EconomyManager {
     }
 
     /**
-     * Transfer money from one player to another.
-     * @param fromPlayer Player to transfer from
-     * @param toPlayer Player to transfer to
+     * Transfer money from one Economable to another.
+     * @param from Economable to transfer from
+     * @param to Economable to transfer to
      * @param amount Amount to transfer
-     * @return True if success, false if fromPlayer has insufficient funds.
+     * @return True if success, false if from has insufficient funds.
      * @throws IllegalArgumentException If amount is negative
      */
-    public boolean transfer(Economable fromPlayer, Economable toPlayer, double amount) {
+    public boolean transfer(Economable from, Economable to, double amount) {
         amount = NumberUtils.filterAmount(currency, amount);
 
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot transfer a negative amount!");
         }
 
-        if (!hasBalance(fromPlayer, amount)) {
+        if (!hasBalance(from, amount)) {
             return false;
         }
 
         /* Perform the actual transfer. TODO: Maybe return their new balances in some way? */
-        subtractBalance(fromPlayer, amount);
-        addBalance(toPlayer, amount);
+        subtractBalance(from, amount, TransactionReason.PLAYER_PAY);
+        addBalance(to, amount, TransactionReason.PLAYER_PAY);
 
         return true;
     }
