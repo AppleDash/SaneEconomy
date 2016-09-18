@@ -1,7 +1,6 @@
 package org.appledash.saneeconomy.utils;
 
 import com.google.common.base.Strings;
-import org.appledash.saneeconomy.ISaneEconomy;
 import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.economy.Currency;
 import org.appledash.saneeconomy.economy.EconomyManager;
@@ -9,7 +8,6 @@ import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendFlatfile;
 import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendMySQL;
 import org.appledash.saneeconomy.economy.economable.EconomableGeneric;
-import org.appledash.saneeconomy.economy.logger.TransactionLogger;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -21,9 +19,9 @@ import java.util.logging.Logger;
  * Blackjack is best pony.
  */
 public class SaneEconomyConfiguration {
-    private Logger logger;
-    private SaneEconomy saneEconomy;
-    private Configuration rootConfig;
+    private final Logger logger;
+    private final SaneEconomy saneEconomy;
+    private final Configuration rootConfig;
 
     public SaneEconomyConfiguration(SaneEconomy saneEconomy) {
         this.saneEconomy = saneEconomy;

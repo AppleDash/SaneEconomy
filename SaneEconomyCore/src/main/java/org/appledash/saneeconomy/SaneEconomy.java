@@ -1,23 +1,14 @@
 package org.appledash.saneeconomy;
 
-import com.google.common.base.Strings;
 import org.appledash.saneeconomy.command.SaneEconomyCommand;
 import org.appledash.saneeconomy.command.type.*;
-import org.appledash.saneeconomy.economy.Currency;
 import org.appledash.saneeconomy.economy.EconomyManager;
-import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
-import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendFlatfile;
-import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendMySQL;
-import org.appledash.saneeconomy.economy.economable.EconomableGeneric;
 import org.appledash.saneeconomy.economy.logger.TransactionLogger;
 import org.appledash.saneeconomy.listeners.JoinQuitListener;
 import org.appledash.saneeconomy.updates.GithubVersionChecker;
-import org.appledash.saneeconomy.utils.DatabaseCredentials;
 import org.appledash.saneeconomy.utils.I18n;
 import org.appledash.saneeconomy.utils.SaneEconomyConfiguration;
 import org.appledash.saneeconomy.vault.VaultHook;
-import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -28,8 +19,6 @@ import java.util.logging.Logger;
 /**
  * Created by AppleDash on 6/13/2016.
  * Blackjack is still best pony.
- *
- * FIXME: Why is the backend and config loading so complex and why is it even in this class?
  */
 public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
     private static SaneEconomy instance;
@@ -102,6 +91,8 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
         SaneEconomyConfiguration saneEconomyConfiguration = new SaneEconomyConfiguration(this);
 
         economyManager = saneEconomyConfiguration.loadEconomyBackend();
+
+        saveConfig();
 
         return economyManager != null;
 

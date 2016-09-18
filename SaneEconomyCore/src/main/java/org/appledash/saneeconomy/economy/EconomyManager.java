@@ -1,7 +1,6 @@
 package org.appledash.saneeconomy.economy;
 
 import org.appledash.saneeconomy.ISaneEconomy;
-import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.utils.NumberUtils;
@@ -19,7 +18,7 @@ import java.util.UUID;
  * Represents our EconomyManager, which manages players' balances.
  */
 public class EconomyManager {
-    private ISaneEconomy saneEconomy;
+    private final ISaneEconomy saneEconomy;
     private final Currency currency;
     private final EconomyStorageBackend backend;
 
