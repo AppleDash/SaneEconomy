@@ -14,6 +14,7 @@ import org.appledash.saneeconomy.listeners.JoinQuitListener;
 import org.appledash.saneeconomy.updates.GithubVersionChecker;
 import org.appledash.saneeconomy.utils.DatabaseCredentials;
 import org.appledash.saneeconomy.utils.I18n;
+import org.appledash.saneeconomy.utils.SaneEconomyConfiguration;
 import org.appledash.saneeconomy.vault.VaultHook;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
@@ -50,9 +51,7 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
 
     @Override
     public void onEnable() {
-        loadConfig();
-
-        if (!loadEconomyBackend()) { /* Invalid backend type or connection error of some sort */
+        if (!loadConfig()) { /* Invalid backend type or connection error of some sort */
             shutdown();
             return;
         }
@@ -85,7 +84,7 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
         economyManager.getBackend().waitUntilFlushed();
     }
 
-    private void loadConfig() {
+    private boolean loadConfig() {
         File configFile = new File(getDataFolder(), "config.yml");
 
         if (configFile.exists() && getConfig().getBoolean("debug", false)) {
@@ -99,101 +98,13 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
             saveDefaultConfig();
             reloadConfig();
         }
-    }
 
-    private boolean loadEconomyBackend() {
-        getLogger().info("Initializing currency...");
-        Currency currency = Currency.fromConfig(getConfig(), "currency");
-        getLogger().info("Initialized currency: " + currency.getPluralName());
+        SaneEconomyConfiguration saneEconomyConfiguration = new SaneEconomyConfiguration(this);
 
-        getLogger().info("Initializing economy storage backend...");
+        economyManager = saneEconomyConfiguration.loadEconomyBackend();
 
-        EconomyStorageBackend backend = loadBackend(getConfig().getConfigurationSection("backend"));
+        return economyManager != null;
 
-        if (backend == null) {
-            getLogger().severe("Failed to load backend!");
-            return false;
-        }
-
-        getLogger().info("Performing initial data load...");
-        backend.reloadDatabase();
-        getLogger().info("Data loaded!");
-
-        if (!Strings.isNullOrEmpty(getConfig().getString("old-backend.type", null))) {
-            getLogger().info("Old backend detected, converting... (This may take a minute or two.)");
-            EconomyStorageBackend oldBackend = loadBackend(getConfig().getConfigurationSection("old-backend"));
-            if (oldBackend == null) {
-                getLogger().severe("Failed to load old backend!");
-                return false;
-            }
-
-            oldBackend.reloadDatabase();
-            convertBackends(oldBackend, backend);
-            getLogger().info("Data converted, removing old config section.");
-            getConfig().set("old-backend", null);
-            saveConfig();
-        }
-
-        economyManager = new EconomyManager(this, currency, backend);
-
-        return true;
-    }
-
-    private EconomyStorageBackend loadBackend(ConfigurationSection config) {
-        EconomyStorageBackend backend;
-        String backendType = config.getString("type");
-
-        if (backendType.equalsIgnoreCase("flatfile")) {
-            String backendFileName = config.getString("file", "economy.db");
-            File backendFile = new File(getDataFolder(), backendFileName);
-            backend = new EconomyStorageBackendFlatfile(backendFile);
-            getLogger().info("Initialized flatfile backend with file " + backendFile.getAbsolutePath());
-        } else if (backendType.equalsIgnoreCase("mysql")) {
-            EconomyStorageBackendMySQL mySQLBackend = new EconomyStorageBackendMySQL(loadCredentials(config));
-
-            backend = mySQLBackend;
-
-            getLogger().info("Initialized MySQL backend.");
-            getLogger().info("Testing connection...");
-            if (!mySQLBackend.testConnection()) {
-                getLogger().severe("MySQL connection failed - cannot continue!");
-                return null;
-            }
-
-            getLogger().info("Connection successful!");
-        } else {
-            getLogger().severe("Unknown storage backend " + backendType + "!");
-            return null;
-        }
-
-        return backend;
-    }
-
-    private void convertBackends(EconomyStorageBackend old, EconomyStorageBackend newer) {
-        old.getAllBalances().forEach((uniqueId, balance) -> {
-            newer.setBalance(new EconomableGeneric(uniqueId), balance);
-        });
-        newer.waitUntilFlushed();
-    }
-
-    private TransactionLogger loadTransactionLogger() {
-        if (!getConfig().getBoolean("transaction-logger.enabled", false)) {
-            return null;
-        }
-
-        return null;
-    }
-
-    private DatabaseCredentials loadCredentials(ConfigurationSection config) {
-        String backendHost = config.getString("host");
-        int backendPort = config.getInt("port", 3306);
-        String backendDb = config.getString("database");
-        String backendUser = config.getString("username");
-        String backendPass = config.getString("password");
-
-        return new DatabaseCredentials(
-                backendHost, backendPort, backendUser, backendPass, backendDb
-        );
     }
 
     private void loadCommands() {
