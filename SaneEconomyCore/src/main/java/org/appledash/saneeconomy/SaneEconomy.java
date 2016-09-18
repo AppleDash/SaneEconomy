@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  * Created by AppleDash on 6/13/2016.
  * Blackjack is still best pony.
  */
-public class SaneEconomy extends JavaPlugin {
+public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
     private static SaneEconomy instance;
     private EconomyManager economyManager;
     private VaultHook vaultHook;
@@ -131,7 +131,7 @@ public class SaneEconomy extends JavaPlugin {
             saveConfig();
         }
 
-        economyManager = new EconomyManager(currency, backend);
+        economyManager = new EconomyManager(this, currency, backend);
 
         return true;
     }
@@ -199,6 +199,7 @@ public class SaneEconomy extends JavaPlugin {
      * Get the active EconomyManager.
      * @return EconomyManager
      */
+    @Override
     public EconomyManager getEconomyManager() {
         return economyManager;
     }
@@ -207,6 +208,7 @@ public class SaneEconomy extends JavaPlugin {
      * Check whether transactions should be logged.
      * @return True if transactions should be logged, false otherwise.
      */
+    @Override
     public boolean shouldLogTransactions() {
         return transactionLogger != null;
     }
@@ -215,6 +217,7 @@ public class SaneEconomy extends JavaPlugin {
      * Get the active TransactionLogger.
      * @return TransactionLogger, if there is one.
      */
+    @Override
     public TransactionLogger getTransactionLogger() {
         return transactionLogger;
     }

@@ -6,7 +6,9 @@ import org.appledash.saneeconomy.economy.TransactionReason;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.test.mock.MockEconomyStorageBackend;
 import org.appledash.saneeconomy.test.mock.MockOfflinePlayer;
+import org.appledash.saneeconomy.test.mock.MockSaneEconomy;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.text.DecimalFormat;
@@ -16,9 +18,17 @@ import java.text.DecimalFormat;
  * Blackjack is still best pony.
  */
 public class EconomyManagerTest {
+    private EconomyManager economyManager;
+
+    @Before
+    public void setupEconomyManager()  {
+        economyManager = new EconomyManager(new MockSaneEconomy(),
+                new Currency("test dollar", "test dollars", new DecimalFormat("0.00")),
+                new MockEconomyStorageBackend());
+    }
+
     @Test
     public void testEconomyManager() {
-        EconomyManager economyManager = new EconomyManager(new Currency("test dollar", "test dollars", new DecimalFormat("0.00")), new MockEconomyStorageBackend());
         Economable playerOne = Economable.wrap(new MockOfflinePlayer("One"));
         Economable playerTwo = Economable.wrap(new MockOfflinePlayer("Two"));
 
@@ -59,7 +69,6 @@ public class EconomyManagerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testNegativeBalance() {
-        EconomyManager economyManager = new EconomyManager(new Currency("test dollar", "test dollars", new DecimalFormat("0.00")), new MockEconomyStorageBackend());
         Economable economable = Economable.wrap(new MockOfflinePlayer("Bob"));
         economyManager.setBalance(economable, -1.0, TransactionReason.PLUGIN);
     }

@@ -1,5 +1,6 @@
 package org.appledash.saneeconomy.economy;
 
+import org.appledash.saneeconomy.ISaneEconomy;
 import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.economable.Economable;
@@ -18,10 +19,12 @@ import java.util.UUID;
  * Represents our EconomyManager, which manages players' balances.
  */
 public class EconomyManager {
+    private ISaneEconomy saneEconomy;
     private final Currency currency;
     private final EconomyStorageBackend backend;
 
-    public EconomyManager(Currency currency, EconomyStorageBackend backend) {
+    public EconomyManager(ISaneEconomy saneEconomy, Currency currency, EconomyStorageBackend backend) {
+        this.saneEconomy = saneEconomy;
         this.currency = currency;
         this.backend = backend;
     }
@@ -138,11 +141,11 @@ public class EconomyManager {
 
         backend.setBalance(targetPlayer, amount);
 
-        if (SaneEconomy.getInstance().shouldLogTransactions() && reason != TransactionReason.PLAYER_PAY) { // Player pay is handled in the transfer() method.
+        if (saneEconomy.shouldLogTransactions() && reason != TransactionReason.PLAYER_PAY) { // Player pay is handled in the transfer() method.
             if (oldAmount > amount) { // Lower amount now
-                SaneEconomy.getInstance().getTransactionLogger().logSubtraction(targetPlayer, amount, reason);
+                saneEconomy.getTransactionLogger().logSubtraction(targetPlayer, amount, reason);
             } else if (oldAmount < amount) { // Higher amount now
-                SaneEconomy.getInstance().getTransactionLogger().logAddition(targetPlayer, amount, reason);
+                saneEconomy.getTransactionLogger().logAddition(targetPlayer, amount, reason);
             }
         }
     }
@@ -170,8 +173,8 @@ public class EconomyManager {
         subtractBalance(from, amount, TransactionReason.PLAYER_PAY);
         addBalance(to, amount, TransactionReason.PLAYER_PAY);
 
-        if (SaneEconomy.getInstance().shouldLogTransactions()) {
-            SaneEconomy.getInstance().getTransactionLogger().logTransfer(from, to, amount, TransactionReason.PLAYER_PAY);
+        if (saneEconomy.shouldLogTransactions()) {
+            saneEconomy.getTransactionLogger().logTransfer(from, to, amount, TransactionReason.PLAYER_PAY);
         }
 
         return true;
