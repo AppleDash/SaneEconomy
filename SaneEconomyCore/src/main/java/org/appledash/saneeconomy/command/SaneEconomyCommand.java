@@ -1,8 +1,10 @@
 package org.appledash.saneeconomy.command;
 
+import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.command.exception.CommandException;
 import org.appledash.saneeconomy.command.exception.type.NoPermissionException;
 import org.appledash.saneeconomy.command.exception.type.usage.UsageException;
+import org.appledash.saneeconomy.command.type.SaneEcoCommand;
 import org.appledash.saneeconomy.utils.MessageUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,6 +15,12 @@ import org.bukkit.command.CommandSender;
  * Blackjack is still best pony.
  */
 public abstract class SaneEconomyCommand implements CommandExecutor {
+    protected SaneEconomy saneEconomy;
+
+    public SaneEconomyCommand(SaneEconomy saneEconomy) {
+        this.saneEconomy = saneEconomy;
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         try {

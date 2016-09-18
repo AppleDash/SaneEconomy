@@ -31,12 +31,12 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
     private VaultHook vaultHook;
     private TransactionLogger transactionLogger;
 
-    private static final Map<String, SaneEconomyCommand> COMMANDS = new HashMap<String, SaneEconomyCommand>() {{
-        put("balance", new BalanceCommand());
-        put("ecoadmin", new EconomyAdminCommand());
-        put("pay", new PayCommand());
-        put("saneeconomy", new SaneEcoCommand());
-        put("balancetop", new BalanceTopCommand());
+    private final Map<String, SaneEconomyCommand> COMMANDS = new HashMap<String, SaneEconomyCommand>() {{
+        put("balance", new BalanceCommand(SaneEconomy.this));
+        put("ecoadmin", new EconomyAdminCommand(SaneEconomy.this));
+        put("pay", new PayCommand(SaneEconomy.this));
+        put("saneeconomy", new SaneEcoCommand(SaneEconomy.this));
+        put("balancetop", new BalanceTopCommand(SaneEconomy.this));
     }};
 
     public SaneEconomy() {

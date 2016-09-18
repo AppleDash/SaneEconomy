@@ -16,6 +16,10 @@ import org.bukkit.entity.Player;
  * Blackjack is still best pony.
  */
 public class BalanceCommand extends SaneEconomyCommand {
+    public BalanceCommand(SaneEconomy saneEconomy) {
+        super(saneEconomy);
+    }
+
     @Override
     public String getPermission() {
         return "saneeconomy.balance";
@@ -54,6 +58,6 @@ public class BalanceCommand extends SaneEconomyCommand {
             return;
         }
 
-        MessageUtils.sendMessage(sender, "Balance for %s is %s.", playerName, SaneEconomy.getInstance().getEconomyManager().getFormattedBalance(Economable.wrap(player)));
+        MessageUtils.sendMessage(sender, "Balance for %s is %s.", playerName, saneEconomy.getEconomyManager().getFormattedBalance(Economable.wrap(player)));
     }
 }

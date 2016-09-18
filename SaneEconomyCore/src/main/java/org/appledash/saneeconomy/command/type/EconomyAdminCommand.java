@@ -23,6 +23,10 @@ import static org.appledash.saneeconomy.utils.I18n._;
  * Blackjack is still best pony.
  */
 public class EconomyAdminCommand extends SaneEconomyCommand {
+    public EconomyAdminCommand(SaneEconomy saneEconomy) {
+        super(saneEconomy);
+    }
+
     @Override
     public String getPermission() {
         return "saneeconomy.ecoadmin";
@@ -64,7 +68,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
             return;
         }
 
-        EconomyManager ecoMan = SaneEconomy.getInstance().getEconomyManager();
+        EconomyManager ecoMan = saneEconomy.getEconomyManager();
         Economable economable = Economable.wrap(targetPlayer);
 
         double amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount);

@@ -16,6 +16,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Blackjack is still best pony.
  */
 public class BalanceTopCommand extends SaneEconomyCommand {
+    public BalanceTopCommand(SaneEconomy saneEconomy) {
+        super(saneEconomy);
+    }
+
     @Override
     public String getPermission() {
         return "saneeconomy.balancetop";
@@ -34,7 +38,7 @@ public class BalanceTopCommand extends SaneEconomyCommand {
             throw new TooManyArgumentsException();
         }
 
-        Map<OfflinePlayer, Double> topBalances = SaneEconomy.getInstance().getEconomyManager().getTopPlayerBalances(10);
+        Map<OfflinePlayer, Double> topBalances = saneEconomy.getEconomyManager().getTopPlayerBalances(10);
         AtomicInteger index = new AtomicInteger(1); /* I know it's stupid, but you can't do some_int++ from within the lambda. */
 
         MessageUtils.sendMessage(sender, "Top %d players:", topBalances.size());

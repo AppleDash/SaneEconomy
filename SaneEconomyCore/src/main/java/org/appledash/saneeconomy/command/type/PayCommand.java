@@ -19,6 +19,10 @@ import org.bukkit.entity.Player;
  * TODO: Support for paying offline players.
  */
 public class PayCommand extends SaneEconomyCommand {
+    public PayCommand(SaneEconomy saneEconomy) {
+        super(saneEconomy);
+    }
+
     @Override
     public String getPermission() {
         return "saneeconomy.pay";
@@ -42,7 +46,7 @@ public class PayCommand extends SaneEconomyCommand {
             throw new NeedPlayerException();
         }
 
-        EconomyManager ecoMan = SaneEconomy.getInstance().getEconomyManager();
+        EconomyManager ecoMan = saneEconomy.getEconomyManager();
         Player fromPlayer = (Player) sender;
 
         String sToPlayer = args[0];

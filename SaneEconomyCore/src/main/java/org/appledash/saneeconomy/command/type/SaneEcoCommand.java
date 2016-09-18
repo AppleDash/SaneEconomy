@@ -12,6 +12,10 @@ import org.bukkit.command.CommandSender;
  * Blackjack is still best pony.
  */
 public class SaneEcoCommand extends SaneEconomyCommand {
+    public SaneEcoCommand(SaneEconomy saneEconomy) {
+        super(saneEconomy);
+    }
+
     @Override
     public String getPermission() {
         return "saneeconomy.admin";
@@ -34,7 +38,7 @@ public class SaneEcoCommand extends SaneEconomyCommand {
 
         if (subCommand.equalsIgnoreCase("reload-database")) {
             MessageUtils.sendMessage(sender, "Reloading database...");
-            SaneEconomy.getInstance().getEconomyManager().getBackend().reloadDatabase();
+            saneEconomy.getEconomyManager().getBackend().reloadDatabase();
             MessageUtils.sendMessage(sender, "Database reloaded.");
         } else {
             throw new InvalidUsageException();
