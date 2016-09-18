@@ -1,6 +1,7 @@
 package org.appledash.saneeconomy.listeners;
 
 import org.appledash.saneeconomy.SaneEconomy;
+import org.appledash.saneeconomy.economy.TransactionReason;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.updates.GithubVersionChecker;
 import org.appledash.saneeconomy.utils.MessageUtils;
@@ -28,7 +29,7 @@ public class JoinQuitListener implements Listener {
 
         /* A starting balance is configured AND they haven't been given it yet. */
         if ((startBalance > 0) && !plugin.getEconomyManager().accountExists(economable)) {
-            plugin.getEconomyManager().setBalance(economable, startBalance);
+            plugin.getEconomyManager().setBalance(economable, startBalance, TransactionReason.STARTING_BALANCE);
             MessageUtils.sendMessage(player, "You've been issued a starting balance of %s!", plugin.getEconomyManager().getCurrency().formatAmount(startBalance));
         }
 

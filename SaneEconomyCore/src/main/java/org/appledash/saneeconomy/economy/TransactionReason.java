@@ -16,5 +16,9 @@ public enum TransactionReason {
     /**
      * Another plugin using the API.
      */
-    PLUGIN
+    PLUGIN,
+    /**
+     * Initial starting balance on join.
+     */
+    STARTING_BALANCE
 }

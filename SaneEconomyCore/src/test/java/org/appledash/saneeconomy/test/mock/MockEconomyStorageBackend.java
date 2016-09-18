@@ -17,4 +17,9 @@ public class MockEconomyStorageBackend extends EconomyStorageBackendCaching {
     public void reloadDatabase() {
         System.out.println("Reloading mock economy database (doing nothing).");
     }
+
+    @Override
+    public void waitUntilFlushed() {
+        // Null op
+    }
 }
