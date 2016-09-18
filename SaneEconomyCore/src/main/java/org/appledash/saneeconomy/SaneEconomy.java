@@ -15,6 +15,8 @@ import org.appledash.saneeconomy.updates.GithubVersionChecker;
 import org.appledash.saneeconomy.utils.DatabaseCredentials;
 import org.appledash.saneeconomy.utils.I18n;
 import org.appledash.saneeconomy.vault.VaultHook;
+import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -25,6 +27,8 @@ import java.util.logging.Logger;
 /**
  * Created by AppleDash on 6/13/2016.
  * Blackjack is still best pony.
+ *
+ * FIXME: Why is the backend and config loading so complex and why is it even in this class?
  */
 public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
     private static SaneEconomy instance;
@@ -103,10 +107,8 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
         getLogger().info("Initialized currency: " + currency.getPluralName());
 
         getLogger().info("Initializing economy storage backend...");
-        String backendType = getConfig().getString("backend.type");
-        String oldBackendType = getConfig().getString("old-backend.type", null);
 
-        EconomyStorageBackend backend = loadBackend(backendType, "backend");
+        EconomyStorageBackend backend = loadBackend(getConfig().getConfigurationSection("backend"));
 
         if (backend == null) {
             getLogger().severe("Failed to load backend!");
@@ -117,9 +119,9 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
         backend.reloadDatabase();
         getLogger().info("Data loaded!");
 
-        if (!Strings.isNullOrEmpty(oldBackendType)) {
+        if (!Strings.isNullOrEmpty(getConfig().getString("old-backend.type", null))) {
             getLogger().info("Old backend detected, converting... (This may take a minute or two.)");
-            EconomyStorageBackend oldBackend = loadBackend(oldBackendType, "old-backend");
+            EconomyStorageBackend oldBackend = loadBackend(getConfig().getConfigurationSection("old-backend"));
             if (oldBackend == null) {
                 getLogger().severe("Failed to load old backend!");
                 return false;
@@ -137,28 +139,21 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
         return true;
     }
 
-    private EconomyStorageBackend loadBackend(String backendType, String configPrefix) {
+    private EconomyStorageBackend loadBackend(ConfigurationSection config) {
         EconomyStorageBackend backend;
+        String backendType = config.getString("type");
 
         if (backendType.equalsIgnoreCase("flatfile")) {
-            String backendFileName = getConfig().getString(configPrefix + ".file", "economy.db");
+            String backendFileName = config.getString("file", "economy.db");
             File backendFile = new File(getDataFolder(), backendFileName);
             backend = new EconomyStorageBackendFlatfile(backendFile);
             getLogger().info("Initialized flatfile backend with file " + backendFile.getAbsolutePath());
         } else if (backendType.equalsIgnoreCase("mysql")) {
-            String backendHost = getConfig().getString(configPrefix + ".host");
-            int backendPort = getConfig().getInt(configPrefix + ".port", 3306);
-            String backendDb = getConfig().getString(configPrefix + ".database");
-            String backendUser = getConfig().getString(configPrefix + ".username");
-            String backendPass = getConfig().getString(configPrefix + ".password");
-
-            EconomyStorageBackendMySQL mySQLBackend = new EconomyStorageBackendMySQL(new DatabaseCredentials(
-                    backendHost, backendPort, backendUser, backendPass, backendDb
-            ));
+            EconomyStorageBackendMySQL mySQLBackend = new EconomyStorageBackendMySQL(loadCredentials(config));
 
             backend = mySQLBackend;
 
-            getLogger().info("Initialized MySQL backend to host " + backendHost);
+            getLogger().info("Initialized MySQL backend.");
             getLogger().info("Testing connection...");
             if (!mySQLBackend.testConnection()) {
                 getLogger().severe("MySQL connection failed - cannot continue!");
@@ -179,6 +174,26 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
             newer.setBalance(new EconomableGeneric(uniqueId), balance);
         });
         newer.waitUntilFlushed();
+    }
+
+    private TransactionLogger loadTransactionLogger() {
+        if (!getConfig().getBoolean("transaction-logger.enabled", false)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    private DatabaseCredentials loadCredentials(ConfigurationSection config) {
+        String backendHost = config.getString("host");
+        int backendPort = config.getInt("port", 3306);
+        String backendDb = config.getString("database");
+        String backendUser = config.getString("username");
+        String backendPass = config.getString("password");
+
+        return new DatabaseCredentials(
+                backendHost, backendPort, backendUser, backendPass, backendDb
+        );
     }
 
     private void loadCommands() {
