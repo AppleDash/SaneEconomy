@@ -12,6 +12,7 @@ import org.appledash.saneeconomy.economy.economable.EconomableGeneric;
 import org.appledash.saneeconomy.economy.logger.TransactionLogger;
 import org.appledash.saneeconomy.listeners.JoinQuitListener;
 import org.appledash.saneeconomy.updates.GithubVersionChecker;
+import org.appledash.saneeconomy.utils.DatabaseCredentials;
 import org.appledash.saneeconomy.utils.I18n;
 import org.appledash.saneeconomy.vault.VaultHook;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -151,9 +152,10 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
             String backendUser = getConfig().getString(configPrefix + ".username");
             String backendPass = getConfig().getString(configPrefix + ".password");
 
-            String jdbcUrl = String.format("jdbc:mysql://%s:%d/%s", backendHost, backendPort, backendDb);
+            EconomyStorageBackendMySQL mySQLBackend = new EconomyStorageBackendMySQL(new DatabaseCredentials(
+                    backendHost, backendPort, backendUser, backendPass, backendDb
+            ));
 
-            EconomyStorageBackendMySQL mySQLBackend = new EconomyStorageBackendMySQL(jdbcUrl, backendUser, backendPass);
             backend = mySQLBackend;
 
             getLogger().info("Initialized MySQL backend to host " + backendHost);

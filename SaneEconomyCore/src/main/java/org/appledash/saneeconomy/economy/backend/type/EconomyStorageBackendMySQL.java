@@ -2,6 +2,7 @@ package org.appledash.saneeconomy.economy.backend.type;
 
 import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.economy.economable.Economable;
+import org.appledash.saneeconomy.utils.DatabaseCredentials;
 import org.bukkit.Bukkit;
 
 import java.sql.*;
@@ -17,15 +18,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * Blackjack is still best pony.
  */
 public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
-    private final String dbUrl;
-    private final String dbUser;
-    private final String dbPassword;
     private final Set<String> writingUsers = Collections.newSetFromMap(new ConcurrentHashMap<>());
+    private final DatabaseCredentials dbCredentials;
 
-    public EconomyStorageBackendMySQL(String dbUrl, String dbUser, String dbPassword) {
-        this.dbUrl = dbUrl;
-        this.dbUser = dbUser;
-        this.dbPassword = dbPassword;
+    public EconomyStorageBackendMySQL(DatabaseCredentials dbCredentials) {
+        this.dbCredentials = dbCredentials;
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -36,7 +33,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
 
     private Connection openConnection() {
         try {
-            return DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+            return DriverManager.getConnection(dbCredentials.getJDBCURL(), dbCredentials.getUsername(), dbCredentials.getPassword());
         } catch (SQLException e) {
             throw new RuntimeException("Database unavailable.");
         }
@@ -113,7 +110,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
     private boolean checkTableExists(String tableName) {
         try (Connection conn = openConnection()) {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM information_schema.tables WHERE table_schema = ? AND table_name = ? LIMIT 1");
-            ps.setString(1, dbUrl.substring("jdbc:mysql://".length()).split("/")[1]); // FIXME: There has to be a better way.
+            ps.setString(1, dbCredentials.getDatabaseName());
             ps.setString(2, tableName);
             ps.executeQuery();
             ResultSet rs = ps.getResultSet();
