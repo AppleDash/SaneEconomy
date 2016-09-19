@@ -67,10 +67,14 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
     @Override
     public void onDisable() {
         if (vaultHook != null) {
+            getLogger().info("Unhooking from Vault.");
             vaultHook.unhook();
         }
 
-        economyManager.getBackend().waitUntilFlushed();
+        if (economyManager != null) {
+            getLogger().info("Flushing database...");
+            economyManager.getBackend().waitUntilFlushed();
+        }
     }
 
     private boolean loadConfig() {

@@ -34,6 +34,7 @@ public class BalanceCommand extends SaneEconomyCommand {
 
     @Override
     public void onCommand(CommandSender sender, String[] args) throws CommandException {
+        String playerIdentifier;
         String playerName;
 
         if (args.length == 0) {
@@ -41,17 +42,21 @@ public class BalanceCommand extends SaneEconomyCommand {
                 throw new NeedPlayerException();
             }
 
-            playerName = sender.getName();
+            Player player = (Player) sender;
+
+            playerIdentifier = player.getUniqueId().toString();
+            playerName = player.getDisplayName();
         } else {
+            playerIdentifier = args[0];
             playerName = args[0];
 
             if (!sender.hasPermission("saneeconomy.balance.other")) {
-                MessageUtils.sendMessage(sender, "You don't have permission to check the balance of %s.", playerName);
+                MessageUtils.sendMessage(sender, "You don't have permission to check the balance of %s.", playerIdentifier);
                 return;
             }
         }
 
-        OfflinePlayer player = PlayerUtils.getOfflinePlayer(playerName);
+        OfflinePlayer player = PlayerUtils.getOfflinePlayer(playerIdentifier);
 
         if (player == null) {
             MessageUtils.sendMessage(sender, "That player does not exist.");

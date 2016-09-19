@@ -27,7 +27,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("No MySQL driver found.");
+            throw new RuntimeException("No MySQL driver found.", e);
         }
     }
 
@@ -35,12 +35,12 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         try {
             return DriverManager.getConnection(dbCredentials.getJDBCURL(), dbCredentials.getUsername(), dbCredentials.getPassword());
         } catch (SQLException e) {
-            throw new RuntimeException("Database unavailable.");
+            throw new RuntimeException("Database unavailable.", e);
         }
     }
 
     public boolean testConnection() {
-        try (Connection conn = openConnection()) {
+        try (Connection ignored = openConnection()) {
             createTables();
             return true;
         } catch (Exception e) {
