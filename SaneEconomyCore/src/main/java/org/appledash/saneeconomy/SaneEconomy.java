@@ -95,7 +95,6 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
         saveConfig();
 
         return economyManager != null;
-
     }
 
     private void loadCommands() {

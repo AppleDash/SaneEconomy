@@ -31,7 +31,7 @@ public class SaneEconomyConfiguration {
 
     public EconomyManager loadEconomyBackend() {
         logger.info("Initializing currency...");
-        Currency currency = Currency.fromConfig(rootConfig, "currency");
+        Currency currency = Currency.fromConfig(rootConfig.getConfigurationSection("currency"));
         logger.info("Initialized currency: " + currency.getPluralName());
 
         logger.info("Initializing economy storage backend...");
@@ -64,6 +64,11 @@ public class SaneEconomyConfiguration {
         return new EconomyManager(saneEconomy, currency, backend);
     }
 
+    /**
+     * Load an EconomyStorageBackend using the information in the given ConfigurationSection.
+     * @param config ConfigurationSection to read connection parameters from
+     * @return Constructed EconomyStorageBackend, or null if something inappropriate happened.
+     */
     private EconomyStorageBackend loadBackend(ConfigurationSection config) {
         EconomyStorageBackend backend;
         String backendType = config.getString("type");
@@ -94,6 +99,12 @@ public class SaneEconomyConfiguration {
         return backend;
     }
 
+    /**
+     * Convert one EconomyStorageBackend to another.
+     * Right now, this just consists of converting all player balances. Data in the old backend is kept.
+     * @param old Old backend
+     * @param newer New backend
+     */
     private void convertBackends(EconomyStorageBackend old, EconomyStorageBackend newer) {
         old.getAllBalances().forEach((uniqueId, balance) -> {
             newer.setBalance(new EconomableGeneric(uniqueId), balance);
@@ -101,6 +112,11 @@ public class SaneEconomyConfiguration {
         newer.waitUntilFlushed();
     }
 
+    /**
+     * Load database host, port, username, password, and db name from a ConfigurationSection
+     * @param config ConfigurationSection containing the right fields.
+     * @return DatabaseCredentials with the information from the config.
+     */
     private DatabaseCredentials loadCredentials(ConfigurationSection config) {
         String backendHost = config.getString("host");
         int backendPort = config.getInt("port", 3306);

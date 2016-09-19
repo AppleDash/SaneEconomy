@@ -1,6 +1,7 @@
 package org.appledash.saneeconomy.economy;
 
 import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.text.DecimalFormat;
 
@@ -21,11 +22,11 @@ public class Currency {
         this.format = format;
     }
 
-    public static Currency fromConfig(Configuration config, String baseNode) {
+    public static Currency fromConfig(ConfigurationSection config) {
         return new Currency(
-                config.getString(String.format("%s.name.singular", baseNode), "dollar"),
-                config.getString(String.format("%s.name.plural", baseNode), "dollars"),
-                new DecimalFormat(config.getString(String.format("%s.format", baseNode), "0.00"))
+                config.getString("name.singular", "dollar"),
+                config.getString("name.plural", "dollars"),
+                new DecimalFormat(config.getString("format", "0.00"))
         );
     }
 
