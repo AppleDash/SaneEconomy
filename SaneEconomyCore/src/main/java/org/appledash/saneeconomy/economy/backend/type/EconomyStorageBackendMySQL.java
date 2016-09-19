@@ -3,6 +3,7 @@ package org.appledash.saneeconomy.economy.backend.type;
 import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.utils.DatabaseCredentials;
+import org.appledash.saneeconomy.utils.MySQLConnection;
 import org.bukkit.Bukkit;
 
 import java.sql.*;
@@ -18,39 +19,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * Blackjack is still best pony.
  */
 public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
-    private final Set<String> writingUsers = Collections.newSetFromMap(new ConcurrentHashMap<>());
-    private final DatabaseCredentials dbCredentials;
+    private final MySQLConnection dbConn;
 
     public EconomyStorageBackendMySQL(DatabaseCredentials dbCredentials) {
-        this.dbCredentials = dbCredentials;
-
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("No MySQL driver found.", e);
-        }
-    }
-
-    private Connection openConnection() {
-        try {
-            return DriverManager.getConnection(dbCredentials.getJDBCURL(), dbCredentials.getUsername(), dbCredentials.getPassword());
-        } catch (SQLException e) {
-            throw new RuntimeException("Database unavailable.", e);
-        }
-    }
-
-    public boolean testConnection() {
-        try (Connection ignored = openConnection()) {
-            createTables();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        this.dbConn = new MySQLConnection(dbCredentials);
     }
 
     private void createTables() {
-        try (Connection conn = openConnection()) {
+        try (Connection conn = dbConn.openConnection()) {
             int schemaVersion;
             if (!checkTableExists("saneeconomy_schema")) {
                 if (checkTableExists("player_balances")) {
@@ -108,9 +84,9 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
     }
 
     private boolean checkTableExists(String tableName) {
-        try (Connection conn = openConnection()) {
+        try (Connection conn = dbConn.openConnection()) {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM information_schema.tables WHERE table_schema = ? AND table_name = ? LIMIT 1");
-            ps.setString(1, dbCredentials.getDatabaseName());
+            ps.setString(1, dbConn.getCredentials().getDatabaseName());
             ps.setString(2, tableName);
             ps.executeQuery();
             ResultSet rs = ps.getResultSet();
@@ -123,7 +99,8 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
 
     @Override
     public void reloadDatabase() {
-        try (Connection conn = openConnection()) {
+        createTables();
+        try (Connection conn = dbConn.openConnection()) {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM `saneeconomy_balances`");
             ResultSet rs = ps.executeQuery();
 
@@ -142,21 +119,16 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         final double oldBalance = getBalance(economable);
         balances.put(economable.getUniqueIdentifier(), newBalance);
 
-        Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(SaneEconomy.getInstance(), () -> {
-            waitForSlot(); // Don't run too many database operations at once.
-            writingUsers.add(economable.getUniqueIdentifier());
-            try (Connection conn = openConnection()) {
+        dbConn.executeAsyncOperation((conn) -> {
+            try {
                 ensureAccountExists(economable, conn);
                 PreparedStatement statement = conn.prepareStatement("UPDATE `saneeconomy_balances` SET balance = ? WHERE `unique_identifier` = ?");
                 statement.setDouble(1, newBalance);
                 statement.setString(2, economable.getUniqueIdentifier());
                 statement.executeUpdate();
-            } catch (SQLException e) {
-                /* Roll it back */
+            } catch (Exception e) {
                 balances.put(economable.getUniqueIdentifier(), oldBalance);
                 throw new RuntimeException("SQL error has occurred.", e);
-            } finally {
-                writingUsers.remove(economable.getUniqueIdentifier());
             }
         });
     }
@@ -178,24 +150,12 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         return rs.next();
     }
 
-    private void waitForSlot() {
-        while (writingUsers.size() >= 5) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     @Override
     public void waitUntilFlushed() {
-        while (!writingUsers.isEmpty()) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        dbConn.waitUntilFlushed();
+    }
+
+    public MySQLConnection getConnection() {
+        return dbConn;
     }
 }

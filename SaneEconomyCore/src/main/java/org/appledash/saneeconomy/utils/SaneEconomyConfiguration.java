@@ -85,7 +85,7 @@ public class SaneEconomyConfiguration {
 
             logger.info("Initialized MySQL backend.");
             logger.info("Testing connection...");
-            if (!mySQLBackend.testConnection()) {
+            if (!mySQLBackend.getConnection().testConnection()) {
                 logger.severe("MySQL connection failed - cannot continue!");
                 return null;
             }
