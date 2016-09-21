@@ -1,4 +1,4 @@
-package org.appledash.saneeconomy.economy;
+package org.appledash.saneeconomy.economy.transaction;
 
 /**
  * Created by AppleDash on 8/15/2016.
@@ -20,5 +20,9 @@ public enum TransactionReason {
     /**
      * Initial starting balance on join.
      */
-    STARTING_BALANCE
+    STARTING_BALANCE,
+    /**
+     * Used in unit tests.
+     */
+    TEST
 }

@@ -4,8 +4,10 @@ import com.google.common.collect.ImmutableList;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.appledash.saneeconomy.SaneEconomy;
-import org.appledash.saneeconomy.economy.TransactionReason;
 import org.appledash.saneeconomy.economy.economable.Economable;
+import org.appledash.saneeconomy.economy.transaction.Transaction;
+import org.appledash.saneeconomy.economy.transaction.TransactionReason;
+import org.appledash.saneeconomy.economy.transaction.TransactionResult;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
@@ -142,11 +144,9 @@ public class EconomySaneEconomy implements Economy {
             economable = Economable.wrap(playerName);
         }
 
-        if (!has(playerName, v)) {
-            return new EconomyResponse(v, getBalance(playerName), EconomyResponse.ResponseType.FAILURE, "Insufficient funds.");
-        }
-
-        return new EconomyResponse(v, SaneEconomy.getInstance().getEconomyManager().subtractBalance(economable, v, TransactionReason.PLUGIN), EconomyResponse.ResponseType.SUCCESS, null);
+        return transact(new Transaction(
+                Economable.PLUGIN, economable, v, TransactionReason.PLUGIN
+        ));
     }
 
     @Override
@@ -155,7 +155,9 @@ public class EconomySaneEconomy implements Economy {
             return new EconomyResponse(v, getBalance(offlinePlayer), EconomyResponse.ResponseType.FAILURE, "Insufficient funds.");
         }
 
-        return new EconomyResponse(v, SaneEconomy.getInstance().getEconomyManager().subtractBalance(Economable.wrap(offlinePlayer), v, TransactionReason.PLUGIN), EconomyResponse.ResponseType.SUCCESS, null);
+        return transact(new Transaction(
+                Economable.PLUGIN, Economable.wrap(offlinePlayer), v, TransactionReason.PLUGIN
+        ));
     }
 
     @Override
@@ -177,12 +179,16 @@ public class EconomySaneEconomy implements Economy {
             economable = Economable.wrap(playerName);
         }
 
-        return new EconomyResponse(v, SaneEconomy.getInstance().getEconomyManager().addBalance(economable, v, TransactionReason.PLUGIN), EconomyResponse.ResponseType.SUCCESS, null);
+        return transact(new Transaction(
+                economable, Economable.PLUGIN, v, TransactionReason.PLUGIN
+        ));
     }
 
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, double v) {
-        return new EconomyResponse(v, SaneEconomy.getInstance().getEconomyManager().addBalance(Economable.wrap(offlinePlayer), v, TransactionReason.PLUGIN), EconomyResponse.ResponseType.SUCCESS, null);
+        return transact(new Transaction(
+                Economable.wrap(offlinePlayer), Economable.PLUGIN, v, TransactionReason.PLUGIN
+        ));
     }
 
     @Override
@@ -277,5 +283,15 @@ public class EconomySaneEconomy implements Economy {
 
     private boolean validatePlayer(String playerName) {
         return Bukkit.getServer().getPlayer(playerName) != null;
+    }
+
+    private EconomyResponse transact(Transaction transaction) {
+        TransactionResult result = SaneEconomy.getInstance().getEconomyManager().transact(transaction);
+
+        if (result.getStatus() == TransactionResult.Status.SUCCESS) {
+            return new EconomyResponse(transaction.getAmount(), result.getToBalance(), EconomyResponse.ResponseType.SUCCESS, null);
+        }
+
+        return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, result.getStatus().toString());
     }
 }

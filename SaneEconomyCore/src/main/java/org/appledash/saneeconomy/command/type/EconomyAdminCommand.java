@@ -7,8 +7,10 @@ import org.appledash.saneeconomy.command.exception.type.usage.InvalidUsageExcept
 import org.appledash.saneeconomy.command.exception.type.usage.NeedPlayerException;
 import org.appledash.saneeconomy.command.exception.type.usage.TooFewArgumentsException;
 import org.appledash.saneeconomy.economy.EconomyManager;
-import org.appledash.saneeconomy.economy.TransactionReason;
 import org.appledash.saneeconomy.economy.economable.Economable;
+import org.appledash.saneeconomy.economy.transaction.Transaction;
+import org.appledash.saneeconomy.economy.transaction.TransactionReason;
+import org.appledash.saneeconomy.economy.transaction.TransactionResult;
 import org.appledash.saneeconomy.utils.MessageUtils;
 import org.appledash.saneeconomy.utils.NumberUtils;
 import org.appledash.saneeconomy.utils.PlayerUtils;
@@ -79,7 +81,10 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
         }
 
         if (subCommand.equalsIgnoreCase("give")) {
-            double newAmount = ecoMan.addBalance(economable, amount, TransactionReason.ADMIN);
+            Transaction transaction = new Transaction(Economable.wrap(sender), Economable.wrap(targetPlayer), amount, TransactionReason.ADMIN);
+            TransactionResult result = ecoMan.transact(transaction);
+
+            double newAmount = result.getToBalance();
 
             MessageUtils.sendMessage(sender, _("Added %s to %s. Their balance is now %s."),
                     ecoMan.getCurrency().formatAmount(amount),
@@ -90,7 +95,10 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
         }
 
         if (subCommand.equalsIgnoreCase("take")) {
-            double newAmount = ecoMan.subtractBalance(economable, amount, TransactionReason.ADMIN);
+            Transaction transaction = new Transaction(Economable.wrap(sender), Economable.wrap(targetPlayer), amount, TransactionReason.ADMIN);
+            TransactionResult result = ecoMan.transact(transaction);
+
+            double newAmount = result.getFromBalance();
 
             MessageUtils.sendMessage(sender, _("Took %s from %s. Their balance is now %s."),
                     ecoMan.getCurrency().formatAmount(amount),
@@ -101,8 +109,16 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
         }
 
         if (subCommand.equalsIgnoreCase("set")) {
-            ecoMan.setBalance(economable, amount, TransactionReason.ADMIN);
+            ecoMan.setBalance(economable, amount);
             MessageUtils.sendMessage(sender, _("Balance for %s set to %s."), sTargetPlayer, ecoMan.getCurrency().formatAmount(amount));
+
+            // FIXME: This is a silly hack to get it to log.
+            saneEconomy.getTransactionLogger().logTransaction(new Transaction(
+                    economable, Economable.CONSOLE, ecoMan.getBalance(economable), TransactionReason.ADMIN
+            ));
+            saneEconomy.getTransactionLogger().logTransaction(new Transaction(
+                    Economable.CONSOLE, economable, amount, TransactionReason.ADMIN
+            ));
             return;
         }
 

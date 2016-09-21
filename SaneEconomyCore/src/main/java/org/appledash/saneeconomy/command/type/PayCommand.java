@@ -6,6 +6,9 @@ import org.appledash.saneeconomy.command.exception.CommandException;
 import org.appledash.saneeconomy.command.exception.type.usage.NeedPlayerException;
 import org.appledash.saneeconomy.economy.EconomyManager;
 import org.appledash.saneeconomy.economy.economable.Economable;
+import org.appledash.saneeconomy.economy.transaction.Transaction;
+import org.appledash.saneeconomy.economy.transaction.TransactionReason;
+import org.appledash.saneeconomy.economy.transaction.TransactionResult;
 import org.appledash.saneeconomy.utils.MessageUtils;
 import org.appledash.saneeconomy.utils.NumberUtils;
 import org.bukkit.Bukkit;
@@ -71,9 +74,10 @@ public class PayCommand extends SaneEconomyCommand {
         }
 
         /* Perform the actual transfer. False == They didn't have enough money */
-        boolean result = ecoMan.transfer(Economable.wrap(fromPlayer), Economable.wrap(toPlayer), amount);
+        Transaction transaction = new Transaction(Economable.wrap(fromPlayer), Economable.wrap(toPlayer), amount, TransactionReason.PLAYER_PAY);
+        TransactionResult result = ecoMan.transact(transaction);
 
-        if (!result) {
+        if (result.getStatus() != TransactionResult.Status.SUCCESS) {
             MessageUtils.sendMessage(sender, "You do not have enough money to transfer %s to %s.",
                     ecoMan.getCurrency().formatAmount(amount),
                     sToPlayer

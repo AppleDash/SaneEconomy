@@ -3,6 +3,9 @@ package org.appledash.saneeconomy.economy;
 import org.appledash.saneeconomy.ISaneEconomy;
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.economable.Economable;
+import org.appledash.saneeconomy.economy.transaction.Transaction;
+import org.appledash.saneeconomy.economy.transaction.TransactionReason;
+import org.appledash.saneeconomy.economy.transaction.TransactionResult;
 import org.appledash.saneeconomy.utils.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -60,6 +63,10 @@ public class EconomyManager {
      * @return Player's balance
      */
     public double getBalance(Economable targetPlayer) {
+        if (targetPlayer == Economable.CONSOLE) {
+            return Double.MAX_VALUE;
+        }
+
         return backend.getBalance(targetPlayer);
     }
 
@@ -71,6 +78,10 @@ public class EconomyManager {
      * @return True if they have requiredBalance or more, false otherwise
      */
     public boolean hasBalance(Economable targetPlayer, double requiredBalance) {
+        if (targetPlayer == Economable.CONSOLE) {
+            return true;
+        }
+
         return getBalance(targetPlayer) >= requiredBalance;
     }
 
@@ -81,16 +92,20 @@ public class EconomyManager {
      * @return Player's new balance
      * @throws IllegalArgumentException If amount is negative
      */
-    public double addBalance(Economable targetPlayer, double amount, TransactionReason reason) {
+    private double addBalance(Economable targetPlayer, double amount) {
         amount = NumberUtils.filterAmount(currency, amount);
 
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot add a negative amount!");
         }
 
+        if (targetPlayer == Economable.CONSOLE) {
+            return Double.MAX_VALUE;
+        }
+
         double newAmount = backend.getBalance(targetPlayer) + amount;
 
-        setBalance(targetPlayer, newAmount, reason);
+        setBalance(targetPlayer, newAmount);
 
         return newAmount;
     }
@@ -103,11 +118,15 @@ public class EconomyManager {
      * @return Player's new balance
      * @throws IllegalArgumentException If amount is negative
      */
-    public double subtractBalance(Economable targetPlayer, double amount, TransactionReason reason) {
+    private double subtractBalance(Economable targetPlayer, double amount) {
         amount = NumberUtils.filterAmount(currency, amount);
 
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot subtract a negative amount!");
+        }
+
+        if (targetPlayer == Economable.CONSOLE) {
+            return Double.MAX_VALUE;
         }
 
         double newAmount = backend.getBalance(targetPlayer) - amount;
@@ -118,65 +137,55 @@ public class EconomyManager {
             newAmount = 0.0D;
         }
 
-        setBalance(targetPlayer, newAmount, reason);
+        setBalance(targetPlayer, newAmount);
 
         return newAmount;
     }
 
     /**
-     * Set a player's balance.
+     * Set a player's balance. This does NOT log.
      * @param targetPlayer Player to set balance of
      * @param amount Amount to set balance to
      * @throws IllegalArgumentException If amount is negative
      */
-    public void setBalance(Economable targetPlayer, double amount, TransactionReason reason) {
+    public void setBalance(Economable targetPlayer, double amount) {
         amount = NumberUtils.filterAmount(currency, amount);
 
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot set balance to a negative value!");
         }
 
-        double oldAmount = backend.getBalance(targetPlayer);
+        if (targetPlayer == Economable.CONSOLE) {
+            return;
+        }
 
         backend.setBalance(targetPlayer, amount);
-
-        if (saneEconomy.shouldLogTransactions() && reason != TransactionReason.PLAYER_PAY) { // Player pay is handled in the transfer() method.
-            if (oldAmount > amount) { // Lower amount now
-                saneEconomy.getTransactionLogger().logSubtraction(targetPlayer, oldAmount - amount, reason);
-            } else if (oldAmount < amount) { // Higher amount now
-                saneEconomy.getTransactionLogger().logAddition(targetPlayer, amount - oldAmount, reason);
-            }
-        }
     }
 
     /**
-     * Transfer money from one Economable to another.
-     * @param from Economable to transfer from
-     * @param to Economable to transfer to
-     * @param amount Amount to transfer
-     * @return True if success, false if from has insufficient funds.
-     * @throws IllegalArgumentException If amount is negative
+     * Perform a transaction.
+     * @param transaction Transaction to perform.
      */
-    public boolean transfer(Economable from, Economable to, double amount) {
-        amount = NumberUtils.filterAmount(currency, amount);
+    public TransactionResult transact(Transaction transaction) {
+        Economable sender = transaction.getSender();
+        Economable receiver = transaction.getReceiver();
+        double amount = transaction.getAmount();
 
-        if (amount < 0) {
-            throw new IllegalArgumentException("Cannot transfer a negative amount!");
+        if (!transaction.isFree()) { // If the transaction is occurring because of another plugin or because of an admin.
+            if (!hasBalance(sender, amount) && transaction.getReason() != TransactionReason.TEST) {
+                return new TransactionResult(transaction, TransactionResult.Status.ERR_NOT_ENOUGH_FUNDS);
+            }
+
+            subtractBalance(sender, amount);
         }
 
-        if (!hasBalance(from, amount)) {
-            return false;
-        }
-
-        /* Perform the actual transfer. TODO: Maybe return their new balances in some way? */
-        subtractBalance(from, amount, TransactionReason.PLAYER_PAY);
-        addBalance(to, amount, TransactionReason.PLAYER_PAY);
+        addBalance(receiver, amount);
 
         if (saneEconomy.shouldLogTransactions()) {
-            saneEconomy.getTransactionLogger().logTransfer(from, to, amount);
+            saneEconomy.getTransactionLogger().logTransaction(transaction);
         }
 
-        return true;
+        return new TransactionResult(transaction, getBalance(sender), getBalance(receiver));
     }
 
     /**
