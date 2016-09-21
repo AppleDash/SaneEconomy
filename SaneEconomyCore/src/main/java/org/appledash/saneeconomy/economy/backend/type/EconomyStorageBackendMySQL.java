@@ -4,15 +4,14 @@ import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.utils.DatabaseCredentials;
 import org.appledash.saneeconomy.utils.MySQLConnection;
-import org.bukkit.Bukkit;
 
-import java.sql.*;
-import java.util.Collections;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by AppleDash on 6/14/2016.

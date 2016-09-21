@@ -2,7 +2,6 @@ package org.appledash.saneeconomy.utils;
 
 import org.appledash.saneeconomy.SaneEconomy;
 import org.bukkit.Bukkit;
-import sun.misc.Unsafe;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

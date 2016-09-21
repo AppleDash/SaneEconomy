@@ -6,6 +6,7 @@ import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.economy.transaction.Transaction;
 import org.appledash.saneeconomy.economy.transaction.TransactionReason;
 import org.appledash.saneeconomy.economy.transaction.TransactionResult;
+import org.appledash.saneeconomy.economy.transaction.TransactionResult.Status;
 import org.appledash.saneeconomy.utils.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -92,7 +93,7 @@ public class EconomyManager {
      * @return Player's new balance
      * @throws IllegalArgumentException If amount is negative
      */
-    private double addBalance(Economable targetPlayer, double amount) {
+    private void addBalance(Economable targetPlayer, double amount) {
         amount = NumberUtils.filterAmount(currency, amount);
 
         if (amount < 0) {
@@ -100,14 +101,12 @@ public class EconomyManager {
         }
 
         if (targetPlayer == Economable.CONSOLE) {
-            return Double.MAX_VALUE;
+            return;
         }
 
         double newAmount = backend.getBalance(targetPlayer) + amount;
 
         setBalance(targetPlayer, newAmount);
-
-        return newAmount;
     }
 
     /**
@@ -118,7 +117,7 @@ public class EconomyManager {
      * @return Player's new balance
      * @throws IllegalArgumentException If amount is negative
      */
-    private double subtractBalance(Economable targetPlayer, double amount) {
+    private void subtractBalance(Economable targetPlayer, double amount) {
         amount = NumberUtils.filterAmount(currency, amount);
 
         if (amount < 0) {
@@ -126,7 +125,7 @@ public class EconomyManager {
         }
 
         if (targetPlayer == Economable.CONSOLE) {
-            return Double.MAX_VALUE;
+            return;
         }
 
         double newAmount = backend.getBalance(targetPlayer) - amount;
@@ -138,8 +137,6 @@ public class EconomyManager {
         }
 
         setBalance(targetPlayer, newAmount);
-
-        return newAmount;
     }
 
     /**
@@ -172,8 +169,8 @@ public class EconomyManager {
         double amount = transaction.getAmount();
 
         if (!transaction.isFree()) { // If the transaction is occurring because of another plugin or because of an admin.
-            if (!hasBalance(sender, amount) && transaction.getReason() != TransactionReason.TEST) {
-                return new TransactionResult(transaction, TransactionResult.Status.ERR_NOT_ENOUGH_FUNDS);
+            if (!hasBalance(sender, amount) && (transaction.getReason() != TransactionReason.TEST)) {
+                return new TransactionResult(transaction, Status.ERR_NOT_ENOUGH_FUNDS);
             }
 
             subtractBalance(sender, amount);

@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * Blackjack is best pony.
  */
 public class TransactionLoggerMySQL implements TransactionLogger {
-    private MySQLConnection dbConn;
+    private final MySQLConnection dbConn;
 
     public TransactionLoggerMySQL(DatabaseCredentials credentials) {
         this.dbConn = new MySQLConnection(credentials);

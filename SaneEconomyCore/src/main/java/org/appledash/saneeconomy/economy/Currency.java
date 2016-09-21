@@ -1,6 +1,5 @@
 package org.appledash.saneeconomy.economy;
 
-import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.text.DecimalFormat;

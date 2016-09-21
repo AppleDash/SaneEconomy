@@ -92,10 +92,10 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
             reloadConfig();
         }
 
-        SaneEconomyConfiguration saneEconomyConfiguration = new SaneEconomyConfiguration(this);
+        SaneEconomyConfiguration config = new SaneEconomyConfiguration(this);
 
-        economyManager = saneEconomyConfiguration.loadEconomyBackend();
-        transactionLogger = saneEconomyConfiguration.loadLogger();
+        economyManager = config.loadEconomyBackend();
+        transactionLogger = config.loadLogger();
 
         saveConfig();
 

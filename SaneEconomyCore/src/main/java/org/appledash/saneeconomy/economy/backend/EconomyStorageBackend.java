@@ -13,25 +13,25 @@ import java.util.UUID;
  */
 public interface EconomyStorageBackend {
     /**
-     * Check whether a player has used the economy system before.
-     * @param player Player
+     * Check whether an economable has used the economy system before.
+     * @param economable Economable
      * @return True if they have, false otherwise.
      */
-    boolean accountExists(Economable player);
+    boolean accountExists(Economable economable);
 
     /**
      * Get the balance of a player.
-     * @param player Player
+     * @param economable Economable
      * @return Player's current balance
      */
-    double getBalance(Economable player);
+    double getBalance(Economable economable);
 
     /**
-     * Set the balance of a player, overwriting the old balance.
-     * @param player Player
+     * Set the balance of an Economable, overwriting the old balance.
+     * @param economable Economable
      * @param newBalance Player's new balance
      */
-    void setBalance(Economable player, double newBalance);
+    void setBalance(Economable economable, double newBalance);
 
     /**
      * Get the UUIDs of the players who have the most money, along with how much money they have.

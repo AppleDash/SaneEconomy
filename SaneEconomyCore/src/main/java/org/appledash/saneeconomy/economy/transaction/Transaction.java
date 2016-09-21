@@ -40,6 +40,6 @@ public class Transaction {
     }
 
     public boolean isFree() {
-        return sender == Economable.CONSOLE || sender == Economable.PLUGIN || reason == TransactionReason.ADMIN;
+        return (sender == Economable.CONSOLE) || (sender == Economable.PLUGIN) || (reason == TransactionReason.ADMIN);
     }
 }

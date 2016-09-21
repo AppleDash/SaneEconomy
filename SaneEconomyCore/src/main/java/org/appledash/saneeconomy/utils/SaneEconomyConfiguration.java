@@ -128,10 +128,11 @@ public class SaneEconomyConfiguration {
 
         DatabaseCredentials credentials = loadCredentials(rootConfig.getConfigurationSection("logger-database"));
 
-        TransactionLoggerMySQL transactionLoggerMySQL = new TransactionLoggerMySQL(credentials);
-        if (transactionLoggerMySQL.testConnection()) {
+        TransactionLoggerMySQL transactionLogger = new TransactionLoggerMySQL(credentials);
+
+        if (transactionLogger.testConnection()) {
             logger.info("Initialized MySQL transaction logger.");
-            return transactionLoggerMySQL;
+            return transactionLogger;
         }
 
         logger.severe("Failed to connect to MySQL database for transaction logger!");
