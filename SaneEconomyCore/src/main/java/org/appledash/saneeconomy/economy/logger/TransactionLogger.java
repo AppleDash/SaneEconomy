@@ -10,5 +10,5 @@ import org.appledash.saneeconomy.economy.economable.Economable;
 public interface TransactionLogger {
     void logAddition(Economable economable, double amount, TransactionReason reason);
     void logSubtraction(Economable economable, double amount, TransactionReason reason);
-    void logTransfer(Economable from, Economable to, double amount, TransactionReason reason);
+    void logTransfer(Economable from, Economable to, double amount);
 }

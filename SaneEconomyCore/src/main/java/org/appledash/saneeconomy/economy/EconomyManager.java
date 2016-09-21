@@ -173,7 +173,7 @@ public class EconomyManager {
         addBalance(to, amount, TransactionReason.PLAYER_PAY);
 
         if (saneEconomy.shouldLogTransactions()) {
-            saneEconomy.getTransactionLogger().logTransfer(from, to, amount, TransactionReason.PLAYER_PAY);
+            saneEconomy.getTransactionLogger().logTransfer(from, to, amount);
         }
 
         return true;

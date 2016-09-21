@@ -8,6 +8,8 @@ import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendFlatfile;
 import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendMySQL;
 import org.appledash.saneeconomy.economy.economable.EconomableGeneric;
+import org.appledash.saneeconomy.economy.logger.TransactionLogger;
+import org.appledash.saneeconomy.economy.logger.TransactionLoggerMySQL;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -110,6 +112,16 @@ public class SaneEconomyConfiguration {
             newer.setBalance(new EconomableGeneric(uniqueId), balance);
         });
         newer.waitUntilFlushed();
+    }
+
+    private TransactionLogger loadLogger() {
+        if (!rootConfig.getBoolean("log-transactions", false)) {
+            return null;
+        }
+
+        DatabaseCredentials credentials = loadCredentials(rootConfig.getConfigurationSection("logger-database"));
+
+        return new TransactionLoggerMySQL(credentials);
     }
 
     /**
