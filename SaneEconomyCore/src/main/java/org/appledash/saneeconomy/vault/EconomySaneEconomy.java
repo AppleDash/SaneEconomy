@@ -172,6 +172,7 @@ public class EconomySaneEconomy implements Economy {
 
     @Override
     public EconomyResponse depositPlayer(String playerName, double v) {
+        // StackTraceUtils.what();
         Economable economable;
         if (validatePlayer(playerName)) {
             economable = Economable.wrap(Bukkit.getPlayer(playerName));
@@ -186,6 +187,7 @@ public class EconomySaneEconomy implements Economy {
 
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, double v) {
+        // StackTraceUtils.what();
         return transact(new Transaction(
                 Economable.wrap(offlinePlayer), Economable.PLUGIN, v, TransactionReason.PLUGIN
         ));
