@@ -121,6 +121,11 @@ public class SaneEconomyConfiguration {
 
         logger.info("Attempting to load transaction logger...");
 
+        if (rootConfig.getConfigurationSection("logger-database") == null) {
+            logger.severe("No transaction logger database defined, cannot possibly connect!");
+            return null;
+        }
+
         DatabaseCredentials credentials = loadCredentials(rootConfig.getConfigurationSection("logger-database"));
 
         TransactionLoggerMySQL transactionLoggerMySQL = new TransactionLoggerMySQL(credentials);

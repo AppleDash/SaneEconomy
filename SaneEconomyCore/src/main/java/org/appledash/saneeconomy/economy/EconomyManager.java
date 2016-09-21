@@ -142,9 +142,9 @@ public class EconomyManager {
 
         if (saneEconomy.shouldLogTransactions() && reason != TransactionReason.PLAYER_PAY) { // Player pay is handled in the transfer() method.
             if (oldAmount > amount) { // Lower amount now
-                saneEconomy.getTransactionLogger().logSubtraction(targetPlayer, amount, reason);
+                saneEconomy.getTransactionLogger().logSubtraction(targetPlayer, oldAmount - amount, reason);
             } else if (oldAmount < amount) { // Higher amount now
-                saneEconomy.getTransactionLogger().logAddition(targetPlayer, amount, reason);
+                saneEconomy.getTransactionLogger().logAddition(targetPlayer, amount - oldAmount, reason);
             }
         }
     }

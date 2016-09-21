@@ -5,6 +5,7 @@ import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.utils.DatabaseCredentials;
 import org.appledash.saneeconomy.utils.MySQLConnection;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -41,6 +42,7 @@ public class TransactionLoggerMySQL implements TransactionLogger {
                 ps.setString(1, from);
                 ps.setString(2, to);
                 ps.setDouble(3, change);
+                ps.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException("Error occurred logging addition", e);
             }
@@ -48,6 +50,20 @@ public class TransactionLoggerMySQL implements TransactionLogger {
     }
 
     public boolean testConnection() {
-        return dbConn.testConnection();
+        if (dbConn.testConnection()) {
+            createTables();
+            return true;
+        }
+
+        return false;
+    }
+
+    private void createTables() {
+        try (Connection conn = dbConn.openConnection()) {
+            PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS `transaction_logs` (`source` VARCHAR(128), `destination` VARCHAR(128), `amount` DECIMAL(18, 2))");
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to create transaction logger tables", e);
+        }
     }
 }
