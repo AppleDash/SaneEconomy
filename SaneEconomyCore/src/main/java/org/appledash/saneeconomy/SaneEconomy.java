@@ -95,6 +95,7 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
         SaneEconomyConfiguration saneEconomyConfiguration = new SaneEconomyConfiguration(this);
 
         economyManager = saneEconomyConfiguration.loadEconomyBackend();
+        transactionLogger = saneEconomyConfiguration.loadLogger();
 
         saveConfig();
 

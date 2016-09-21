@@ -46,4 +46,8 @@ public class TransactionLoggerMySQL implements TransactionLogger {
             }
         });
     }
+
+    public boolean testConnection() {
+        return dbConn.testConnection();
+    }
 }

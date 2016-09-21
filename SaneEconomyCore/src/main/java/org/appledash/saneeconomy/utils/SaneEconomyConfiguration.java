@@ -114,14 +114,23 @@ public class SaneEconomyConfiguration {
         newer.waitUntilFlushed();
     }
 
-    private TransactionLogger loadLogger() {
+    public TransactionLogger loadLogger() {
         if (!rootConfig.getBoolean("log-transactions", false)) {
             return null;
         }
 
+        logger.info("Attempting to load transaction logger...");
+
         DatabaseCredentials credentials = loadCredentials(rootConfig.getConfigurationSection("logger-database"));
 
-        return new TransactionLoggerMySQL(credentials);
+        TransactionLoggerMySQL transactionLoggerMySQL = new TransactionLoggerMySQL(credentials);
+        if (transactionLoggerMySQL.testConnection()) {
+            logger.info("Initialized MySQL transaction logger.");
+            return transactionLoggerMySQL;
+        }
+
+        logger.severe("Failed to connect to MySQL database for transaction logger!");
+        return null;
     }
 
     /**
