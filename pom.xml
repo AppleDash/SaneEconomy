@@ -24,11 +24,6 @@
             <name>Vault</name>
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
-        <repository>
-            <id>mcstats</id>
-            <name>MCStats</name>
-            <url>http://repo.mcstats.org/content/repositories/public</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -41,12 +36,6 @@
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.6</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mcstats.bukkit</groupId>
-            <artifactId>metrics</artifactId>
-            <version>R8-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
