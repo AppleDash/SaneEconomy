@@ -79,11 +79,8 @@ public class EconomyManager {
      * @return True if they have requiredBalance or more, false otherwise
      */
     public boolean hasBalance(Economable targetPlayer, double requiredBalance) {
-        if (targetPlayer == Economable.CONSOLE) {
-            return true;
-        }
+        return targetPlayer == Economable.CONSOLE || getBalance(targetPlayer) >= requiredBalance;
 
-        return getBalance(targetPlayer) >= requiredBalance;
     }
 
     /**
@@ -149,7 +146,7 @@ public class EconomyManager {
         amount = NumberUtils.filterAmount(currency, amount);
 
         if (amount < 0) {
-            throw new IllegalArgumentException("Cannot set balance to a negative value!");
+            throw new IllegalArgumentException("Cannot subtract a negative amount!");
         }
 
         if (targetPlayer == Economable.CONSOLE) {
@@ -160,17 +157,20 @@ public class EconomyManager {
     }
 
     /**
-     * Perform a transaction.
+     * Perform a transaction - a transfer of funds from one entity to another.
      * @param transaction Transaction to perform.
+     * @return TransactionResult describing success or failure of the Transaction.
      */
     public TransactionResult transact(Transaction transaction) {
         Economable sender = transaction.getSender();
         Economable receiver = transaction.getReceiver();
-        double amount = transaction.getAmount();
+        double amount = transaction.getAmount(); // This amount is validated upon creation of Transaction
 
         if (!transaction.isFree()) { // If the transaction is occurring because of another plugin or because of an admin.
-            if (!hasBalance(sender, amount) && (transaction.getReason() != TransactionReason.TEST)) {
-                return new TransactionResult(transaction, Status.ERR_NOT_ENOUGH_FUNDS);
+            // If the sender doesn't have the balance AND we're not testing, throw an error.
+            // I don't really know why we check if they're testing, but it breaks if we don't. FIXME.
+            if (!hasBalance(sender, amount) && transaction.getReason() != TransactionReason.TEST) {
+                return new TransactionResult(transaction, TransactionResult.Status.ERR_NOT_ENOUGH_FUNDS);
             }
 
             subtractBalance(sender, amount);

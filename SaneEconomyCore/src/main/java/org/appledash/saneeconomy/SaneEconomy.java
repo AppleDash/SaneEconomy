@@ -10,8 +10,10 @@ import org.appledash.saneeconomy.utils.I18n;
 import org.appledash.saneeconomy.utils.SaneEconomyConfiguration;
 import org.appledash.saneeconomy.vault.VaultHook;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -62,6 +64,14 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
             economyManager.getBackend().reloadTopPlayerBalances();
         }, 0, (20 * 300) /* Update baltop every 5 minutes */);
         I18n.getInstance().loadTranslations();
+
+        try {
+            Metrics metrics = new Metrics(this);
+            metrics.start();
+        } catch (IOException e) {
+            getLogger().warning("Failed to start Metrics.");
+            e.printStackTrace();
+        }
     }
 
     @Override

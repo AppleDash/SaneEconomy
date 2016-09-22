@@ -50,7 +50,7 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
-                                    <include>org.mcstats.bukkit:metrics</include>
+                                    <include>org.mcstats.*:*</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

@@ -95,7 +95,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
         }
 
         if (subCommand.equalsIgnoreCase("take")) {
-            Transaction transaction = new Transaction(Economable.wrap(sender), Economable.wrap(targetPlayer), amount, TransactionReason.ADMIN);
+            Transaction transaction = new Transaction(Economable.wrap(targetPlayer), Economable.wrap(sender), amount, TransactionReason.ADMIN);
             TransactionResult result = ecoMan.transact(transaction);
 
             double newAmount = result.getFromBalance();

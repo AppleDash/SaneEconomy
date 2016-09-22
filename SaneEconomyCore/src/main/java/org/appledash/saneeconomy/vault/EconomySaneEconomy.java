@@ -145,7 +145,7 @@ public class EconomySaneEconomy implements Economy {
         }
 
         return transact(new Transaction(
-                economable, Economable.PLUGIN,  v, TransactionReason.PLUGIN
+                economable, Economable.PLUGIN, v, TransactionReason.PLUGIN
         ));
     }
 
