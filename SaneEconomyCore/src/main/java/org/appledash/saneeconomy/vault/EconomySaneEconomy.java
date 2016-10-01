@@ -8,7 +8,7 @@ import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.economy.transaction.Transaction;
 import org.appledash.saneeconomy.economy.transaction.TransactionReason;
 import org.appledash.saneeconomy.economy.transaction.TransactionResult;
-import org.bukkit.Bukkit;
+import org.appledash.saneeconomy.utils.PlayerUtils;
 import org.bukkit.OfflinePlayer;
 
 import java.util.List;
@@ -57,7 +57,7 @@ public class EconomySaneEconomy implements Economy {
     public boolean hasAccount(String playerName) {
         Economable economable;
         if (validatePlayer(playerName)) {
-            economable = Economable.wrap(Bukkit.getPlayer(playerName));
+            economable = Economable.wrap(PlayerUtils.getOfflinePlayer(playerName));
         } else {
             economable = Economable.wrap(playerName);
         }
@@ -85,7 +85,7 @@ public class EconomySaneEconomy implements Economy {
     public double getBalance(String playerName) {
         Economable economable;
         if (validatePlayer(playerName)) {
-            economable = Economable.wrap(Bukkit.getPlayer(playerName));
+            economable = Economable.wrap(PlayerUtils.getOfflinePlayer(playerName));
         } else {
             economable = Economable.wrap(playerName);
         }
@@ -112,7 +112,7 @@ public class EconomySaneEconomy implements Economy {
     public boolean has(String playerName, double v) {
         Economable economable;
         if (validatePlayer(playerName)) {
-            economable = Economable.wrap(Bukkit.getPlayer(playerName));
+            economable = Economable.wrap(PlayerUtils.getOfflinePlayer(playerName));
         } else {
             economable = Economable.wrap(playerName);
         }
@@ -137,9 +137,13 @@ public class EconomySaneEconomy implements Economy {
 
     @Override
     public EconomyResponse withdrawPlayer(String playerName, double v) {
+        if (v == 0) {
+            return new EconomyResponse(v, getBalance(playerName), EconomyResponse.ResponseType.SUCCESS, "");
+        }
+
         Economable economable;
         if (validatePlayer(playerName)) {
-            economable = Economable.wrap(Bukkit.getPlayer(playerName));
+            economable = Economable.wrap(PlayerUtils.getOfflinePlayer(playerName));
         } else {
             economable = Economable.wrap(playerName);
         }
@@ -182,7 +186,7 @@ public class EconomySaneEconomy implements Economy {
 
         Economable economable;
         if (validatePlayer(playerName)) {
-            economable = Economable.wrap(Bukkit.getPlayer(playerName));
+            economable = Economable.wrap(PlayerUtils.getOfflinePlayer(playerName));
         } else {
             economable = Economable.wrap(playerName);
         }
@@ -294,7 +298,7 @@ public class EconomySaneEconomy implements Economy {
     }
 
     private boolean validatePlayer(String playerName) {
-        return Bukkit.getServer().getPlayer(playerName) != null;
+        return PlayerUtils.getOfflinePlayer(playerName) != null;
     }
 
     private EconomyResponse transact(Transaction transaction) {
