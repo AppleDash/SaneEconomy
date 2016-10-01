@@ -19,7 +19,7 @@ public class PlayerUtils {
     public static OfflinePlayer getOfflinePlayer(String playerNameOrUUID) {
         OfflinePlayer player = tryGetFromUUID(playerNameOrUUID);
 
-        if (player != null && player.hasPlayedBefore()) {
+        if (player != null && (player.hasPlayedBefore() || player.isOnline())) {
             return player;
         }
 
@@ -29,7 +29,7 @@ public class PlayerUtils {
             player = Bukkit.getServer().getOfflinePlayer(playerNameOrUUID);
         }
 
-        if ((player != null) && !player.hasPlayedBefore()) {
+        if ((player != null) && (!player.hasPlayedBefore() && !player.isOnline())) {
             return null;
         }
 
