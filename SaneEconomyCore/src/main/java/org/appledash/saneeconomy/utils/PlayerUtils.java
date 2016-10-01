@@ -19,7 +19,7 @@ public class PlayerUtils {
     public static OfflinePlayer getOfflinePlayer(String playerNameOrUUID) {
         OfflinePlayer player = tryGetFromUUID(playerNameOrUUID);
 
-        if (player != null) {
+        if (player != null && player.hasPlayedBefore()) {
             return player;
         }
 
@@ -38,11 +38,18 @@ public class PlayerUtils {
 
     private static OfflinePlayer tryGetFromUUID(String possibleUUID) {
         UUID uuid;
+        OfflinePlayer player;
 
         try {
             uuid = UUID.fromString(possibleUUID);
         } catch (IllegalArgumentException ignored) {
             return null;
+        }
+
+        player = Bukkit.getServer().getPlayer(uuid);
+
+        if (player != null) {
+            return player;
         }
 
         return Bukkit.getServer().getOfflinePlayer(uuid);
