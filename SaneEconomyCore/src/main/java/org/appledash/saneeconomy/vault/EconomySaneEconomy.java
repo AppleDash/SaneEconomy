@@ -151,6 +151,10 @@ public class EconomySaneEconomy implements Economy {
 
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, double v) {
+        if (v == 0) {
+            return new EconomyResponse(v, getBalance(offlinePlayer), EconomyResponse.ResponseType.SUCCESS, "");
+        }
+
         if (!has(offlinePlayer, v)) {
             return new EconomyResponse(v, getBalance(offlinePlayer), EconomyResponse.ResponseType.FAILURE, "Insufficient funds.");
         }
@@ -172,7 +176,10 @@ public class EconomySaneEconomy implements Economy {
 
     @Override
     public EconomyResponse depositPlayer(String playerName, double v) {
-        // StackTraceUtils.what();
+        if (v == 0) {
+            return new EconomyResponse(v, getBalance(playerName), EconomyResponse.ResponseType.SUCCESS, "");
+        }
+
         Economable economable;
         if (validatePlayer(playerName)) {
             economable = Economable.wrap(Bukkit.getPlayer(playerName));
@@ -187,7 +194,10 @@ public class EconomySaneEconomy implements Economy {
 
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, double v) {
-        // StackTraceUtils.what();
+        if (v == 0) {
+            return new EconomyResponse(v, getBalance(offlinePlayer), EconomyResponse.ResponseType.SUCCESS, "");
+        }
+
         return transact(new Transaction(
                 Economable.PLUGIN, Economable.wrap(offlinePlayer), v, TransactionReason.PLUGIN
         ));
