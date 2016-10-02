@@ -38,8 +38,8 @@ public class JoinQuitListener implements Listener {
         }
 
         /* Update notification */
-        if (player.hasPermission("saneeconomy.update-notify") && GithubVersionChecker.isUpdateAvailable()) {
-            MessageUtils.sendMessage(player, "An update is available! The currently-installed version is %s, but the newest available is %s. Please go to %s to update!", plugin.getDescription().getVersion(), GithubVersionChecker.getNewestVersion(), GithubVersionChecker.DOWNLOAD_URL);
+        if (player.hasPermission("saneeconomy.update-notify") && plugin.getVersionChecker().isUpdateAvailable()) {
+            MessageUtils.sendMessage(player, "An update is available! The currently-installed version is %s, but the newest available is %s. Please go to %s to update!", plugin.getDescription().getVersion(), plugin.getVersionChecker().getNewestVersion(), GithubVersionChecker.DOWNLOAD_URL);
         }
     }
 }

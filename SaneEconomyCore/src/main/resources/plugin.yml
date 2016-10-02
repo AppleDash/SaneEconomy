@@ -49,3 +49,16 @@ permissions:
   saneeconomy.balancetop:
     description: Allows you to view the players on the server who have the most money.
     default: true
+  saneeconomy.update-notify:
+    description: Allows you to be notified of updates to the plugin on join.
+    default: op
+  saneeconomy.*:
+    children:
+      saneeconomy.balance: true
+      saneeconomy.balance.other: true
+      saneeconomy.ecoadmin: true
+      saneeconomy.pay: true
+      saneeconomy.admin: true
+      saneeconomy.balancetop: true
+      saneeconomy.update-notify: true
+    default: op

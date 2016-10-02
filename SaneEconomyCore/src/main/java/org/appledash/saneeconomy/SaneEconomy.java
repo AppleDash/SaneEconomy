@@ -25,6 +25,7 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
     private EconomyManager economyManager;
     private VaultHook vaultHook;
     private TransactionLogger transactionLogger;
+    private GithubVersionChecker versionChecker;
 
     private final Map<String, SaneEconomyCommand> COMMANDS = new HashMap<String, SaneEconomyCommand>() {{
         put("balance", new BalanceCommand(SaneEconomy.this));
@@ -56,7 +57,8 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
             getLogger().info("Not hooking into Vault because it isn't loaded.");
         }
 
-        getServer().getScheduler().scheduleAsyncDelayedTask(this, GithubVersionChecker::checkUpdateAvailable);
+        versionChecker = new GithubVersionChecker("SaneEconomyCore", this.getDescription().getVersion());
+        getServer().getScheduler().scheduleAsyncDelayedTask(this, versionChecker::checkUpdateAvailable);
 
         getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
             economyManager.getBackend().reloadTopPlayerBalances();
@@ -116,6 +118,10 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
 
     private void shutdown(){
         getServer().getPluginManager().disablePlugin(this);
+    }
+
+    public GithubVersionChecker getVersionChecker() {
+        return versionChecker;
     }
 
     /**

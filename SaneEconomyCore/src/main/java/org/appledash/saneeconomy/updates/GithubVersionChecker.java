@@ -14,11 +14,18 @@ import org.appledash.saneeconomy.utils.WebUtils;
 public class GithubVersionChecker {
     public static final String DOWNLOAD_URL = "https://github.com/AppleDash/SaneEconomy/releases";
     private static final String RELEASES_URL = "https://api.github.com/repos/AppleDash/SaneEconomy/releases";
-    private static boolean updateChecked;
-    private static boolean updateAvailable;
+    private boolean updateChecked;
+    private boolean updateAvailable;
     private static String newestVersion;
+    private final String pluginName;
+    private final String currentVersion;
 
-    public static void checkUpdateAvailable() {
+    public GithubVersionChecker(String pluginName, String currentVersion) {
+        this.pluginName = pluginName;
+        this.currentVersion = currentVersion;
+    }
+
+    public void checkUpdateAvailable() {
         String jsonContent = WebUtils.getContents(RELEASES_URL);
 
         JsonArray array = (JsonArray)new JsonParser().parse(jsonContent);
@@ -33,6 +40,12 @@ public class GithubVersionChecker {
                 boolean isPrerelease = releaseObj.get("prerelease").getAsBoolean();
 
                 if (isPrerelease) { // Don't tell them to update to prereleases, which I might release for individual users to test.
+                    continue;
+                }
+
+                String releaseName = releaseObj.get("name").getAsString().split(" ")[0];
+
+                if (!releaseName.equalsIgnoreCase(pluginName)) { // Not for this plugin.
                     continue;
                 }
 
@@ -51,15 +64,15 @@ public class GithubVersionChecker {
         updateAvailable = newestVersion > currentVersion;
     }
 
-    private static int releaseToInt(String release) {
+    private int releaseToInt(String release) {
         return Integer.valueOf(release.trim().replace(".", ""));
     }
 
-    public static boolean isUpdateAvailable() {
+    public boolean isUpdateAvailable() {
         return updateChecked && updateAvailable;
     }
 
-    public static String getNewestVersion() {
+    public String getNewestVersion() {
         return newestVersion;
     }
 }
