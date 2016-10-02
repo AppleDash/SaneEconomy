@@ -1,7 +1,7 @@
 # How to use this file:
 # Add a translation to the messages you wish to change, like this:
 # - message: That player is not online.
-#   translation: Ce joueur est pas en ligne.
+#   translation: Ce joueur n'est pas en ligne.
 messages:
   - message: You don't have permission to check the balance of %s.
   - message: That player is not online.
