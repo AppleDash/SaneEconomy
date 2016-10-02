@@ -6,6 +6,7 @@ currency:
     singular: dollar
     plural: dollars
   format: '0.00'
+  grouping: 3
 
 chat:
   prefix: '&b[&9Economy&b]&r '
