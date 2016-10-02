@@ -13,6 +13,7 @@ public enum TransactionReason {
      * An admin giving a player money.
      */
     ADMIN,
+    ADMIN_TAKE,
     /**
      * Another plugin using the API.
      */
