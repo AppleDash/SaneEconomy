@@ -16,12 +16,14 @@ public class NumberUtilsTest {
     @Test
     public void testParsePositive() {
         // Valid input
-        Assert.assertEquals(NumberUtils.parsePositiveDouble("69.0"), 69.0, 0.0);
+        Assert.assertEquals(69.0, NumberUtils.parsePositiveDouble("69.0"), 0.0);
         // Valid but not positive
-        Assert.assertEquals(NumberUtils.parsePositiveDouble("-10.0"), -1.0, 0.0);
+        Assert.assertEquals(-1.0, NumberUtils.parsePositiveDouble("-10.0"), 0.0);
         // Invalid
-        Assert.assertEquals(NumberUtils.parsePositiveDouble("nan"), -1.0, 0.0);
-        Assert.assertEquals(NumberUtils.parsePositiveDouble("ponies"), -1.0, 0.0);
+        Assert.assertEquals(-1.0, NumberUtils.parsePositiveDouble("nan"), 0.0);
+        Assert.assertEquals(-1.0, NumberUtils.parsePositiveDouble("ponies"), 0.0);
+        // Infinite
+        Assert.assertEquals(-1.0, NumberUtils.parsePositiveDouble("1E1000000000"), 0.0);
     }
 
     @Test

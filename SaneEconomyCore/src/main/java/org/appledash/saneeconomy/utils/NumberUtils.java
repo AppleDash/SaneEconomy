@@ -36,6 +36,10 @@ public class NumberUtils {
             return INVALID_DOUBLE;
         }
 
+        if (Double.isInfinite(doub) || Double.isNaN(doub)) {
+            return INVALID_DOUBLE;
+        }
+
         return doub;
     }
 
