@@ -8,22 +8,40 @@ public enum TransactionReason {
     /**
      * A player paying another player.
      */
-    PLAYER_PAY,
+    PLAYER_PAY(AffectedParties.BOTH),
     /**
      * An admin giving a player money.
      */
-    ADMIN,
-    ADMIN_TAKE,
+    ADMIN_GIVE(AffectedParties.RECEIVER),
+    ADMIN_TAKE(AffectedParties.SENDER),
     /**
      * Another plugin using the API.
      */
-    PLUGIN,
+    PLUGIN_GIVE(AffectedParties.RECEIVER),
+    PLUGIN_TAKE(AffectedParties.SENDER),
     /**
      * Initial starting balance on join.
      */
-    STARTING_BALANCE,
+    STARTING_BALANCE(AffectedParties.RECEIVER),
     /**
      * Used in unit tests.
      */
-    TEST
+    TEST_GIVE(AffectedParties.RECEIVER),
+    TEST_TAKE(AffectedParties.SENDER);
+
+    private final AffectedParties affectedParties;
+
+    TransactionReason(AffectedParties affectedParties) {
+        this.affectedParties = affectedParties;
+    }
+
+    public AffectedParties getAffectedParties() {
+        return affectedParties;
+    }
+
+    public enum AffectedParties {
+        SENDER,
+        RECEIVER,
+        BOTH
+    }
 }

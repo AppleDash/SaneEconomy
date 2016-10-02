@@ -4,7 +4,6 @@ import org.appledash.saneeconomy.ISaneEconomy;
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.economy.transaction.Transaction;
-import org.appledash.saneeconomy.economy.transaction.TransactionReason;
 import org.appledash.saneeconomy.economy.transaction.TransactionResult;
 import org.appledash.saneeconomy.utils.NumberUtils;
 import org.bukkit.Bukkit;
@@ -165,17 +164,15 @@ public class EconomyManager {
         Economable receiver = transaction.getReceiver();
         double amount = transaction.getAmount(); // This amount is validated upon creation of Transaction
 
-        if (!transaction.isFree()) { // If the transaction is occurring because of another plugin or because of an admin.
-            // If the sender doesn't have the balance AND we're not testing, throw an error.
-            // I don't really know why we check if they're testing, but it breaks if we don't. FIXME.
-            if (!hasBalance(sender, amount) && transaction.getReason() != TransactionReason.TEST && transaction.getReason() != TransactionReason.ADMIN_TAKE) {
+        if (transaction.isSenderAffected()) { // Sender should have balance taken from them
+            if (!hasBalance(sender, amount)) {
                 return new TransactionResult(transaction, TransactionResult.Status.ERR_NOT_ENOUGH_FUNDS);
             }
 
             subtractBalance(sender, amount);
         }
 
-        if (transaction.getReason() != TransactionReason.ADMIN_TAKE) {
+        if (transaction.isReceiverAffected()) { // Receiver should have balance added to them
             addBalance(receiver, amount);
         }
 

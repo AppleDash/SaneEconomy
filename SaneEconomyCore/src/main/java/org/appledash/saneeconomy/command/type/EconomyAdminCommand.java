@@ -81,7 +81,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
         }
 
         if (subCommand.equalsIgnoreCase("give")) {
-            Transaction transaction = new Transaction(Economable.wrap(sender), Economable.wrap(targetPlayer), amount, TransactionReason.ADMIN);
+            Transaction transaction = new Transaction(Economable.wrap(sender), Economable.wrap(targetPlayer), amount, TransactionReason.ADMIN_GIVE);
             TransactionResult result = ecoMan.transact(transaction);
 
             double newAmount = result.getToBalance();
@@ -117,12 +117,12 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
                 // FIXME: This is a silly hack to get it to log.
                 if (oldBal > 0.0) {
                     saneEconomy.getTransactionLogger().logTransaction(new Transaction(
-                            economable, Economable.CONSOLE, oldBal, TransactionReason.ADMIN
+                            economable, Economable.CONSOLE, oldBal, TransactionReason.ADMIN_GIVE
                     ));
                 }
 
                 saneEconomy.getTransactionLogger().logTransaction(new Transaction(
-                        Economable.CONSOLE, economable, amount, TransactionReason.ADMIN
+                        Economable.CONSOLE, economable, amount, TransactionReason.ADMIN_GIVE
                 ));
             }
 

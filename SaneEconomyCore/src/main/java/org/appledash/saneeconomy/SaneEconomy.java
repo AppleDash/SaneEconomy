@@ -142,6 +142,10 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
      */
     @Override
     public TransactionLogger getTransactionLogger() {
+        if (!shouldLogTransactions()) {
+            throw new IllegalStateException("TransactionLogger should not be retrieved if we aren't logging transactions!");
+        }
+
         return transactionLogger;
     }
 

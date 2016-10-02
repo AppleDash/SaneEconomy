@@ -37,8 +37,8 @@ public class EconomyManagerTest {
         // Accounts should not exist
         Assert.assertFalse(economyManager.accountExists(playerOne));
         Assert.assertFalse(economyManager.accountExists(playerTwo));
-        Assert.assertEquals(economyManager.getBalance(playerOne), 0.0D, 0.0);
-        Assert.assertEquals(economyManager.getBalance(playerTwo), 0.0D, 0.0);
+        Assert.assertEquals(0.0D, economyManager.getBalance(playerOne), 0.0);
+        Assert.assertEquals(0.0D, economyManager.getBalance(playerTwo), 0.0);
 
         economyManager.setBalance(playerOne, 100.0D);
 
@@ -47,28 +47,28 @@ public class EconomyManagerTest {
         Assert.assertFalse(economyManager.accountExists(playerTwo));
 
         // One should have balance, two should not
-        Assert.assertEquals(economyManager.getBalance(playerOne), 100.0, 0.0);
-        Assert.assertEquals(economyManager.getBalance(playerTwo), 0.0, 0.0);
+        Assert.assertEquals(100.0, economyManager.getBalance(playerOne), 0.0);
+        Assert.assertEquals(0.0, economyManager.getBalance(playerTwo), 0.0);
 
         // One should be able to transfer to two
         Assert.assertTrue(economyManager.transact(new Transaction(playerOne, playerTwo, 50.0, TransactionReason.PLAYER_PAY)).getStatus() == TransactionResult.Status.SUCCESS);
 
         // One should now have only 50 left, two should have 50 now
-        Assert.assertEquals(economyManager.getBalance(playerOne), 50.0, 0.0);
-        Assert.assertEquals(economyManager.getBalance(playerTwo), 50.0, 0.0);
+        Assert.assertEquals(50.0, economyManager.getBalance(playerOne), 0.0);
+        Assert.assertEquals(50.0, economyManager.getBalance(playerTwo), 0.0);
 
         // Ensure that balance addition and subtraction works...
-        Assert.assertEquals(economyManager.transact(
-                new Transaction(playerOne, Economable.CONSOLE, 25.0, TransactionReason.TEST)
-        ).getFromBalance(), 25.0, 0.0);
+        Assert.assertEquals(25.0, economyManager.transact(
+                new Transaction(playerOne, Economable.CONSOLE, 25.0, TransactionReason.TEST_TAKE)
+        ).getFromBalance(), 0.0);
 
-        Assert.assertEquals(economyManager.transact(
-                new Transaction(Economable.CONSOLE, playerOne, 25.0, TransactionReason.TEST)
-        ).getToBalance(), 50.0, 0.0);
+        Assert.assertEquals(50.0, economyManager.transact(
+                new Transaction(Economable.CONSOLE, playerOne, 25.0, TransactionReason.TEST_GIVE)
+        ).getToBalance(), 0.0);
 
-        Assert.assertEquals(economyManager.transact(
-                new Transaction(playerTwo, Economable.CONSOLE, Double.MAX_VALUE, TransactionReason.TEST)
-        ).getFromBalance(), 0.0, 0.0);
+        Assert.assertEquals(TransactionResult.Status.ERR_NOT_ENOUGH_FUNDS, economyManager.transact(
+                new Transaction(playerTwo, Economable.CONSOLE, Double.MAX_VALUE, TransactionReason.TEST_TAKE)
+        ).getStatus());
 
         // Ensure that hasBalance works
         Assert.assertTrue(economyManager.hasBalance(playerOne, 50.0));

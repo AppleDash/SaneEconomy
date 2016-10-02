@@ -1,6 +1,7 @@
 package org.appledash.saneeconomy.economy.transaction;
 
 import org.appledash.saneeconomy.economy.economable.Economable;
+import org.appledash.saneeconomy.economy.transaction.TransactionReason.AffectedParties;
 
 /**
  * Created by appledash on 9/21/16.
@@ -39,7 +40,11 @@ public class Transaction {
         return reason;
     }
 
-    public boolean isFree() {
-        return (sender == Economable.CONSOLE) || (sender == Economable.PLUGIN) || (reason == TransactionReason.ADMIN);
+    public boolean isSenderAffected() {
+        return (reason.getAffectedParties() == AffectedParties.SENDER) || (reason.getAffectedParties() == AffectedParties.BOTH);
+    }
+
+    public boolean isReceiverAffected() {
+        return (reason.getAffectedParties() == AffectedParties.RECEIVER) || (reason.getAffectedParties() == AffectedParties.BOTH);
     }
 }

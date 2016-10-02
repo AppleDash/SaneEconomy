@@ -149,7 +149,7 @@ public class EconomySaneEconomy implements Economy {
         }
 
         return transact(new Transaction(
-                economable, Economable.PLUGIN, v, TransactionReason.PLUGIN
+                economable, Economable.PLUGIN, v, TransactionReason.PLUGIN_TAKE
         ));
     }
 
@@ -164,7 +164,7 @@ public class EconomySaneEconomy implements Economy {
         }
 
         return transact(new Transaction(
-                Economable.wrap(offlinePlayer), Economable.PLUGIN, v, TransactionReason.PLUGIN
+                Economable.wrap(offlinePlayer), Economable.PLUGIN, v, TransactionReason.PLUGIN_TAKE
         ));
     }
 
@@ -192,7 +192,7 @@ public class EconomySaneEconomy implements Economy {
         }
 
         return transact(new Transaction(
-                Economable.PLUGIN, economable, v, TransactionReason.PLUGIN
+                Economable.PLUGIN, economable, v, TransactionReason.PLUGIN_GIVE
         ));
     }
 
@@ -203,7 +203,7 @@ public class EconomySaneEconomy implements Economy {
         }
 
         return transact(new Transaction(
-                Economable.PLUGIN, Economable.wrap(offlinePlayer), v, TransactionReason.PLUGIN
+                Economable.PLUGIN, Economable.wrap(offlinePlayer), v, TransactionReason.PLUGIN_GIVE
         ));
     }
 

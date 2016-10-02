@@ -11,6 +11,7 @@
 
     <modules>
         <module>SaneEconomyCore</module>
+        <module>SaneEconomySignShop</module>
     </modules>
 
     <repositories>
