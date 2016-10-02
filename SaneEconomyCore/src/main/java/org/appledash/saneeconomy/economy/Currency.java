@@ -3,6 +3,7 @@ package org.appledash.saneeconomy.economy;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 
 /**
  * Created by AppleDash on 6/13/2016.
@@ -22,10 +23,24 @@ public class Currency {
     }
 
     public static Currency fromConfig(ConfigurationSection config) {
+        DecimalFormat format = new DecimalFormat(config.getString("format", "0.00"));
+
+        if (config.getInt("grouping", 0) > 0) {
+            DecimalFormatSymbols symbols = format.getDecimalFormatSymbols();
+            if (symbols.getDecimalSeparator() == ',') { // French
+                symbols.setGroupingSeparator(' ');
+            } else {
+                symbols.setGroupingSeparator(',');
+            }
+            format.setDecimalFormatSymbols(symbols);
+            format.setGroupingUsed(true);
+            format.setGroupingSize(3);
+        }
+
         return new Currency(
                 config.getString("name.singular", "dollar"),
                 config.getString("name.plural", "dollars"),
-                new DecimalFormat(config.getString("format", "0.00"))
+                format
         );
     }
 
