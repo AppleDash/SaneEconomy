@@ -13,13 +13,15 @@ public class SignShop {
     private final UUID ownerUuid;
     private final Location location;
     private final Material item;
+    private final int quantity;
     private final double buyAmount;
     private final double sellAmount;
 
-    public SignShop(UUID ownerUuid, Location location, Material item, double buyAmount, double sellAmount) {
+    public SignShop(UUID ownerUuid, Location location, Material item, int quantity, double buyAmount, double sellAmount) {
         this.ownerUuid = ownerUuid;
         this.location = location;
         this.item = item;
+        this.quantity = quantity;
         this.buyAmount = buyAmount;
         this.sellAmount = sellAmount;
     }
@@ -50,5 +52,9 @@ public class SignShop {
 
     public UUID getOwnerUuid() {
         return ownerUuid;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 }

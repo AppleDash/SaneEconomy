@@ -23,6 +23,7 @@ public interface ISaneEconomy {
     /**
      * Get the active TransactionLogger.
      * @return TransactionLogger, if there is one.
+     * @throws IllegalStateException if shouldLogTransactions() is false.
      */
     TransactionLogger getTransactionLogger();
 }

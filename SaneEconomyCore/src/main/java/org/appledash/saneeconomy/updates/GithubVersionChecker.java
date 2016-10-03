@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.utils.WebUtils;
 
 /**
@@ -30,7 +29,7 @@ public class GithubVersionChecker {
 
         JsonArray array = (JsonArray)new JsonParser().parse(jsonContent);
 
-        int currentVersion = releaseToInt(SaneEconomy.getInstance().getDescription().getVersion());
+        int currentVersion = releaseToInt(this.currentVersion);
         int newestVersion = -1;
         // JsonObject newestObj = null;
 

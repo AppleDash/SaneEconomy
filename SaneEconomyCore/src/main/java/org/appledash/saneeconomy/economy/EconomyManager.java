@@ -85,7 +85,6 @@ public class EconomyManager {
      * Add to a player's balance.
      * @param targetPlayer Player to add to
      * @param amount Amount to add
-     * @return Player's new balance
      * @throws IllegalArgumentException If amount is negative
      */
     private void addBalance(Economable targetPlayer, double amount) {
@@ -109,7 +108,6 @@ public class EconomyManager {
      * If the subtraction would result in a negative balance, the balance is instead set to 0.
      * @param targetPlayer Player to subtract from
      * @param amount Amount to subtract
-     * @return Player's new balance
      * @throws IllegalArgumentException If amount is negative
      */
     private void subtractBalance(Economable targetPlayer, double amount) {

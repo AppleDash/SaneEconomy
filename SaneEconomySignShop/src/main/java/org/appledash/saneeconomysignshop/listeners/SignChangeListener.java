@@ -1,6 +1,7 @@
 package org.appledash.saneeconomysignshop.listeners;
 
 import com.google.common.base.Strings;
+import org.appledash.saneeconomy.utils.MessageUtils;
 import org.appledash.saneeconomysignshop.SaneEconomySignShop;
 import org.appledash.saneeconomysignshop.signshop.SignShop;
 import org.bukkit.Location;
@@ -26,7 +27,37 @@ public class SignChangeListener implements Listener {
 
     @EventHandler
     public void onSignChange(SignChangeEvent evt) {
+        if (!evt.getPlayer().hasPermission("saneeconomysignshop.create.admin")) {
+            return;
+        }
 
+        ParsedSignShop pss = parseSignShop(evt);
+
+        if (pss.error != null) {
+            MessageUtils.sendMessage(evt.getPlayer(), String.format("Cannot create shop: %s", pss.error));
+            return;
+        }
+
+        if (pss.shop == null) {
+            return;
+        }
+
+        SignShop signShop = pss.shop;
+        plugin.getSignShopManager().addSignShop(signShop);
+        MessageUtils.sendMessage(evt.getPlayer(), "Sign shop created!");
+        MessageUtils.sendMessage(evt.getPlayer(), String.format("Item: %d x %s", signShop.getQuantity(), signShop.getItem()));
+
+        if (signShop.canBuy()) {
+            MessageUtils.sendMessage(evt.getPlayer(), String.format("Will buy from players for %s.",
+                    plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(signShop.getBuyAmount())
+            ));
+        }
+
+        if (signShop.canSell()) {
+            MessageUtils.sendMessage(evt.getPlayer(), String.format("Will sell to players for %s.",
+                    plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(signShop.getSellAmount())
+            ));
+        }
     }
 
     private ParsedSignShop parseSignShop(SignChangeEvent evt) {
@@ -61,10 +92,16 @@ public class SignChangeListener implements Listener {
             return new ParsedSignShop("Invalid item name specified.");
         }
 
-        Matcher m = Pattern.compile("(B:(?<buy>[0-9.]+))?[ ]*(S:(?<sell>[0-9.]+))?").matcher(buySellRaw);
+        Matcher m = Pattern.compile("(B:(?<buy>[0-9.]+))?[ ]*(S:(?<sell>[0-9.]+))?").matcher(buySellRaw.trim());
 
-        if (!m.find()) {
+        if (!m.matches()) {
             return new ParsedSignShop("Invalid buy/sell prices specified.");
+        }
+
+        plugin.getLogger().info(m.group("buy"));
+        plugin.getLogger().info(m.group("sell"));
+        for (int i = 0; i < m.groupCount(); i++) {
+            plugin.getLogger().info("Group " + i + ": " + m.group(i));
         }
 
         double buy = Strings.isNullOrEmpty(m.group("buy")) ? -1.0 : Double.valueOf(m.group("buy"));
@@ -86,7 +123,7 @@ public class SignChangeListener implements Listener {
             return new ParsedSignShop("Item amount is not a positive integer.");
         }
 
-        return new ParsedSignShop(new SignShop(player.getUniqueId(), location, mat, buy, sell));
+        return new ParsedSignShop(new SignShop(player.getUniqueId(), location, mat, itemAmount, buy, sell));
     }
 
     private class ParsedSignShop {

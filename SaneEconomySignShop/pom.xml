@@ -12,6 +12,14 @@
     <artifactId>SaneEconomySignShop</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.appledash</groupId>
+            <artifactId>SaneEconomyCore</artifactId>
+            <version>0.8.4-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
         <resources>
