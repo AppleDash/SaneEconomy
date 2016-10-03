@@ -1,0 +1,5 @@
+name: SaneEconomySignShop
+main: org.appledash.saneeconomysignshop.SaneEconomySignshop
+author: AppleDash
+version: 0.1.0
+depend: [SaneEconomy]
