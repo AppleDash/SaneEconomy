@@ -51,13 +51,13 @@ public class SignChangeListener implements Listener {
 
         if (signShop.canBuy()) {
             MessageUtils.sendMessage(evt.getPlayer(), String.format("Will buy from players for %s.",
-                    plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(signShop.getBuyAmount())
+                    plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(signShop.getBuyPrice())
             ));
         }
 
         if (signShop.canSell()) {
             MessageUtils.sendMessage(evt.getPlayer(), String.format("Will sell to players for %s.",
-                    plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(signShop.getSellAmount())
+                    plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(signShop.getSellPrice())
             ));
         }
     }

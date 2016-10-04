@@ -65,33 +65,39 @@ public class InteractListener implements Listener {
 
     private void doBuy(SignShop shop, Player player) {
         EconomyManager ecoMan = plugin.getSaneEconomy().getEconomyManager();
+        int quantity = player.isSneaking() ? 1 : shop.getQuantity();
+        double price = shop.getBuyPrice(quantity);
 
-        if (!ecoMan.hasBalance(Economable.wrap(player), shop.getBuyAmount())) {
-            MessageUtils.sendMessage(player, String.format("You do not have enough money to buy %d %s.", shop.getQuantity(), shop.getItem()));
+        if (!ecoMan.hasBalance(Economable.wrap(player), price)) {
+            MessageUtils.sendMessage(player, String.format("You do not have enough money to buy %d %s.", quantity, shop.getItem()));
             return;
         }
 
-        TransactionResult result = ecoMan.transact(new Transaction(Economable.wrap(player), Economable.PLUGIN, shop.getBuyAmount(), TransactionReason.PLUGIN_TAKE));
+        TransactionResult result = ecoMan.transact(new Transaction(Economable.wrap(player), Economable.PLUGIN, price, TransactionReason.PLUGIN_TAKE));
 
         if (result.getStatus() != TransactionResult.Status.SUCCESS) {
             MessageUtils.sendMessage(player, String.format("An error occurred attempting to perform that transaction: %s", result.getStatus()));
             return;
         }
 
-        player.getInventory().addItem(new ItemStack(shop.getItem(), shop.getQuantity()));
-        MessageUtils.sendMessage(player, String.format("You have bought %d %s for %s.", shop.getQuantity(), shop.getItem(), ecoMan.getCurrency().formatAmount(shop.getBuyAmount())));
+        player.getInventory().addItem(new ItemStack(shop.getItem(), quantity));
+        MessageUtils.sendMessage(player, String.format("You have bought %d %s for %s.", quantity, shop.getItem(), ecoMan.getCurrency().formatAmount(price)));
     }
 
     private void doSell(SignShop shop, Player player) {
         EconomyManager ecoMan = plugin.getSaneEconomy().getEconomyManager();
+        int quantity = player.isSneaking() ? 1 : shop.getQuantity();
+        double price = shop.getSellPrice(quantity);
 
-        if (!player.getInventory().contains(new ItemStack(shop.getItem(), shop.getQuantity()))) {
-            MessageUtils.sendMessage(player, String.format("You do not have %d %s!", shop.getQuantity(), shop.getItem()));
+        ItemStack requiredItem = new ItemStack(shop.getItem(), quantity);
+
+        if (!player.getInventory().contains(requiredItem)) {
+            MessageUtils.sendMessage(player, String.format("You do not have %d %s!", quantity, shop.getItem()));
             return;
         }
 
-        player.getInventory().remove(new ItemStack(shop.getItem(), shop.getQuantity()));
-        ecoMan.transact(new Transaction(Economable.PLUGIN, Economable.wrap(player), shop.getSellAmount(), TransactionReason.PLUGIN_GIVE));
-        MessageUtils.sendMessage(player, String.format("You have sold %d %s for %s.", shop.getQuantity(), shop.getItem(), ecoMan.getCurrency().formatAmount(shop.getSellAmount())));
+        player.getInventory().remove(requiredItem);
+        ecoMan.transact(new Transaction(Economable.PLUGIN, Economable.wrap(player), price, TransactionReason.PLUGIN_GIVE));
+        MessageUtils.sendMessage(player, String.format("You have sold %d %s for %s.", shop.getQuantity(), shop.getItem(), ecoMan.getCurrency().formatAmount(price)));
     }
 }
