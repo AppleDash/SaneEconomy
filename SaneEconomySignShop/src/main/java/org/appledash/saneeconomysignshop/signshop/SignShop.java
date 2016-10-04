@@ -18,6 +18,14 @@ public class SignShop {
     private final double sellAmount;
 
     public SignShop(UUID ownerUuid, Location location, Material item, int quantity, double buyAmount, double sellAmount) {
+        if (ownerUuid == null || location == null || item == null) {
+            throw new IllegalArgumentException("ownerUuid, location, and item must not be null.");
+        }
+
+        if (quantity < 1) {
+            throw new IllegalArgumentException("Quantity must be greater than zero.");
+        }
+
         this.ownerUuid = ownerUuid;
         this.location = location;
         this.item = item;

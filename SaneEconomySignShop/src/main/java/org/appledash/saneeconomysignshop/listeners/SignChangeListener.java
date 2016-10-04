@@ -1,6 +1,7 @@
 package org.appledash.saneeconomysignshop.listeners;
 
 import com.google.common.base.Strings;
+import net.md_5.bungee.api.ChatColor;
 import org.appledash.saneeconomy.utils.MessageUtils;
 import org.appledash.saneeconomysignshop.SaneEconomySignShop;
 import org.appledash.saneeconomysignshop.signshop.SignShop;
@@ -27,7 +28,7 @@ public class SignChangeListener implements Listener {
 
     @EventHandler
     public void onSignChange(SignChangeEvent evt) {
-        if (!evt.getPlayer().hasPermission("saneeconomysignshop.create.admin")) {
+        if (!evt.getPlayer().hasPermission("saneeconomy.signshop.create.admin")) {
             return;
         }
 
@@ -44,6 +45,7 @@ public class SignChangeListener implements Listener {
 
         SignShop signShop = pss.shop;
         plugin.getSignShopManager().addSignShop(signShop);
+        evt.setLine(0, ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("admin-shop-title")));
         MessageUtils.sendMessage(evt.getPlayer(), "Sign shop created!");
         MessageUtils.sendMessage(evt.getPlayer(), String.format("Item: %d x %s", signShop.getQuantity(), signShop.getItem()));
 
@@ -96,12 +98,6 @@ public class SignChangeListener implements Listener {
 
         if (!m.matches()) {
             return new ParsedSignShop("Invalid buy/sell prices specified.");
-        }
-
-        plugin.getLogger().info(m.group("buy"));
-        plugin.getLogger().info(m.group("sell"));
-        for (int i = 0; i < m.groupCount(); i++) {
-            plugin.getLogger().info("Group " + i + ": " + m.group(i));
         }
 
         double buy = Strings.isNullOrEmpty(m.group("buy")) ? -1.0 : Double.valueOf(m.group("buy"));

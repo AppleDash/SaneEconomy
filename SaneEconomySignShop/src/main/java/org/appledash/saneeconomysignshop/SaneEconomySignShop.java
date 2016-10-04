@@ -1,6 +1,7 @@
 package org.appledash.saneeconomysignshop;
 
 import org.appledash.saneeconomy.ISaneEconomy;
+import org.appledash.saneeconomysignshop.listeners.InteractListener;
 import org.appledash.saneeconomysignshop.listeners.SignChangeListener;
 import org.appledash.saneeconomysignshop.signshop.SignShopManager;
 import org.bukkit.plugin.Plugin;
@@ -27,8 +28,11 @@ public class SaneEconomySignShop extends JavaPlugin {
         // If it's stupid but it works... it's probably still stupid.
         getLogger().info(String.format("Hooked into SaneEconomy version %s.", ((Plugin)saneEconomy).getDescription().getVersion()));
 
+        saveDefaultConfig();
+
         signShopManager.loadSignShops();
         getServer().getPluginManager().registerEvents(new SignChangeListener(this), this);
+        getServer().getPluginManager().registerEvents(new InteractListener(this), this);
     }
 
     public SignShopManager getSignShopManager() {
