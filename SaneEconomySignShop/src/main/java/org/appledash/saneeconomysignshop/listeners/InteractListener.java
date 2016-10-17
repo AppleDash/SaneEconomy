@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Optional;
@@ -34,6 +35,10 @@ public class InteractListener implements Listener {
             return;
         }
 
+        if (evt.getHand() != EquipmentSlot.HAND) {
+            return;
+        }
+
         Optional<SignShop> shopOptional = plugin.getSignShopManager().getSignShop(evt.getClickedBlock().getLocation());
 
         if (!shopOptional.isPresent()) {
@@ -44,6 +49,7 @@ public class InteractListener implements Listener {
 
         // Buy
         if (evt.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            evt.setCancelled(true);
             if (!shop.canBuy()) {
                 MessageUtils.sendMessage(evt.getPlayer(), "This shop does not permit buying.");
                 return;
@@ -54,6 +60,7 @@ public class InteractListener implements Listener {
 
         // Sell
         if (evt.getAction() == Action.LEFT_CLICK_BLOCK) {
+            evt.setCancelled(true);
             if (!shop.canSell()) {
                 MessageUtils.sendMessage(evt.getPlayer(), "This shop does not permit selling.");
                 return;
@@ -89,15 +96,13 @@ public class InteractListener implements Listener {
         int quantity = player.isSneaking() ? 1 : shop.getQuantity();
         double price = shop.getSellPrice(quantity);
 
-        ItemStack requiredItem = new ItemStack(shop.getItem(), quantity);
-
-        if (!player.getInventory().contains(requiredItem)) {
+        if (!player.getInventory().containsAtLeast(new ItemStack(shop.getItem()), quantity)) {
             MessageUtils.sendMessage(player, String.format("You do not have %d %s!", quantity, shop.getItem()));
             return;
         }
 
-        player.getInventory().remove(requiredItem);
+        player.getInventory().removeItem(new ItemStack(shop.getItem(), quantity)); // FIXME: This does not remove items with damage values that were detected by contains()
         ecoMan.transact(new Transaction(Economable.PLUGIN, Economable.wrap(player), price, TransactionReason.PLUGIN_GIVE));
-        MessageUtils.sendMessage(player, String.format("You have sold %d %s for %s.", shop.getQuantity(), shop.getItem(), ecoMan.getCurrency().formatAmount(price)));
+        MessageUtils.sendMessage(player, String.format("You have sold %d %s for %s.", quantity, shop.getItem(), ecoMan.getCurrency().formatAmount(price)));
     }
 }

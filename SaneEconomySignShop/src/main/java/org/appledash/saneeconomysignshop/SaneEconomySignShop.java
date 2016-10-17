@@ -4,8 +4,11 @@ import org.appledash.saneeconomy.ISaneEconomy;
 import org.appledash.saneeconomysignshop.listeners.InteractListener;
 import org.appledash.saneeconomysignshop.listeners.SignChangeListener;
 import org.appledash.saneeconomysignshop.signshop.SignShopManager;
+import org.appledash.saneeconomysignshop.signshop.storage.SignShopStorageFlatfile;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
 
 /**
  * Created by appledash on 10/2/16.
@@ -13,7 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class SaneEconomySignShop extends JavaPlugin {
     private ISaneEconomy saneEconomy;
-    private final SignShopManager signShopManager = new SignShopManager();
+    private final SignShopManager signShopManager = new SignShopManager(new SignShopStorageFlatfile(new File(getDataFolder(), "shops.db")));
 
     @Override
     public void onEnable() {
@@ -33,6 +36,7 @@ public class SaneEconomySignShop extends JavaPlugin {
         signShopManager.loadSignShops();
         getServer().getPluginManager().registerEvents(new SignChangeListener(this), this);
         getServer().getPluginManager().registerEvents(new InteractListener(this), this);
+        getServer().getPluginManager().registerEvents(new SignChangeListener(this), this);
     }
 
     public SignShopManager getSignShopManager() {

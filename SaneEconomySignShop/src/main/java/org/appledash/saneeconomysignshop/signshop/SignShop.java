@@ -73,7 +73,7 @@ public class SignShop {
      * @return Price to buy that number of items at this shop
      */
     public double getBuyPrice(int quantity) {
-        return Math.ceil(this.buyPrice * (this.quantity / quantity)); // TODO: Is this okay?
+        return Math.ceil(this.buyPrice * (quantity / this.quantity)); // TODO: Is this okay?
     }
 
     /**
@@ -83,7 +83,7 @@ public class SignShop {
      * @return Price to sell that number of items at this shop
      */
     public double getSellPrice(int quantity) {
-        return Math.floor(this.sellPrice * (this.quantity / quantity)); // TODO: Is this okay?
+        return Math.floor(this.sellPrice * (quantity / this.quantity)); // TODO: Is this okay?
     }
 
     /**

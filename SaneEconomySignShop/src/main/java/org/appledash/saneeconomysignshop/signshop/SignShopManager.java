@@ -1,9 +1,8 @@
 package org.appledash.saneeconomysignshop.signshop;
 
+import org.appledash.saneeconomysignshop.signshop.storage.SignShopStorage;
 import org.bukkit.Location;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -11,17 +10,25 @@ import java.util.Optional;
  * Blackjack is still best pony.
  */
 public class SignShopManager {
-    private Map<Location, SignShop> signShops = new HashMap<Location, SignShop>();
+    private SignShopStorage storage;
+
+    public SignShopManager(SignShopStorage storage) {
+        this.storage = storage;
+    }
 
     public void loadSignShops() {
-
+        storage.loadSignShops();
     }
 
     public void addSignShop(SignShop signShop) {
-        signShops.put(signShop.getLocation(), signShop);
+        storage.putSignShop(signShop);
+    }
+
+    public void removeSignShop(SignShop signShop) {
+        storage.removeSignShop(signShop);
     }
 
     public Optional<SignShop> getSignShop(Location location) {
-        return Optional.ofNullable(signShops.get(location));
+        return Optional.ofNullable(storage.getSignShops().get(location));
     }
 }
