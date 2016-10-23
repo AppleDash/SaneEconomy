@@ -1,17 +1,19 @@
 package org.appledash.saneeconomysignshop.signshop;
 
+import org.appledash.saneeconomysignshop.util.SerializableLocation;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by appledash on 10/2/16.
  * Blackjack is still best pony.
  */
-public class SignShop {
+public class SignShop implements Serializable {
     private final UUID ownerUuid;
-    private final Location location;
+    private final SerializableLocation location;
     private final Material item;
     private final int quantity;
     private final double buyPrice;
@@ -27,7 +29,7 @@ public class SignShop {
         }
 
         this.ownerUuid = ownerUuid;
-        this.location = location;
+        this.location = new SerializableLocation(location);
         this.item = item;
         this.quantity = quantity;
         this.buyPrice = buyPrice;
@@ -39,7 +41,7 @@ public class SignShop {
      * @return Location
      */
     public Location getLocation() {
-        return location;
+        return location.getBukkitLocation();
     }
 
     /**
@@ -73,7 +75,7 @@ public class SignShop {
      * @return Price to buy that number of items at this shop
      */
     public double getBuyPrice(int quantity) {
-        return Math.ceil(this.buyPrice * (quantity / this.quantity)); // TODO: Is this okay?
+        return this.buyPrice * ((float)quantity / (float)this.quantity); // TODO: Is this okay?
     }
 
     /**
@@ -83,7 +85,7 @@ public class SignShop {
      * @return Price to sell that number of items at this shop
      */
     public double getSellPrice(int quantity) {
-        return Math.floor(this.sellPrice * (quantity / this.quantity)); // TODO: Is this okay?
+        return this.sellPrice * ((float)quantity / (float)this.quantity); // TODO: Is this okay?
     }
 
     /**

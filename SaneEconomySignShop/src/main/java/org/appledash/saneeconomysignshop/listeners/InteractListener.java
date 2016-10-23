@@ -8,6 +8,7 @@ import org.appledash.saneeconomy.economy.transaction.TransactionResult;
 import org.appledash.saneeconomy.utils.MessageUtils;
 import org.appledash.saneeconomysignshop.SaneEconomySignShop;
 import org.appledash.saneeconomysignshop.signshop.SignShop;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -36,6 +37,10 @@ public class InteractListener implements Listener {
         }
 
         if (evt.getHand() != EquipmentSlot.HAND) {
+            return;
+        }
+
+        if (evt.getPlayer().getInventory().getItemInMainHand() != null && evt.getPlayer().getInventory().getItemInMainHand().getType() == Material.DIAMOND_AXE) {
             return;
         }
 
@@ -91,7 +96,7 @@ public class InteractListener implements Listener {
         MessageUtils.sendMessage(player, String.format("You have bought %d %s for %s.", quantity, shop.getItem(), ecoMan.getCurrency().formatAmount(price)));
     }
 
-    private void doSell(SignShop shop, Player player) {
+    private void doSell(SignShop shop, Player player) { // TODO: Selling enchanted items
         EconomyManager ecoMan = plugin.getSaneEconomy().getEconomyManager();
         int quantity = player.isSneaking() ? 1 : shop.getQuantity();
         double price = shop.getSellPrice(quantity);
@@ -100,6 +105,8 @@ public class InteractListener implements Listener {
             MessageUtils.sendMessage(player, String.format("You do not have %d %s!", quantity, shop.getItem()));
             return;
         }
+
+        System.out.printf("The amount is: %f\n", price);
 
         player.getInventory().removeItem(new ItemStack(shop.getItem(), quantity)); // FIXME: This does not remove items with damage values that were detected by contains()
         ecoMan.transact(new Transaction(Economable.PLUGIN, Economable.wrap(player), price, TransactionReason.PLUGIN_GIVE));

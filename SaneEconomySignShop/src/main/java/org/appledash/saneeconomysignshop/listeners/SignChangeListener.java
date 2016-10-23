@@ -67,7 +67,7 @@ public class SignChangeListener implements Listener {
         Player player = evt.getPlayer();
         Location location = evt.getBlock().getLocation();
 
-        if ((lines[0] == null) || !lines[0].equalsIgnoreCase("Admin Shop")) { // First line must say "Admin Shop"
+        if ((lines[0] == null) || !lines[0].equalsIgnoreCase(plugin.getConfig().getString("admin-shop-trigger"))) { // First line must contain the trigger
             return new ParsedSignShop();
         }
 

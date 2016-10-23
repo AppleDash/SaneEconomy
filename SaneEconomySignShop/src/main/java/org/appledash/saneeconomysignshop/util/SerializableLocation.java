@@ -3,13 +3,14 @@ package org.appledash.saneeconomysignshop.util;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by appledash on 10/17/16.
  * Blackjack is best pony.
  */
-public class SerializableLocation {
+public class SerializableLocation implements Serializable {
     private double x, y, z;
     private float yaw, pitch;
     private UUID worldUuid;
