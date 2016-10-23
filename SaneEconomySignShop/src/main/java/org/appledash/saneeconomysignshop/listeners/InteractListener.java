@@ -106,8 +106,6 @@ public class InteractListener implements Listener {
             return;
         }
 
-        System.out.printf("The amount is: %f\n", price);
-
         player.getInventory().removeItem(new ItemStack(shop.getItem(), quantity)); // FIXME: This does not remove items with damage values that were detected by contains()
         ecoMan.transact(new Transaction(Economable.PLUGIN, Economable.wrap(player), price, TransactionReason.PLUGIN_GIVE));
         MessageUtils.sendMessage(player, String.format("You have sold %d %s for %s.", quantity, shop.getItem(), ecoMan.getCurrency().formatAmount(price)));

@@ -1,6 +1,7 @@
 package org.appledash.saneeconomysignshop;
 
 import org.appledash.saneeconomy.ISaneEconomy;
+import org.appledash.saneeconomysignshop.listeners.BreakListener;
 import org.appledash.saneeconomysignshop.listeners.InteractListener;
 import org.appledash.saneeconomysignshop.listeners.SignChangeListener;
 import org.appledash.saneeconomysignshop.signshop.SignShopManager;
@@ -36,7 +37,7 @@ public class SaneEconomySignShop extends JavaPlugin {
         signShopManager.loadSignShops();
         getServer().getPluginManager().registerEvents(new SignChangeListener(this), this);
         getServer().getPluginManager().registerEvents(new InteractListener(this), this);
-        getServer().getPluginManager().registerEvents(new SignChangeListener(this), this);
+        getServer().getPluginManager().registerEvents(new BreakListener(this), this);
     }
 
     public SignShopManager getSignShopManager() {
