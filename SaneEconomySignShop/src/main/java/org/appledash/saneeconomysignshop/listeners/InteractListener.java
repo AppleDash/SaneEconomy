@@ -40,7 +40,7 @@ public class InteractListener implements Listener {
             return;
         }
 
-        if (evt.getPlayer().getInventory().getItemInMainHand() != null && evt.getPlayer().getInventory().getItemInMainHand().getType() == Material.DIAMOND_AXE) {
+        if ((evt.getPlayer().getInventory().getItemInMainHand() != null) && (evt.getPlayer().getInventory().getItemInMainHand().getType() == Material.DIAMOND_AXE)) {
             return;
         }
 
