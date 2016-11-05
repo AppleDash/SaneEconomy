@@ -1,5 +1,6 @@
 package org.appledash.saneeconomysignshop.signshop;
 
+import org.appledash.saneeconomysignshop.util.ItemInfo;
 import org.appledash.saneeconomysignshop.util.SerializableLocation;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
@@ -14,7 +15,7 @@ import java.util.UUID;
 public class SignShop implements Serializable {
     private final UUID ownerUuid;
     private final SerializableLocation location;
-    private final ItemStack item;
+    private final ItemInfo item;
     private final int quantity;
     private final double buyPrice;
     private final double sellPrice;
@@ -30,7 +31,7 @@ public class SignShop implements Serializable {
 
         this.ownerUuid = ownerUuid;
         this.location = new SerializableLocation(location);
-        this.item = item;
+        this.item = new ItemInfo(item);
         this.quantity = quantity;
         this.buyPrice = buyPrice;
         this.sellPrice = sellPrice;
@@ -49,7 +50,7 @@ public class SignShop implements Serializable {
      * @return Material representing item/block type
      */
     public ItemStack getItem() {
-        return item;
+        return item.toItemStack();
     }
 
     /**
