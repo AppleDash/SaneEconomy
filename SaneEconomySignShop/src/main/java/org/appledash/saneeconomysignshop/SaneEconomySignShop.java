@@ -6,6 +6,7 @@ import org.appledash.saneeconomysignshop.listeners.InteractListener;
 import org.appledash.saneeconomysignshop.listeners.SignChangeListener;
 import org.appledash.saneeconomysignshop.signshop.SignShopManager;
 import org.appledash.saneeconomysignshop.signshop.storage.SignShopStorageFlatfile;
+import org.appledash.saneeconomysignshop.util.ItemDatabase;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -26,6 +27,8 @@ public class SaneEconomySignShop extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+
+        ItemDatabase.initItemDB();
 
         saneEconomy = (ISaneEconomy)getServer().getPluginManager().getPlugin("SaneEconomy");
 

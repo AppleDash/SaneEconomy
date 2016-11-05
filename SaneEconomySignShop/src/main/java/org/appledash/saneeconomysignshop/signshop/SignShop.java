@@ -2,7 +2,7 @@ package org.appledash.saneeconomysignshop.signshop;
 
 import org.appledash.saneeconomysignshop.util.SerializableLocation;
 import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -14,12 +14,12 @@ import java.util.UUID;
 public class SignShop implements Serializable {
     private final UUID ownerUuid;
     private final SerializableLocation location;
-    private final Material item;
+    private final ItemStack item;
     private final int quantity;
     private final double buyPrice;
     private final double sellPrice;
 
-    public SignShop(UUID ownerUuid, Location location, Material item, int quantity, double buyPrice, double sellPrice) {
+    public SignShop(UUID ownerUuid, Location location, ItemStack item, int quantity, double buyPrice, double sellPrice) {
         if (ownerUuid == null || location == null || item == null) {
             throw new IllegalArgumentException("ownerUuid, location, and item must not be null.");
         }
@@ -48,7 +48,7 @@ public class SignShop implements Serializable {
      * Get the type of item this SignShop is selling
      * @return Material representing item/block type
      */
-    public Material getItem() {
+    public ItemStack getItem() {
         return item;
     }
 

@@ -44,6 +44,10 @@ public class InteractListener implements Listener {
             return;
         }
 
+        if ((evt.getAction() != Action.RIGHT_CLICK_BLOCK) && (evt.getAction() != Action.LEFT_CLICK_BLOCK)) {
+            return;
+        }
+
         Optional<SignShop> shopOptional = plugin.getSignShopManager().getSignShop(evt.getClickedBlock().getLocation());
 
         if (!shopOptional.isPresent()) {
@@ -92,7 +96,10 @@ public class InteractListener implements Listener {
             return;
         }
 
-        player.getInventory().addItem(new ItemStack(shop.getItem(), quantity));
+        ItemStack stack = shop.getItem().clone();
+        stack.setAmount(quantity);
+
+        player.getInventory().addItem(stack);
         MessageUtils.sendMessage(player, String.format("You have bought %d %s for %s.", quantity, shop.getItem(), ecoMan.getCurrency().formatAmount(price)));
     }
 
@@ -106,7 +113,10 @@ public class InteractListener implements Listener {
             return;
         }
 
-        player.getInventory().removeItem(new ItemStack(shop.getItem(), quantity)); // FIXME: This does not remove items with damage values that were detected by contains()
+        ItemStack stack = shop.getItem().clone();
+        stack.setAmount(quantity);
+
+        player.getInventory().removeItem(stack); // FIXME: This does not remove items with damage values that were detected by contains()
         ecoMan.transact(new Transaction(Economable.PLUGIN, Economable.wrap(player), price, TransactionReason.PLUGIN_GIVE));
         MessageUtils.sendMessage(player, String.format("You have sold %d %s for %s.", quantity, shop.getItem(), ecoMan.getCurrency().formatAmount(price)));
     }
