@@ -186,8 +186,8 @@ public class EconomyManager {
      * @param amount Maximum number of players to show.
      * @return Map of OfflinePlayer to Double
      */
-    public Map<OfflinePlayer, Double> getTopPlayerBalances(int amount) {
-        Map<UUID, Double> uuidBalances = backend.getTopPlayerBalances(amount);
+    public Map<OfflinePlayer, Double> getTopPlayerBalances(int amount, int offset) {
+        Map<UUID, Double> uuidBalances = backend.getTopPlayerBalances(amount, offset);
         Map<OfflinePlayer, Double> playerBalances = new LinkedHashMap<>();
 
         uuidBalances.forEach((uuid, balance) -> playerBalances.put(Bukkit.getServer().getOfflinePlayer(uuid), balance));

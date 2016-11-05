@@ -38,7 +38,7 @@ public interface EconomyStorageBackend {
      * @param amount Maximum number to get.
      * @return Map of player UUIDs to amounts.
      */
-    Map<UUID, Double> getTopPlayerBalances(int amount);
+    Map<UUID, Double> getTopPlayerBalances(int amount, int offset);
 
     /**
      * Reload this backend's database from disk.

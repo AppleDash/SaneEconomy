@@ -33,8 +33,8 @@ public abstract class EconomyStorageBackendCaching implements EconomyStorageBack
     }
 
     @Override
-    public Map<UUID, Double> getTopPlayerBalances(int amount) {
-        return MapUtil.takeFromMap(topPlayerBalances, amount);
+    public Map<UUID, Double> getTopPlayerBalances(int amount, int offset) {
+        return MapUtil.takeFromMap(topPlayerBalances, amount, offset);
     }
 
     @Override

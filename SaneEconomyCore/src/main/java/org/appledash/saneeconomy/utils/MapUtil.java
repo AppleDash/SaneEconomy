@@ -20,14 +20,26 @@ public class MapUtil {
         return result;
     }
 
-    public static <K, V> Map<K, V> takeFromMap(Map<K, V> map, int amount) {
+    public static <K, V> Map<K, V> takeFromMap(Map<K, V> map, int amount, int offset) {
         Map<K, V> newMap = new LinkedHashMap<>();
 
+        if (offset > map.size()) {
+            return newMap;
+        }
+
+        int i = 0;
+
         for (Map.Entry<K, V> entry : map.entrySet()) {
+            if (i < offset) {
+                continue;
+            }
+
             if (newMap.size() > amount) {
                 break;
             }
+
             newMap.put(entry.getKey(), entry.getValue());
+            i++;
         }
 
         return newMap;
