@@ -22,7 +22,7 @@ public class EconomyStorageBackendFlatfile extends EconomyStorageBackendCaching 
     }
 
     @Override
-    public void reloadDatabase() {
+    public synchronized void reloadDatabase() {
         if (!file.exists()) {
             return;
         }

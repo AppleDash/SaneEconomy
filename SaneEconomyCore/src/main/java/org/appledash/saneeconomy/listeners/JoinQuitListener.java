@@ -10,6 +10,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 /**
@@ -41,5 +42,10 @@ public class JoinQuitListener implements Listener {
         if (player.hasPermission("saneeconomy.update-notify") && plugin.getVersionChecker().isUpdateAvailable()) {
             MessageUtils.sendMessage(player, "An update is available! The currently-installed version is %s, but the newest available is %s. Please go to %s to update!", plugin.getDescription().getVersion(), plugin.getVersionChecker().getNewestVersion(), GithubVersionChecker.DOWNLOAD_URL);
         }
+    }
+
+    @EventHandler
+    public void onPlayerLogin(AsyncPlayerPreLoginEvent evt) {
+        plugin.getEconomyManager().getBackend().reloadDatabase(); // TODO: If servers start to lag when lots of people join, this is why.
     }
 }

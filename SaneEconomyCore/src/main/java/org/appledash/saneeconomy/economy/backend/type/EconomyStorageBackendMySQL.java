@@ -97,7 +97,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
     }
 
     @Override
-    public void reloadDatabase() {
+    public synchronized void reloadDatabase() {
         createTables();
         try (Connection conn = dbConn.openConnection()) {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM `saneeconomy_balances`");
