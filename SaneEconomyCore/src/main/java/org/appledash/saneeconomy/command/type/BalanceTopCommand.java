@@ -53,7 +53,7 @@ public class BalanceTopCommand extends SaneEconomyCommand {
         Map<OfflinePlayer, Double> topBalances = saneEconomy.getEconomyManager().getTopPlayerBalances(10, offset);
         AtomicInteger index = new AtomicInteger(1); /* I know it's stupid, but you can't do some_int++ from within the lambda. */
 
-        MessageUtils.sendMessage(sender, "Top %d players (page %s):", topBalances.size(), args[0]);
+        MessageUtils.sendMessage(sender, "Top %d players (page %s):", topBalances.size(), args.length == 1 ? args[0] : "1");
         topBalances.forEach((player, balance) -> MessageUtils.sendMessage(sender, "[%02d] %s - %s", index.getAndIncrement(), player.getName(), SaneEconomy.getInstance().getEconomyManager().getCurrency().formatAmount(balance)));
     }
 }
