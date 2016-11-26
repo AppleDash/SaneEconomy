@@ -35,7 +35,9 @@ public class JoinQuitListener implements Listener {
             plugin.getEconomyManager().transact(new Transaction(
                     Economable.CONSOLE, economable, startBalance, TransactionReason.STARTING_BALANCE
             ));
-            MessageUtils.sendMessage(player, "You've been issued a starting balance of %s!", plugin.getEconomyManager().getCurrency().formatAmount(startBalance));
+            if (plugin.getConfig().getBoolean("economy.notify-start-balance", true)) {
+                MessageUtils.sendMessage(player, "You've been issued a starting balance of %s!", plugin.getEconomyManager().getCurrency().formatAmount(startBalance));
+            }
         }
 
         /* Update notification */
