@@ -43,7 +43,11 @@ public class BalanceTopCommand extends SaneEconomyCommand {
 
         if (args.length == 1) {
             try {
-                offset = 10 * Math.abs(Integer.parseInt(args[0]));
+                int page = Math.abs(Integer.parseInt(args[0]));
+                if (page > 1) {
+                    page--;
+                }
+                offset = 10 * page;
             } catch (NumberFormatException e) {
                 MessageUtils.sendMessage(sender, "%s is not a valid number.");
                 return;

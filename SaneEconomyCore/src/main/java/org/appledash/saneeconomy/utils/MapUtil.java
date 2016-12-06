@@ -34,7 +34,7 @@ public class MapUtil {
                 continue;
             }
 
-            if (newMap.size() > amount) {
+            if (newMap.size() >= amount) {
                 break;
             }
 
