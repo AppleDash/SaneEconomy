@@ -2,6 +2,7 @@ package org.appledash.saneeconomy.utils;
 
 import com.google.common.collect.ImmutableMap;
 import org.appledash.saneeconomy.SaneEconomy;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -69,7 +70,7 @@ public class I18n {
     }
 
     private String translate(String input) {
-        return translations.containsKey(input) ? translations.get(input) : input;
+        return translations.containsKey(input) ? ChatColor.translateAlternateColorCodes('&', translations.get(input)) : input;
     }
 
     public static String _(String s) {

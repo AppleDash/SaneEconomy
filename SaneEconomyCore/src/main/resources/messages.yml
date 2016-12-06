@@ -2,6 +2,7 @@
 # Add a translation to the messages you wish to change, like this:
 # - message: That player is not online.
 #   translation: Ce joueur n'est pas en ligne.
+# Colors can also be used, by means of prefixing color codes with an '&' symbol.
 messages:
   - message: You don't have permission to check the balance of %s.
   - message: That player is not online.
