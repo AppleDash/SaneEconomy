@@ -23,7 +23,7 @@ public class TransactionLoggerMySQL implements TransactionLogger {
     private void logGeneric(String from, String to, double change, TransactionReason reason) {
         this.dbConn.executeAsyncOperation((conn) -> {
             try {
-                PreparedStatement ps = conn.prepareStatement("INSERT INTO transaction_logs (`source`, `destination`, `amount`, `reason`) VALUES (?, ?, ?, ?)");
+            PreparedStatement ps = conn.prepareStatement(String.format("INSERT INTO `%s` (`source`, `destination`, `amount`, `reason`) VALUES (?, ?, ?, ?)", dbConn.getTable("transaction_logs")));
                 ps.setString(1, from);
                 ps.setString(2, to);
                 ps.setDouble(3, change);
@@ -46,7 +46,7 @@ public class TransactionLoggerMySQL implements TransactionLogger {
 
     private void createTables() {
         try (Connection conn = dbConn.openConnection()) {
-            PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS `transaction_logs` (`source` VARCHAR(128), `destination` VARCHAR(128), `amount` DECIMAL(18, 2), `reason` VARCHAR(128))");
+            PreparedStatement ps = conn.prepareStatement(String.format("CREATE TABLE IF NOT EXISTS `%s` (`source` VARCHAR(128), `destination` VARCHAR(128), `amount` DECIMAL(18, 2), `reason` VARCHAR(128))", dbConn.getTable("transaction_logs")));
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Failed to create transaction logger tables", e);

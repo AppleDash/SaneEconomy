@@ -63,6 +63,10 @@ public class MySQLConnection {
         return dbCredentials;
     }
 
+    public String getTable(String tableName) {
+        return dbCredentials.getTablePrefix() + tableName;
+    }
+
     private void waitForSlot() {
         while (openTransactions.get() >= MAX_OPEN_TRANSACTIONS) {
             try {

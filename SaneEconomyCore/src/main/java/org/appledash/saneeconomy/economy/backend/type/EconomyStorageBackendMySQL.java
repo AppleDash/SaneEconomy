@@ -27,14 +27,14 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
     private void createTables() {
         try (Connection conn = dbConn.openConnection()) {
             int schemaVersion;
-            if (!checkTableExists("saneeconomy_schema")) {
-                if (checkTableExists("player_balances")) {
+            if (!checkTableExists(dbConn.getTable("saneeconomy_schema"))) {
+                if (checkTableExists(dbConn.getTable("player_balances"))) {
                     schemaVersion = 1;
                 } else {
                     schemaVersion = 0;
                 }
             } else {
-                PreparedStatement ps = conn.prepareStatement("SELECT `val` FROM saneeconomy_schema WHERE `key` = 'schema_version'");
+                PreparedStatement ps = conn.prepareStatement(String.format("SELECT `val` FROM `%s` WHERE `key` = 'schema_version'", dbConn.getTable("saneeconomy_schema")));
                 ps.executeQuery();
                 ResultSet rs = ps.getResultSet();
 
@@ -47,10 +47,10 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
 
             if (schemaVersion < 2) {
                 if (schemaVersion < 1) {
-                    PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS `player_balances` (player_uuid CHAR(36), balance DECIMAL(18, 2))");
+                    PreparedStatement ps = conn.prepareStatement(String.format("CREATE TABLE IF NOT EXISTS `%s` (player_uuid CHAR(36), balance DECIMAL(18, 2))", dbConn.getTable("player_balances")));
                     ps.executeUpdate();
                 }
-                conn.prepareStatement("CREATE TABLE IF NOT EXISTS `saneeconomy_schema` (`key` VARCHAR(32) PRIMARY KEY, `val` TEXT)").executeUpdate();
+                conn.prepareStatement(String.format("CREATE TABLE IF NOT EXISTS `%s` (`key` VARCHAR(32) PRIMARY KEY, `val` TEXT)", dbConn.getTable("saneeconomy_schema"))).executeUpdate();
                 upgradeSchema1To2(conn);
             }
         } catch (SQLException e) {
@@ -60,9 +60,9 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
 
     private void upgradeSchema1To2(Connection conn) throws SQLException {
         SaneEconomy.logger().info("Upgrading database schema from version 1 to version 2. This might take a little while...");
-        PreparedStatement ps = conn.prepareStatement("REPLACE INTO `saneeconomy_schema` (`key`, `val`) VALUES ('schema_version', '2')");
+        PreparedStatement ps = conn.prepareStatement(String.format("REPLACE INTO `%s` (`key`, `val`) VALUES ('schema_version', '2')", dbConn.getTable("saneeconomy_schema")));
         ps.executeUpdate();
-        conn.prepareStatement("CREATE TABLE `saneeconomy_balances` (unique_identifier VARCHAR(128) PRIMARY KEY, balance DECIMAL(18, 2))").executeUpdate();
+        conn.prepareStatement(String.format("CREATE TABLE `%s` (unique_identifier VARCHAR(128) PRIMARY KEY, balance DECIMAL(18, 2))", dbConn.getTable("saneeconomy_balances"))).executeUpdate();
         ps = conn.prepareStatement("SELECT * FROM `player_balances`");
         ResultSet rs = ps.executeQuery();
 
@@ -73,7 +73,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         }
 
         for (Entry<String, Double> e : oldBalances.entrySet()) {
-            ps = conn.prepareStatement("INSERT INTO `saneeconomy_balances` (unique_identifier, balance) VALUES (?, ?)");
+            ps = conn.prepareStatement(String.format("INSERT INTO `%s` (unique_identifier, balance) VALUES (?, ?)", dbConn.getTable("saneeconomy_balances")));
             ps.setString(1, "player:" + e.getKey());
             ps.setDouble(2, e.getValue());
             ps.executeUpdate();
@@ -100,7 +100,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
     public synchronized void reloadDatabase() {
         createTables();
         try (Connection conn = dbConn.openConnection()) {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM `saneeconomy_balances`");
+            PreparedStatement ps = conn.prepareStatement(String.format("SELECT * FROM `%s`", dbConn.getTable("saneeconomy_balances")));
             ResultSet rs = ps.executeQuery();
 
             balances.clear();
@@ -121,7 +121,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         dbConn.executeAsyncOperation((conn) -> {
             try {
                 ensureAccountExists(economable, conn);
-                PreparedStatement statement = conn.prepareStatement("UPDATE `saneeconomy_balances` SET balance = ? WHERE `unique_identifier` = ?");
+                PreparedStatement statement = conn.prepareStatement(String.format("UPDATE `%s` SET balance = ? WHERE `unique_identifier` = ?", dbConn.getTable("saneeconomy_balances")));
                 statement.setDouble(1, newBalance);
                 statement.setString(2, economable.getUniqueIdentifier());
                 statement.executeUpdate();
@@ -134,14 +134,14 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
 
     private synchronized void ensureAccountExists(Economable economable, Connection conn) throws SQLException {
         if (!accountExists(economable, conn)) {
-            PreparedStatement statement = conn.prepareStatement("INSERT INTO `saneeconomy_balances` (unique_identifier, balance) VALUES (?, 0.0)");
+            PreparedStatement statement = conn.prepareStatement(String.format("INSERT INTO `%s` (unique_identifier, balance) VALUES (?, 0.0)", dbConn.getTable("saneeconomy_balances")));
             statement.setString(1, economable.getUniqueIdentifier());
             statement.executeUpdate();
         }
     }
 
     private synchronized boolean accountExists(Economable economable, Connection conn) throws SQLException {
-        PreparedStatement statement = conn.prepareStatement("SELECT 1 FROM `saneeconomy_balances` WHERE `unique_identifier` = ?");
+        PreparedStatement statement = conn.prepareStatement(String.format("SELECT 1 FROM `%s` WHERE `unique_identifier` = ?", dbConn.getTable("saneeconomy_balances")));
         statement.setString(1, economable.getUniqueIdentifier());
 
         ResultSet rs = statement.executeQuery();

@@ -150,9 +150,10 @@ public class SaneEconomyConfiguration {
         String backendDb = config.getString("database");
         String backendUser = config.getString("username");
         String backendPass = config.getString("password");
+        String tablePrefix = config.getString("table_prefix", "");
 
         return new DatabaseCredentials(
-                backendHost, backendPort, backendUser, backendPass, backendDb
+                backendHost, backendPort, backendUser, backendPass, backendDb, tablePrefix
         );
     }
 }

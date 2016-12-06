@@ -10,13 +10,15 @@ public class DatabaseCredentials {
     private final String username;
     private final String password;
     private final String databaseName;
+    private final String tablePrefix;
 
-    public DatabaseCredentials(String hostname, int port, String username, String password, String databaseName) {
+    public DatabaseCredentials(String hostname, int port, String username, String password, String databaseName, String tablePrefix) {
         this.hostname = hostname;
         this.port = port;
         this.username = username;
         this.password = password;
         this.databaseName = databaseName;
+        this.tablePrefix = tablePrefix;
     }
 
     public String getHostname() {
@@ -41,5 +43,9 @@ public class DatabaseCredentials {
 
     public String getJDBCURL() {
         return String.format("jdbc:mysql://%s:%d/%s", hostname, port, databaseName);
+    }
+
+    public String getTablePrefix() {
+        return tablePrefix;
     }
 }
