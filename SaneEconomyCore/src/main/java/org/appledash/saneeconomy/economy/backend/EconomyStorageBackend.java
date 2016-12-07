@@ -2,6 +2,7 @@ package org.appledash.saneeconomy.economy.backend;
 
 import org.appledash.saneeconomy.economy.economable.Economable;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -38,7 +39,7 @@ public interface EconomyStorageBackend {
      * @param amount Maximum number to get.
      * @return Map of player UUIDs to amounts.
      */
-    Map<UUID, Double> getTopPlayerBalances(int amount, int offset);
+    LinkedHashMap<UUID, Double> getTopPlayerBalances(int amount, int offset);
 
     /**
      * Reload this backend's database from disk.

@@ -39,28 +39,30 @@ public class BalanceTopCommand extends SaneEconomyCommand {
             throw new TooManyArgumentsException();
         }
 
-        int offset = 0;
+        int nPerPage = 10;
+        int page = 1;
 
         if (args.length == 1) {
             try {
-                int page = Math.abs(Integer.parseInt(args[0]));
-                offset = 10 * (page - 1);
+                page = Math.abs(Integer.parseInt(args[0]));
             } catch (NumberFormatException e) {
                 MessageUtils.sendMessage(sender, "%s is not a valid number.");
                 return;
             }
         }
 
-        Map<OfflinePlayer, Double> topBalances = saneEconomy.getEconomyManager().getTopPlayerBalances(10, offset);
+        int offset = (page - 1) * nPerPage;
+
+        Map<OfflinePlayer, Double> topBalances = saneEconomy.getEconomyManager().getTopPlayerBalances(nPerPage, offset);
 
         if (topBalances.isEmpty()) {
             MessageUtils.sendMessage(sender, "There aren't enough players to display that page.");
             return;
         }
 
-        AtomicInteger index = new AtomicInteger(1); /* I know it's stupid, but you can't do some_int++ from within the lambda. */
+        AtomicInteger index = new AtomicInteger(offset + 1); /* I know it's stupid, but you can't do some_int++ from within the lambda. */
 
-        MessageUtils.sendMessage(sender, "Top %d players (page %s):", topBalances.size(), (args.length == 1) ? args[0] : "1");
+        MessageUtils.sendMessage(sender, "Top %d players on page %d:", topBalances.size(), page);
         topBalances.forEach((player, balance) -> MessageUtils.sendMessage(sender, "[%02d] %s - %s", index.getAndIncrement(), player.getName(), SaneEconomy.getInstance().getEconomyManager().getCurrency().formatAmount(balance)));
     }
 }
