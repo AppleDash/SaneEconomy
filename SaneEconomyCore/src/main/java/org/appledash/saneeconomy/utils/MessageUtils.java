@@ -18,7 +18,7 @@ public class MessageUtils {
      * @param fmt String#format format
      * @param args String#format args
      */
-    public static void sendMessage(CommandSender target, String fmt, Object... args) {
+    public static synchronized void sendMessage(CommandSender target, String fmt, Object... args) {
         fmt = _(fmt);
         String prefix = ChatColor.translateAlternateColorCodes('&', SaneEconomy.getInstance().getConfig().getString("chat.prefix", ""));
         target.sendMessage(prefix + String.format(fmt, (Object[])args));
