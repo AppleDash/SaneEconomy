@@ -4,6 +4,9 @@ import org.appledash.saneeconomy.SaneEconomy;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static org.appledash.saneeconomy.utils.I18n._;
 
 /**
@@ -22,5 +25,24 @@ public class MessageUtils {
         fmt = _(fmt);
         String prefix = ChatColor.translateAlternateColorCodes('&', SaneEconomy.getInstance().getConfig().getString("chat.prefix", ""));
         target.sendMessage(prefix + String.format(fmt, (Object[])args));
+    }
+
+    public static String indexedFormat(String fmt, String... arguments) {
+        Matcher m = Pattern.compile("\\{([0-9]+)\\}").matcher(fmt);
+        StringBuffer formatted = new StringBuffer();
+
+        while (m.find()) {
+            int index = Integer.valueOf(m.group(1)) - 1;
+
+            if (index > arguments.length - 1 || index < 0) {
+                throw new IllegalArgumentException("Index must be within the range of the given arguments.");
+            }
+
+            m.appendReplacement(formatted, arguments[index]);
+        }
+
+        m.appendTail(formatted);
+
+        return formatted.toString();
     }
 }
