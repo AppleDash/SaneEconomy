@@ -1,5 +1,6 @@
 package org.appledash.saneeconomy.economy;
 
+import com.google.common.base.Strings;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.text.DecimalFormat;
@@ -32,6 +33,13 @@ public class Currency {
             } else {
                 symbols.setGroupingSeparator(',');
             }
+
+            String groupingSeparator = config.getString("grouping-separator", null);
+
+            if (!Strings.isNullOrEmpty(groupingSeparator)) {
+                symbols.setGroupingSeparator(groupingSeparator.charAt(0));
+            }
+
             format.setDecimalFormatSymbols(symbols);
             format.setGroupingUsed(true);
             format.setGroupingSize(3);
