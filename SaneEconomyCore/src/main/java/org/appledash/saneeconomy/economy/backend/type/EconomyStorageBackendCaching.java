@@ -9,13 +9,14 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by appledash on 7/19/16.
  * Blackjack is still best pony.
  */
 public abstract class EconomyStorageBackendCaching implements EconomyStorageBackend {
-    protected HashMap<String, Double> balances = new HashMap<>();
+    protected Map<String, Double> balances = new ConcurrentHashMap<>();
     private LinkedHashMap<UUID, Double> topPlayerBalances = new LinkedHashMap<>();
 
     @Override
@@ -24,7 +25,7 @@ public abstract class EconomyStorageBackendCaching implements EconomyStorageBack
     }
 
     @Override
-    public synchronized double getBalance(Economable economable) {
+    public double getBalance(Economable economable) {
         if (!accountExists(economable)) {
             return 0.0D;
         }
