@@ -3,22 +3,26 @@
 # - message: That player is not online.
 #   translation: Ce joueur n'est pas en ligne.
 # Colors can also be used, by means of prefixing color codes with an '&' symbol.
+# The order of placeholders can be changed. Anything after the :, like the '02d' in {1:02d} is a Java String.format specifier. If you don't know what that is, I recommend leaving it as-is.
 messages:
-  - message: You don't have permission to check the balance of %s.
+  - message: You don't have permission to check the balance of {1}.
   - message: That player is not online.
   - message: You cannot pay yourself.
-  - message: "Usage: %s"
+  - message: "Usage: {1}"
   - message: That player does not exist.
-  - message: Balance for %s is %s.
-  - message: "Top %d players:"
+  - message: Balance for {1} is {2}.
+  - message: "Top {1} players on page {2}:"
   - message: That player does not exist.
-  - message: "%s is not a positive number."
-  - message: Added %s to %s. Their balance is now %s.
-  - message: Took %s from %s. Their balance is now %s.
-  - message: Balance for %s set to %s
-  - message: You do not have enough money to transfer %s to %s.
-  - message: You have transferred %s to %s.
-  - message: You have received %s from %s.
+  - message: "{1} is not a positive number."
+  - message: Added {1} to {2}. Their balance is now {3}.
+  - message: Took {1} from {2}. Their balance is now {3}.
+  - message: Balance for {1} set to {2}.
+  - message: You do not have enough money to transfer {1} to {2}.
+  - message: You have transferred {1} to {2}.
+  - message: You have received {1} from {2}.
   - message: Reloading database...
   - message: Database reloaded.
-  - message: You've been issued a starting balance of %s!
+  - message: You've been issued a starting balance of {1}!
+  - message: "{1} is not a valid number."
+  - message: "There aren't enough players to display that page."
+  - message: "[{1:02d}] {2} - {3}"
