@@ -8,10 +8,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by AppleDash on 8/5/2016.
@@ -31,27 +30,50 @@ public class I18n {
         YamlConfiguration configJar = YamlConfiguration.loadConfiguration(new InputStreamReader(this.getClass().getResourceAsStream("/messages.yml")));
 
         if (configFile.exists()) { // Attempt to merge any new keys from the JAR's messages.yml into the copy in the plugin's data folder
-            YamlConfiguration configFileYaml = YamlConfiguration.loadConfiguration(configFile);
-            for (Map jarMap : configJar.getMapList("messages")) {
-                boolean has = false;
-                String key = jarMap.get("message").toString();
+            YamlConfiguration configDisk = YamlConfiguration.loadConfiguration(configFile);
 
-                for (Map fileMap : configFileYaml.getMapList("messages")) {
-                    if (fileMap.get("message").toString().equals(key)) {
-                        has = true;
+            List<Map<?, ?>> finalKeys = configDisk.getMapList("messages");
+
+            for (Map jarObject : configJar.getMapList("messages")) { // For every translation in the template config in the JAR
+                String jarMessage = String.valueOf(jarObject.get("message")); // Key for this translation
+                Map equivalentOnDisk = null; // Equivalent of this translation in the config file on disk
+
+                for (Map diskMap : configDisk.getMapList("messages")) { // For every translation in the config on disk
+                    if (String.valueOf(diskMap.get("message")).equals(jarMessage)) { // If the translation key on this object on disk is the same as the current one in the JAR
+                        equivalentOnDisk = diskMap;
                         break;
                     }
                 }
 
-                if (!has) { // Folder messages.yml does not have this key, add it.
-                    List<Map> map = new ArrayList<>(configFileYaml.getMapList("messages"));
-                    map.add(ImmutableMap.of("message", key));
-                    configFileYaml.set("messages", map);
+                if (equivalentOnDisk == null) { // This one isn't on disk yet - add it.
+                    finalKeys.add(jarObject);
+                } else {
+                    String currentKey = String.valueOf(equivalentOnDisk.get("message"));
+                    String convertedKey = convertOldTranslations(currentKey);
+
+                    if (!currentKey.equals(convertedKey)) { // Key needs conversion
+                        String convertedValue = convertOldTranslations(String.valueOf(equivalentOnDisk.get("translation")));
+
+                        // Remove current key from map of things to go to the disk
+                        Iterator<Map<?, ?>> iter = finalKeys.iterator();
+
+                        while (iter.hasNext()) {
+                            if (String.valueOf(iter.next().get("message")).equals(equivalentOnDisk.get("message"))) {
+                                iter.remove();
+                            }
+                        }
+
+                        // Add the converted one.
+                        finalKeys.add(ImmutableMap.of("message", convertedKey, "translation", convertedValue));
+                    }
                 }
+
             }
 
+            configDisk.set("messages", finalKeys);
+
             try {
-                configFileYaml.save(configFile);
+                configDisk.save(configFile);
             } catch (IOException e) {
                 throw new RuntimeException("Failed to save translations file.", e);
             }
@@ -67,6 +89,21 @@ public class I18n {
         configFileYaml.getMapList("messages").stream().filter(map -> map.containsKey("translation")).forEach(map -> {
             translations.put(map.get("message").toString(), map.get("translation").toString());
         });
+    }
+
+    private String convertOldTranslations(String input) {
+        Matcher m = Pattern.compile("(%s)").matcher(input);
+        StringBuffer converted = new StringBuffer();
+        int index = 1;
+
+        while (m.find()) {
+            m.appendReplacement(converted, String.format("{%d}", index));
+            index++;
+        }
+
+        m.appendTail(converted);
+
+        return converted.toString();
     }
 
     private String translate(String input) {

@@ -23,11 +23,21 @@ public class MessageUtils {
      */
     public static void sendMessage(CommandSender target, String fmt, Object... args) {
         fmt = _(fmt);
+
         String prefix = ChatColor.translateAlternateColorCodes('&', SaneEconomy.getInstance().getConfig().getString("chat.prefix", ""));
-        target.sendMessage(prefix + String.format(fmt, (Object[])args));
+
+        String formatted;
+
+        if (fmt.contains("%s")) { // Legacy support.
+            formatted = String.format(fmt, (Object[]) args);
+        } else {
+            formatted = indexedFormat(fmt, (Object[]) args);
+        }
+
+        target.sendMessage(prefix + formatted);
     }
 
-    public static String indexedFormat(String fmt, String... arguments) {
+    public static String indexedFormat(String fmt, Object... arguments) {
         Matcher m = Pattern.compile("\\{([0-9]+)\\}").matcher(fmt);
         StringBuffer formatted = new StringBuffer();
 
@@ -38,7 +48,7 @@ public class MessageUtils {
                 throw new IllegalArgumentException("Index must be within the range of the given arguments.");
             }
 
-            m.appendReplacement(formatted, arguments[index]);
+            m.appendReplacement(formatted, String.valueOf(arguments[index]));
         }
 
         m.appendTail(formatted);
