@@ -85,14 +85,14 @@ public class InteractListener implements Listener {
         double price = shop.getBuyPrice(quantity);
 
         if (!ecoMan.hasBalance(Economable.wrap(player), price)) {
-            MessageUtils.sendMessage(player, String.format("You do not have enough money to buy %d %s.", quantity, shop.getItem()));
+            MessageUtils.sendMessage(player, "You do not have enough money to buy {1} {2}.", quantity, shop.getItem());
             return;
         }
 
         TransactionResult result = ecoMan.transact(new Transaction(Economable.wrap(player), Economable.PLUGIN, price, TransactionReason.PLUGIN_TAKE));
 
         if (result.getStatus() != TransactionResult.Status.SUCCESS) {
-            MessageUtils.sendMessage(player, String.format("An error occurred attempting to perform that transaction: %s", result.getStatus()));
+            MessageUtils.sendMessage(player, "An error occurred attempting to perform that transaction: {1}", result.getStatus());
             return;
         }
 
@@ -100,7 +100,7 @@ public class InteractListener implements Listener {
         stack.setAmount(quantity);
 
         player.getInventory().addItem(stack);
-        MessageUtils.sendMessage(player, String.format("You have bought %d %s for %s.", quantity, shop.getItem(), ecoMan.getCurrency().formatAmount(price)));
+        MessageUtils.sendMessage(player, "You have bought {1} {2} for {3}.", quantity, shop.getItem(), ecoMan.getCurrency().formatAmount(price));
     }
 
     private void doSell(SignShop shop, Player player) { // TODO: Selling enchanted items
@@ -109,7 +109,7 @@ public class InteractListener implements Listener {
         double price = shop.getSellPrice(quantity);
 
         if (!player.getInventory().containsAtLeast(new ItemStack(shop.getItem()), quantity)) {
-            MessageUtils.sendMessage(player, String.format("You do not have %d %s!", quantity, shop.getItem()));
+            MessageUtils.sendMessage(player, "You do not have {1} {2}!", quantity, shop.getItem());
             return;
         }
 
@@ -118,6 +118,6 @@ public class InteractListener implements Listener {
 
         player.getInventory().removeItem(stack); // FIXME: This does not remove items with damage values that were detected by contains()
         ecoMan.transact(new Transaction(Economable.PLUGIN, Economable.wrap(player), price, TransactionReason.PLUGIN_GIVE));
-        MessageUtils.sendMessage(player, String.format("You have sold %d %s for %s.", quantity, shop.getItem(), ecoMan.getCurrency().formatAmount(price)));
+        MessageUtils.sendMessage(player, "You have sold {1} {2} for {3}.", quantity, shop.getItem(), ecoMan.getCurrency().formatAmount(price));
     }
 }

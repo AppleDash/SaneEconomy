@@ -38,7 +38,7 @@ public class SignChangeListener implements Listener {
         ParsedSignShop pss = parseSignShop(evt);
 
         if (pss.error != null) {
-            MessageUtils.sendMessage(evt.getPlayer(), String.format("Cannot create shop: %s", pss.error));
+            MessageUtils.sendMessage(evt.getPlayer(), "Cannot create shop: {1}", pss.error);
             return;
         }
 
@@ -50,18 +50,18 @@ public class SignChangeListener implements Listener {
         plugin.getSignShopManager().addSignShop(signShop);
         evt.setLine(0, ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("admin-shop-title")));
         MessageUtils.sendMessage(evt.getPlayer(), "Sign shop created!");
-        MessageUtils.sendMessage(evt.getPlayer(), String.format("Item: %d x %s", signShop.getQuantity(), signShop.getItem()));
+        MessageUtils.sendMessage(evt.getPlayer(), "Item: {1} x {2}", signShop.getQuantity(), signShop.getItem());
 
         if (signShop.canBuy()) { // The player be buying from the shop, not the other way around.
-            MessageUtils.sendMessage(evt.getPlayer(), String.format("Will sell too players for %s.",
+            MessageUtils.sendMessage(evt.getPlayer(), "Will sell to players for {!}.",
                     plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(signShop.getBuyPrice())
-            ));
+            );
         }
 
         if (signShop.canSell()) { // The player be selling to the shop, not the other way around.
-            MessageUtils.sendMessage(evt.getPlayer(), String.format("Will buy from players for %s.",
+            MessageUtils.sendMessage(evt.getPlayer(), "Will buy from players for {1}.",
                     plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(signShop.getSellPrice())
-            ));
+            );
         }
     }
 
@@ -202,8 +202,4 @@ public class SignChangeListener implements Listener {
             super(message);
         }
     }
-
-
-
-
 }

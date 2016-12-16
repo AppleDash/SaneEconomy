@@ -1,5 +1,6 @@
 package org.appledash.saneeconomy.utils;
 
+import com.google.common.base.Strings;
 import org.appledash.saneeconomy.SaneEconomy;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -38,7 +39,7 @@ public class MessageUtils {
     }
 
     public static String indexedFormat(String fmt, Object... arguments) {
-        Matcher m = Pattern.compile("\\{([0-9]+)\\}").matcher(fmt);
+        Matcher m = Pattern.compile("\\{([0-9]+)(:[^}]+)?\\}").matcher(fmt);
         StringBuffer formatted = new StringBuffer();
 
         while (m.find()) {
@@ -48,7 +49,15 @@ public class MessageUtils {
                 throw new IllegalArgumentException("Index must be within the range of the given arguments.");
             }
 
-            m.appendReplacement(formatted, String.valueOf(arguments[index]));
+            String stringRep;
+
+            if (!Strings.isNullOrEmpty(m.group(2))) {
+                stringRep = String.format(String.format("%%%s", m.group(2).substring(1)), arguments[index]);
+            } else {
+                stringRep = String.valueOf(arguments[index]);
+            }
+
+            m.appendReplacement(formatted, stringRep);
         }
 
         m.appendTail(formatted);

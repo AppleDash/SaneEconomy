@@ -18,8 +18,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import static org.appledash.saneeconomy.utils.I18n._;
-
 /**
  * Created by AppleDash on 6/13/2016.
  * Blackjack is still best pony.
@@ -66,7 +64,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
         OfflinePlayer targetPlayer = PlayerUtils.getOfflinePlayer(sTargetPlayer);
 
         if (targetPlayer == null) {
-            MessageUtils.sendMessage(sender, _("That player does not exist."));
+            MessageUtils.sendMessage(sender, "That player does not exist.");
             return;
         }
 
@@ -76,7 +74,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
         double amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount);
 
         if (amount <= 0) {
-            MessageUtils.sendMessage(sender, _("%s is not a positive number."), ((amount == -1) ? sAmount : String.valueOf(amount)));
+            MessageUtils.sendMessage(sender, "{1} is not a positive number.", ((amount == -1) ? sAmount : String.valueOf(amount)));
             return;
         }
 
@@ -86,7 +84,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
 
             double newAmount = result.getToBalance();
 
-            MessageUtils.sendMessage(sender, _("Added %s to %s. Their balance is now %s."),
+            MessageUtils.sendMessage(sender, "Added {1} to {2}. Their balance is now {3}.",
                     ecoMan.getCurrency().formatAmount(amount),
                     sTargetPlayer,
                     ecoMan.getCurrency().formatAmount(newAmount)
@@ -100,7 +98,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
 
             double newAmount = result.getFromBalance();
 
-            MessageUtils.sendMessage(sender, _("Took %s from %s. Their balance is now %s."),
+            MessageUtils.sendMessage(sender, "Took {1} from {2}. Their balance is now {3}.",
                     ecoMan.getCurrency().formatAmount(amount),
                     sTargetPlayer,
                     ecoMan.getCurrency().formatAmount(newAmount)
@@ -111,7 +109,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
         if (subCommand.equalsIgnoreCase("set")) {
             double oldBal = ecoMan.getBalance(economable);
             ecoMan.setBalance(economable, amount);
-            MessageUtils.sendMessage(sender, _("Balance for %s set to %s."), sTargetPlayer, ecoMan.getCurrency().formatAmount(amount));
+            MessageUtils.sendMessage(sender, "Balance for {1} set to {2}.", sTargetPlayer, ecoMan.getCurrency().formatAmount(amount));
 
             if (saneEconomy.shouldLogTransactions()) {
                 // FIXME: This is a silly hack to get it to log.

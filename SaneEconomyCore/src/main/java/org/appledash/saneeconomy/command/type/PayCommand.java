@@ -69,7 +69,7 @@ public class PayCommand extends SaneEconomyCommand {
         double amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount);
 
         if (amount <= 0) {
-            MessageUtils.sendMessage(sender, "%s is not a positive number.", ((amount == -1) ? sAmount : String.valueOf(amount)));
+            MessageUtils.sendMessage(sender, "{1} is not a positive number.", ((amount == -1) ? sAmount : String.valueOf(amount)));
             return;
         }
 
@@ -78,7 +78,7 @@ public class PayCommand extends SaneEconomyCommand {
         TransactionResult result = ecoMan.transact(transaction);
 
         if (result.getStatus() != TransactionResult.Status.SUCCESS) {
-            MessageUtils.sendMessage(sender, "You do not have enough money to transfer %s to %s.",
+            MessageUtils.sendMessage(sender, "You do not have enough money to transfer {1} to {2}.",
                     ecoMan.getCurrency().formatAmount(amount),
                     sToPlayer
             );
@@ -88,12 +88,12 @@ public class PayCommand extends SaneEconomyCommand {
 
         /* Inform the relevant parties. */
 
-        MessageUtils.sendMessage(sender, "You have transferred %s to %s.",
+        MessageUtils.sendMessage(sender, "You have transferred {1} to {2}.",
                 ecoMan.getCurrency().formatAmount(amount),
                 sToPlayer
         );
 
-        MessageUtils.sendMessage(toPlayer, "You have received %s from %s.",
+        MessageUtils.sendMessage(toPlayer, "You have received {1} from {2}.",
                 ecoMan.getCurrency().formatAmount(amount),
                 fromPlayer.getDisplayName()
         );
