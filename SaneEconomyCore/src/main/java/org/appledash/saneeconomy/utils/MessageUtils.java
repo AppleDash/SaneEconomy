@@ -4,6 +4,9 @@ import org.appledash.saneeconomy.SaneEconomy;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static org.appledash.saneeconomy.utils.I18n._;
 
 /**
@@ -20,7 +23,36 @@ public class MessageUtils {
      */
     public static synchronized void sendMessage(CommandSender target, String fmt, Object... args) {
         fmt = _(fmt);
+
         String prefix = ChatColor.translateAlternateColorCodes('&', SaneEconomy.getInstance().getConfig().getString("chat.prefix", ""));
-        target.sendMessage(prefix + String.format(fmt, (Object[])args));
+
+        String formatted;
+
+        if (fmt.contains("%s")) { // Legacy support.
+            formatted = String.format(fmt, (Object[]) args);
+        } else {
+            formatted = indexedFormat(fmt, (Object[]) args);
+        }
+
+        target.sendMessage(prefix + formatted);
+    }
+
+    public static String indexedFormat(String fmt, Object... arguments) {
+        Matcher m = Pattern.compile("\\{([0-9]+)\\}").matcher(fmt);
+        StringBuffer formatted = new StringBuffer();
+
+        while (m.find()) {
+            int index = Integer.valueOf(m.group(1)) - 1;
+
+            if (index > arguments.length - 1 || index < 0) {
+                throw new IllegalArgumentException("Index must be within the range of the given arguments.");
+            }
+
+            m.appendReplacement(formatted, String.valueOf(arguments[index]));
+        }
+
+        m.appendTail(formatted);
+
+        return formatted.toString();
     }
 }

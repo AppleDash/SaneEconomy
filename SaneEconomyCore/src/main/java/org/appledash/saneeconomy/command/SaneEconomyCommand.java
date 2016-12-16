@@ -34,14 +34,14 @@ public abstract class SaneEconomyCommand implements CommandExecutor {
                 /* Invalid usage in some way, print out exactly what went wrong along with the proper usage. */
                 MessageUtils.sendMessage(sender, e.getMessage());
 
+
                 for (String s : getUsage()) {
-                    MessageUtils.sendMessage(sender, String.format("Usage: %s", s.replace("<command>", label)));
+                    MessageUtils.sendMessage(sender, "Usage: {1}", s.replace("<command>", label));
                 }
             } catch (CommandException e) {
                 MessageUtils.sendMessage(sender, e.getMessage());
             }
         });
-
         return true;
     }
 
