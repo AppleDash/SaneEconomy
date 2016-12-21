@@ -18,12 +18,14 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Optional;
+import java.util.logging.Logger;
 
 /**
  * Created by appledash on 10/3/16.
  * Blackjack is best pony.
  */
 public class InteractListener implements Listener {
+    private static final Logger LOGGER = Logger.getLogger("SignShop");
     private final SaneEconomySignShop plugin;
 
     public InteractListener(SaneEconomySignShop plugin) {
@@ -101,6 +103,7 @@ public class InteractListener implements Listener {
 
         player.getInventory().addItem(stack);
         MessageUtils.sendMessage(player, "You have bought {1} {2} for {3}.", quantity, shop.getItem(), ecoMan.getCurrency().formatAmount(price));
+        LOGGER.info(String.format("%s just bought %s for %s.", player.getName(), shop.getItem(), ecoMan.getCurrency().formatAmount(price)));
     }
 
     private void doSell(SignShop shop, Player player) { // TODO: Selling enchanted items
@@ -119,5 +122,6 @@ public class InteractListener implements Listener {
         player.getInventory().removeItem(stack); // FIXME: This does not remove items with damage values that were detected by contains()
         ecoMan.transact(new Transaction(Economable.PLUGIN, Economable.wrap(player), price, TransactionReason.PLUGIN_GIVE));
         MessageUtils.sendMessage(player, "You have sold {1} {2} for {3}.", quantity, shop.getItem(), ecoMan.getCurrency().formatAmount(price));
+        LOGGER.info(String.format("%s just sold %s for %s.", player.getName(), shop.getItem(), ecoMan.getCurrency().formatAmount(price)));
     }
 }
