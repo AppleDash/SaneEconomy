@@ -46,7 +46,7 @@ public class TransactionLoggerMySQL implements TransactionLogger {
 
     private void createTables() {
         try (Connection conn = dbConn.openConnection()) {
-            PreparedStatement ps = conn.prepareStatement(String.format("CREATE TABLE IF NOT EXISTS `%s` (`source` VARCHAR(128), `destination` VARCHAR(128), `amount` DECIMAL(18, 2), `reason` VARCHAR(128))", dbConn.getTable("transaction_logs")));
+            PreparedStatement ps = conn.prepareStatement(String.format("CREATE TABLE IF NOT EXISTS `test` (`source` VARCHAR(128), `destination` VARCHAR(128), `amount` DECIMAL(18, 2), `reason` VARCHAR(128), `logged` TIMESTAMP NOT NULL default CURRENT_TIMESTAMP)", dbConn.getTable("transaction_logs")));
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Failed to create transaction logger tables", e);
