@@ -7,9 +7,7 @@ import org.appledash.saneeconomy.utils.MessageUtils;
 import org.appledash.saneeconomymobkills.SaneEconomyMobKills;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -26,7 +24,6 @@ import java.util.UUID;
 public class EntityDamageListener implements Listener {
     private SaneEconomyMobKills plugin;
     private Map<Integer, Map<UUID, Double>> damageDealt = new HashMap<>();
-    private Map<EntityType, Double> awardsForKills = new HashMap<>();
 
     public EntityDamageListener(SaneEconomyMobKills plugin) {
         this.plugin = plugin;
@@ -40,6 +37,10 @@ public class EntityDamageListener implements Listener {
 
         Player damager = ((Player) evt.getDamager());
         Entity damagee = evt.getEntity();
+
+        if (!plugin.getKillAmounts().containsKey(getEntityType(damagee))) {
+            return;
+        }
 
         Map<UUID, Double> damageDoneToThisEntity = new HashMap<>();
 
@@ -74,7 +75,7 @@ public class EntityDamageListener implements Listener {
         for (Map.Entry<UUID, Double> entry : damageDoneToThisEntity.entrySet()) {
             double thisDmg = entry.getValue();
             double thisPercent = (thisDmg / totalDmg) * 100.0D;
-            double thisAmount = awardsForKills.get(entity.getType()) * (thisPercent / 100);
+            double thisAmount = plugin.getKillAmounts().get(getEntityType(entity)) * (thisPercent / 100);
             OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(entry.getKey());
 
             if (offlinePlayer.isOnline()) {
@@ -87,6 +88,20 @@ public class EntityDamageListener implements Listener {
             ));
         }
 
+    }
+
+    private String getEntityType(Entity entity) {
+        EntityType entityType = entity.getType();
+
+        if ((entityType == EntityType.SKELETON) && (((Skeleton) entity).getSkeletonType() == Skeleton.SkeletonType.WITHER)) {
+            return "WITHER_SKELETON";
+        }
+
+        if ((entityType == EntityType.GUARDIAN) && ((Guardian) entity).isElder()) {
+            return "ELDER_GUARDIAN";
+        }
+
+        return entityType.toString();
     }
 
     private double sumValues(Map<?, Double> map) {
