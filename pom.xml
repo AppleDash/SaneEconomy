@@ -12,6 +12,7 @@
     <modules>
         <module>SaneEconomyCore</module>
         <module>SaneEconomySignShop</module>
+        <module>SaneEconomyMobKills</module>
     </modules>
 
     <repositories>

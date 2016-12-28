@@ -1,0 +1,6 @@
+name: SaneEconomyMobKills
+description: A plugin to give players experience when they kill mobs.
+version: 0.1.0
+author: AppleDash
+main: org.appledash.saneeconomymobkills.SaneEconomyMobKills
+depend: [SaneEconomy]
