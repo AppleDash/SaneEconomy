@@ -46,7 +46,7 @@ public class BalanceTopCommand extends SaneEconomyCommand {
             try {
                 page = Math.abs(Integer.parseInt(args[0]));
             } catch (NumberFormatException e) {
-                MessageUtils.sendMessage(sender, "%s is not a valid number.");
+                MessageUtils.sendMessage(sender, "{1} is not a valid number.");
                 return;
             }
         }
@@ -62,7 +62,7 @@ public class BalanceTopCommand extends SaneEconomyCommand {
 
         AtomicInteger index = new AtomicInteger(offset + 1); /* I know it's stupid, but you can't do some_int++ from within the lambda. */
 
-        MessageUtils.sendMessage(sender, "Top %d players on page %d:", topBalances.size(), page);
-        topBalances.forEach((player, balance) -> MessageUtils.sendMessage(sender, "[%02d] %s - %s", index.getAndIncrement(), player.getName(), SaneEconomy.getInstance().getEconomyManager().getCurrency().formatAmount(balance)));
+        MessageUtils.sendMessage(sender, "Top {1} players on page {2}:", topBalances.size(), page);
+        topBalances.forEach((player, balance) -> MessageUtils.sendMessage(sender, "[{1:02d}] {2} - {3}", index.getAndIncrement(), player.getName(), SaneEconomy.getInstance().getEconomyManager().getCurrency().formatAmount(balance)));
     }
 }

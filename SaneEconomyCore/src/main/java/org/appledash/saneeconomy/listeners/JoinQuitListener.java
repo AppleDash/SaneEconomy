@@ -36,13 +36,13 @@ public class JoinQuitListener implements Listener {
                     Economable.CONSOLE, economable, startBalance, TransactionReason.STARTING_BALANCE
             ));
             if (plugin.getConfig().getBoolean("economy.notify-start-balance", true)) {
-                MessageUtils.sendMessage(player, "You've been issued a starting balance of %s!", plugin.getEconomyManager().getCurrency().formatAmount(startBalance));
+                MessageUtils.sendMessage(player, "You've been issued a starting balance of {1}!", plugin.getEconomyManager().getCurrency().formatAmount(startBalance));
             }
         }
 
         /* Update notification */
         if (player.hasPermission("saneeconomy.update-notify") && plugin.getVersionChecker().isUpdateAvailable()) {
-            MessageUtils.sendMessage(player, "An update is available! The currently-installed version is %s, but the newest available is %s. Please go to %s to update!", plugin.getDescription().getVersion(), plugin.getVersionChecker().getNewestVersion(), GithubVersionChecker.DOWNLOAD_URL);
+            MessageUtils.sendMessage(player, "An update is available! The currently-installed version is {1}, but the newest available is {2}. Please go to %s to update!", plugin.getDescription().getVersion(), plugin.getVersionChecker().getNewestVersion(), GithubVersionChecker.DOWNLOAD_URL);
         }
     }
 

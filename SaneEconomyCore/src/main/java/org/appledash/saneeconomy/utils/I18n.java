@@ -49,25 +49,14 @@ public class I18n {
                     finalKeys.add(jarObject);
                 } else {
                     String currentKey = String.valueOf(equivalentOnDisk.get("message"));
-                    String convertedKey = convertOldTranslations(currentKey);
-
-                    if (!currentKey.equals(convertedKey)) { // Key needs conversion
-                        String convertedValue = convertOldTranslations(String.valueOf(equivalentOnDisk.get("translation")));
-
-                        // Remove current key from map of things to go to the disk
-                        Iterator<Map<?, ?>> iter = finalKeys.iterator();
-
-                        while (iter.hasNext()) {
-                            if (String.valueOf(iter.next().get("message")).equals(equivalentOnDisk.get("message"))) {
-                                iter.remove();
-                            }
-                        }
-
-                        // Add the converted one.
-                        finalKeys.add(ImmutableMap.of("message", convertedKey, "translation", convertedValue));
-                    }
+                    String currentTranslation = String.valueOf(equivalentOnDisk.get("translation"));
+                    convertKey(finalKeys, currentKey, currentTranslation);
                 }
 
+            }
+
+            for (Map diskObject : configDisk.getMapList("messages")) {
+                convertKey(finalKeys, String.valueOf(diskObject.get("message")), String.valueOf(diskObject.get("translation")));
             }
 
             configDisk.set("messages", finalKeys);
@@ -89,6 +78,30 @@ public class I18n {
         configFileYaml.getMapList("messages").stream().filter(map -> map.containsKey("translation")).forEach(map -> {
             translations.put(map.get("message").toString(), map.get("translation").toString());
         });
+    }
+
+    private void convertKey(List<Map<?, ?>> finalKeys, String currentKey, String currentTranslation) {
+        String convertedKey = convertOldTranslations(currentKey);
+
+        if (!currentKey.equals(convertedKey)) { // Key needs conversion
+            String convertedValue = convertOldTranslations(String.valueOf(currentTranslation));
+
+            // Remove current key from map of things to go to the disk
+            Iterator<Map<?, ?>> iter = finalKeys.iterator();
+
+            while (iter.hasNext()) {
+                if (String.valueOf(iter.next().get("message")).equals(currentKey)) {
+                    iter.remove();
+                }
+            }
+
+            // Add the converted one.
+            if (convertedValue.equals("null")) {
+                finalKeys.add(ImmutableMap.of("message", convertedKey));
+            } else {
+                finalKeys.add(ImmutableMap.of("message", convertedKey, "translation", convertedValue));
+            }
+        }
     }
 
     private String convertOldTranslations(String input) {

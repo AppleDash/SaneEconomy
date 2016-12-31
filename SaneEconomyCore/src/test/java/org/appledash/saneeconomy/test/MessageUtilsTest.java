@@ -17,6 +17,12 @@ public class MessageUtilsTest {
         Assert.assertEquals("Hello, world!", MessageUtils.indexedFormat("Hello, world!", "this", "shouldn't", "change"));
     }
 
+    @Test
+    public void testAdvancedIndexFormat() {
+        Assert.assertEquals("Temperature: 20.01 degrees", MessageUtils.indexedFormat("Temperature: {1:.2f} degrees", 20.01f));
+        Assert.assertEquals("Index: 01", MessageUtils.indexedFormat("Index: {1:02d}", 1));
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testBadIndexedFormat() {
          MessageUtils.indexedFormat("Hello, {3}!", "world", "something");

@@ -51,7 +51,7 @@ public class BalanceCommand extends SaneEconomyCommand {
             playerName = args[0];
 
             if (!sender.hasPermission("saneeconomy.balance.other")) {
-                MessageUtils.sendMessage(sender, "You don't have permission to check the balance of {0}.", playerIdentifier);
+                MessageUtils.sendMessage(sender, "You don't have permission to check the balance of {1}.", playerIdentifier);
                 return;
             }
         }
@@ -63,6 +63,6 @@ public class BalanceCommand extends SaneEconomyCommand {
             return;
         }
 
-        MessageUtils.sendMessage(sender, "Balance for %s is %s.", playerName, saneEconomy.getEconomyManager().getFormattedBalance(Economable.wrap(player)));
+        MessageUtils.sendMessage(sender, "Balance for {1} is {2}.", playerName, saneEconomy.getEconomyManager().getFormattedBalance(Economable.wrap(player)));
     }
 }
