@@ -38,7 +38,6 @@ public class SaneEconomyMobKills extends JavaPlugin {
 
         for (String entityTypeName : amountsConfig.getKeys(false)) {
             double value = amountsConfig.getDouble(entityTypeName);
-
             killAmounts.put(entityTypeName, value);
         }
 
