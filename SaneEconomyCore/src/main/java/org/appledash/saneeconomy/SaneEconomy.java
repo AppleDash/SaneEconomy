@@ -14,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 /**
@@ -125,7 +126,7 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
     }
 
     /**
-     * Get the active EconomyManager.
+     * Get the active EconomyManager
      * @return EconomyManager
      */
     @Override
@@ -134,25 +135,12 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
     }
 
     /**
-     * Check whether transactions should be logged.
-     * @return True if transactions should be logged, false otherwise.
-     */
-    @Override
-    public boolean shouldLogTransactions() {
-        return transactionLogger != null;
-    }
-
-    /**
-     * Get the active TransactionLogger.
+     * Get the active TransactionLogger
      * @return TransactionLogger, if there is one.
      */
     @Override
-    public TransactionLogger getTransactionLogger() {
-        if (!shouldLogTransactions()) {
-            throw new IllegalStateException("TransactionLogger should not be retrieved if we aren't logging transactions!");
-        }
-
-        return transactionLogger;
+    public Optional<TransactionLogger> getTransactionLogger() {
+        return Optional.ofNullable(transactionLogger);
     }
 
     /**

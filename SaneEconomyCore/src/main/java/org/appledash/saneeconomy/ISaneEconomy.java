@@ -3,27 +3,25 @@ package org.appledash.saneeconomy;
 import org.appledash.saneeconomy.economy.EconomyManager;
 import org.appledash.saneeconomy.economy.logger.TransactionLogger;
 
+import java.util.Optional;
+
 /**
  * Created by appledash on 9/18/16.
  * Blackjack is best pony.
+ *
+ * This interface represent's SaneEconomy's public API.
+ * Anything not exposed in some way by this interface should be considered unstable, and may change at any time.
  */
 public interface ISaneEconomy {
     /**
-     * Get the active EconomyManager.
+     * Get the active EconomyManager
      * @return EconomyManager
      */
     EconomyManager getEconomyManager();
 
     /**
-     * Check whether transactions should be logged.
-     * @return True if transactions should be logged, false otherwise.
+     * Get the active TransactionLogger
+     * @return TransactionLogger, if there is one. Otherwise, Optional.empty()
      */
-    boolean shouldLogTransactions();
-
-    /**
-     * Get the active TransactionLogger.
-     * @return TransactionLogger, if there is one.
-     * @throws IllegalStateException if shouldLogTransactions() is false.
-     */
-    TransactionLogger getTransactionLogger();
+    Optional<TransactionLogger> getTransactionLogger();
 }
