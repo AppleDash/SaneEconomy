@@ -174,9 +174,7 @@ public class EconomyManager {
             addBalance(receiver, amount);
         }
 
-        if (saneEconomy.shouldLogTransactions()) {
-            saneEconomy.getTransactionLogger().logTransaction(transaction);
-        }
+        saneEconomy.getTransactionLogger().ifPresent((logger) -> logger.logTransaction(transaction));
 
         return new TransactionResult(transaction, getBalance(sender), getBalance(receiver));
     }

@@ -111,18 +111,18 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
             ecoMan.setBalance(economable, amount);
             MessageUtils.sendMessage(sender, "Balance for {1} set to {2}.", sTargetPlayer, ecoMan.getCurrency().formatAmount(amount));
 
-            if (saneEconomy.shouldLogTransactions()) {
+            saneEconomy.getTransactionLogger().ifPresent((logger) -> {
                 // FIXME: This is a silly hack to get it to log.
                 if (oldBal > 0.0) {
-                    saneEconomy.getTransactionLogger().logTransaction(new Transaction(
+                    logger.logTransaction(new Transaction(
                             economable, Economable.CONSOLE, oldBal, TransactionReason.ADMIN_GIVE
                     ));
                 }
 
-                saneEconomy.getTransactionLogger().logTransaction(new Transaction(
+                logger.logTransaction(new Transaction(
                         Economable.CONSOLE, economable, amount, TransactionReason.ADMIN_GIVE
                 ));
-            }
+            });
 
             return;
         }
