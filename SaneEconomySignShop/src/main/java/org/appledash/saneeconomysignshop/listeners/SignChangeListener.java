@@ -50,7 +50,7 @@ public class SignChangeListener implements Listener {
         plugin.getSignShopManager().addSignShop(signShop);
         evt.setLine(0, ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("admin-shop-title")));
         MessageUtils.sendMessage(evt.getPlayer(), "Sign shop created!");
-        MessageUtils.sendMessage(evt.getPlayer(), "Item: {1} x {2}", signShop.getQuantity(), signShop.getItem());
+        MessageUtils.sendMessage(evt.getPlayer(), "Item: {1} x {2}", signShop.getQuantity(), signShop.getItemStack());
 
         if (signShop.canBuy()) { // The player be buying from the shop, not the other way around.
             MessageUtils.sendMessage(evt.getPlayer(), "Will sell to players for {!}.",

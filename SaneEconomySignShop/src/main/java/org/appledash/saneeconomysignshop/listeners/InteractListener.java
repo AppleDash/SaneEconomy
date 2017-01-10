@@ -1,12 +1,11 @@
 package org.appledash.saneeconomysignshop.listeners;
 
 import org.appledash.saneeconomy.economy.EconomyManager;
-import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.economy.transaction.Transaction;
-import org.appledash.saneeconomy.economy.transaction.TransactionReason;
 import org.appledash.saneeconomy.economy.transaction.TransactionResult;
 import org.appledash.saneeconomy.utils.MessageUtils;
 import org.appledash.saneeconomysignshop.SaneEconomySignShop;
+import org.appledash.saneeconomysignshop.signshop.ShopTransaction;
 import org.appledash.saneeconomysignshop.signshop.SignShop;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -84,26 +83,30 @@ public class InteractListener implements Listener {
     private void doBuy(SignShop shop, Player player) {
         EconomyManager ecoMan = plugin.getSaneEconomy().getEconomyManager();
         int quantity = player.isSneaking() ? 1 : shop.getQuantity();
-        double price = shop.getBuyPrice(quantity);
 
-        if (!ecoMan.hasBalance(Economable.wrap(player), price)) {
-            MessageUtils.sendMessage(player, "You do not have enough money to buy {1} {2}.", quantity, shop.getItem());
+        ShopTransaction shopTransaction = shop.makeTransaction(player, ShopTransaction.TransactionDirection.BUY, quantity);
+
+        if (!plugin.getLimitManager().shouldAllowTransaction(shopTransaction)) {
+            MessageUtils.sendMessage(player, "You have reached your buying limit for the time being. Try back in an hour or so.");
             return;
         }
 
-        TransactionResult result = ecoMan.transact(new Transaction(Economable.wrap(player), Economable.PLUGIN, price, TransactionReason.PLUGIN_TAKE));
+        plugin.getLimitManager().setRemainingLimit(player, ShopTransaction.TransactionDirection.BUY, shop.getItem(), plugin.getLimitManager().getRemainingLimit(player, ShopTransaction.TransactionDirection.BUY, shop.getItem()) - quantity);
+
+        Transaction ecoTransaction = shopTransaction.makeEconomyTransaction();
+        TransactionResult result = ecoMan.transact(ecoTransaction);
 
         if (result.getStatus() != TransactionResult.Status.SUCCESS) {
             MessageUtils.sendMessage(player, "An error occurred attempting to perform that transaction: {1}", result.getStatus());
             return;
         }
 
-        ItemStack stack = shop.getItem().clone();
+        ItemStack stack = shop.getItemStack().clone();
         stack.setAmount(quantity);
-
         player.getInventory().addItem(stack);
-        MessageUtils.sendMessage(player, "You have bought {1} {2} for {3}.", quantity, shop.getItem(), ecoMan.getCurrency().formatAmount(price));
-        LOGGER.info(String.format("%s just bought %s for %s.", player.getName(), shop.getItem(), ecoMan.getCurrency().formatAmount(price)));
+
+        MessageUtils.sendMessage(player, "You have bought {1} {2} for {3}.", quantity, shop.getItemStack().getType().name(), ecoMan.getCurrency().formatAmount(shopTransaction.getPrice()));
+        LOGGER.info(String.format("%s just bought %s for %s.", player.getName(), shop.getItemStack(), ecoMan.getCurrency().formatAmount(shopTransaction.getPrice())));
     }
 
     private void doSell(SignShop shop, Player player) { // TODO: Selling enchanted items
@@ -111,17 +114,29 @@ public class InteractListener implements Listener {
         int quantity = player.isSneaking() ? 1 : shop.getQuantity();
         double price = shop.getSellPrice(quantity);
 
-        if (!player.getInventory().containsAtLeast(new ItemStack(shop.getItem()), quantity)) {
-            MessageUtils.sendMessage(player, "You do not have {1} {2}!", quantity, shop.getItem());
+        if (!player.getInventory().containsAtLeast(new ItemStack(shop.getItemStack()), quantity)) {
+            MessageUtils.sendMessage(player, "You do not have {1} {2}!", quantity, shop.getItemStack().getType().name());
             return;
         }
 
-        ItemStack stack = shop.getItem().clone();
-        stack.setAmount(quantity);
+        ShopTransaction shopTransaction = shop.makeTransaction(player, ShopTransaction.TransactionDirection.SELL, quantity);
 
+        if (!plugin.getLimitManager().shouldAllowTransaction(shopTransaction)) {
+            MessageUtils.sendMessage(player, "You have reached your selling limit for the time being. Try back in an hour or so.");
+            return;
+        }
+
+        plugin.getLimitManager().setRemainingLimit(player, ShopTransaction.TransactionDirection.SELL, shop.getItem(), plugin.getLimitManager().getRemainingLimit(player, ShopTransaction.TransactionDirection.BUY, shop.getItem()) - quantity);
+
+
+        ItemStack stack = shop.getItemStack().clone();
+        stack.setAmount(quantity);
         player.getInventory().removeItem(stack); // FIXME: This does not remove items with damage values that were detected by contains()
-        ecoMan.transact(new Transaction(Economable.PLUGIN, Economable.wrap(player), price, TransactionReason.PLUGIN_GIVE));
-        MessageUtils.sendMessage(player, "You have sold {1} {2} for {3}.", quantity, shop.getItem(), ecoMan.getCurrency().formatAmount(price));
-        LOGGER.info(String.format("%s just sold %s for %s.", player.getName(), shop.getItem(), ecoMan.getCurrency().formatAmount(price)));
+
+        ecoMan.transact(shopTransaction.makeEconomyTransaction());
+
+        MessageUtils.sendMessage(player, "You have sold {1} {2} for {3}.", quantity, shop.getItemStack().getType().name(), ecoMan.getCurrency().formatAmount(price));
+        LOGGER.info(String.format("%s just sold %s for %s.", player.getName(), shop.getItemStack(), ecoMan.getCurrency().formatAmount(price)));
     }
+
 }

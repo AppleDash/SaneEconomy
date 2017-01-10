@@ -4,27 +4,48 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Created by appledash on 11/3/16.
  * Blackjack is still best pony.
  */
 public class ItemInfo implements Serializable {
-    private Material id;
-    private short damage;
-    private int amount;
+    private final Material material;
+    private final short damage;
+    private final int amount;
 
     public ItemInfo(ItemStack stack) {
         this(stack.getType(), stack.getDurability(), stack.getAmount());
     }
 
-    public ItemInfo(Material id, short damage, int amount) {
-        this.id = id;
+    public ItemInfo(Material material, short damage, int amount) {
+        this.material = material;
         this.damage = damage;
         this.amount = amount;
     }
 
     public ItemStack toItemStack() {
-        return new ItemStack(id, amount, damage);
+        return new ItemStack(material, amount, damage);
+    }
+
+    public Material getMaterial() {
+        return material;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ItemInfo)) {
+            return false;
+        }
+
+        ItemInfo other = ((ItemInfo) o);
+
+        return (other.material == this.material) && (other.damage == this.damage);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(material, damage);
     }
 }
