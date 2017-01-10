@@ -39,8 +39,17 @@ public class TransactionResult {
     }
 
     public enum Status {
-        SUCCESS,
+        SUCCESS("Success."),
+        ERR_NOT_ENOUGH_FUNDS("Not enough money is available for you to complete that transaction.");
 
-        ERR_NOT_ENOUGH_FUNDS
+        private final String message;
+
+        Status(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
     }
 }

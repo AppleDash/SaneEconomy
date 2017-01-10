@@ -1,8 +1,10 @@
 package org.appledash.saneeconomysignshop.signshop;
 
+import org.appledash.saneeconomysignshop.signshop.ShopTransaction.TransactionDirection;
 import org.appledash.saneeconomysignshop.util.ItemInfo;
 import org.appledash.saneeconomysignshop.util.SerializableLocation;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.Serializable;
@@ -49,8 +51,16 @@ public class SignShop implements Serializable {
      * Get the type of item this SignShop is selling
      * @return Material representing item/block type
      */
-    public ItemStack getItem() {
+    public ItemStack getItemStack() {
         return item.toItemStack();
+    }
+
+    /**
+     * Get the ItemInfo for the item this SignShop is selling
+     * @return ItemInfo representing the type and quantity of item
+     */
+    public ItemInfo getItem() {
+        return item;
     }
 
     /**
@@ -119,5 +129,9 @@ public class SignShop implements Serializable {
      */
     public int getQuantity() {
         return quantity;
+    }
+
+    public ShopTransaction makeTransaction(Player player, TransactionDirection direction, int quantity) {
+        return new ShopTransaction(direction, player, item, quantity, (direction == TransactionDirection.BUY) ? getBuyPrice(quantity) : getSellPrice(quantity));
     }
 }
