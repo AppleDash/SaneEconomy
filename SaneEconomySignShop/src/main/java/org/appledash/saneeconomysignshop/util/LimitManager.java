@@ -2,10 +2,13 @@ package org.appledash.saneeconomysignshop.util;
 
 import org.appledash.saneeconomysignshop.signshop.ShopTransaction;
 import org.appledash.saneeconomysignshop.signshop.ShopTransaction.TransactionDirection;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -56,6 +59,24 @@ public class LimitManager {
                 itemToLimit.putAll(newLimits);
             });
         });
+    }
+
+    public void loadLimits(ConfigurationSection config) {
+        for (Map<?, ?> map : config.getMapList("")) {
+            String itemName = String.valueOf(map.get("item"));
+            int sellLimit = Integer.valueOf(String.valueOf(map.get("buyLimit")));
+            int hourlyGain = Integer.valueOf(String.valueOf(map.get("gain")));
+
+            Optional<ItemDatabase.Pair<Integer, Short>> pair = ItemDatabase.getIDAndDamageForName(itemName);
+
+            if (!pair.isPresent()) {
+                continue;
+            }
+
+            ItemInfo itemInfo = new ItemInfo(new ItemStack(pair.get().getLeft(), pair.get().getRight()));
+
+            itemLimits.get(TransactionDirection.SELL).put(itemInfo, new ItemLimits(sellLimit, hourlyGain));
+        }
     }
 
 }
