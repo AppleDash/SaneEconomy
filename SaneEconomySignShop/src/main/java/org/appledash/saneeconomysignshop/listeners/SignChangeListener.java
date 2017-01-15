@@ -53,7 +53,7 @@ public class SignChangeListener implements Listener {
         MessageUtils.sendMessage(evt.getPlayer(), "Item: {1} x {2}", signShop.getQuantity(), signShop.getItemStack());
 
         if (signShop.canBuy()) { // The player be buying from the shop, not the other way around.
-            MessageUtils.sendMessage(evt.getPlayer(), "Will sell to players for {!}.",
+            MessageUtils.sendMessage(evt.getPlayer(), "Will sell to players for {1}.",
                     plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(signShop.getBuyPrice())
             );
         }
