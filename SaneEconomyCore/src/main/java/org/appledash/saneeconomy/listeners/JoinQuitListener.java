@@ -6,6 +6,7 @@ import org.appledash.saneeconomy.economy.transaction.Transaction;
 import org.appledash.saneeconomy.economy.transaction.TransactionReason;
 import org.appledash.saneeconomy.updates.GithubVersionChecker;
 import org.appledash.saneeconomy.utils.MessageUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -48,6 +49,8 @@ public class JoinQuitListener implements Listener {
 
     @EventHandler
     public void onPlayerLogin(AsyncPlayerPreLoginEvent evt) {
-        plugin.getEconomyManager().getBackend().reloadDatabase(); // TODO: If servers start to lag when lots of people join, this is why.
+        Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, () -> {
+            plugin.getEconomyManager().getBackend().reloadDatabase(); // TODO: If servers start to lag when lots of people join, this is why.
+        }, 0);
     }
 }
