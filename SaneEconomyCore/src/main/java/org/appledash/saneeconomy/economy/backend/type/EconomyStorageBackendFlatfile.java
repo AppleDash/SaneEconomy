@@ -43,7 +43,7 @@ public class EconomyStorageBackendFlatfile extends EconomyStorageBackendCaching 
                 return;
             }
 
-            balances = (HashMap<String, Double>) ois.readObject();
+            balances = (Map<String, Double>) ois.readObject();
 
             ois.close();
         } catch (IOException | ClassNotFoundException e) {
