@@ -8,14 +8,14 @@ import java.util.function.Supplier;
  * Blackjack is still best pony.
  */
 public class DefaultHashMap<K, V> extends HashMap<K, V> {
-    private final Supplier<V> defaultSupplier;
+    private final KeyBasedSupplier<K, V> defaultSupplier;
 
     public DefaultHashMap(Supplier<V> defaultSupplier) {
-        if (defaultSupplier == null) {
-            throw new NullPointerException("defaultSupplier is null");
-        }
+        this((k) -> defaultSupplier.get());
+    }
 
-        this.defaultSupplier = defaultSupplier;
+    public DefaultHashMap(KeyBasedSupplier<K, V> supplier) {
+        this.defaultSupplier = supplier;
     }
 
     @Override
@@ -23,10 +23,14 @@ public class DefaultHashMap<K, V> extends HashMap<K, V> {
         V v = super.get(k);
 
         if (v == null) {
-            v = defaultSupplier.get();
+            v = defaultSupplier.get((K)k);
             this.put((K) k, v);
         }
 
         return v;
+    }
+
+    public interface KeyBasedSupplier<K, V> {
+        V get(K k);
     }
 }
