@@ -10,12 +10,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Created by appledash on 1/1/17.
  * Blackjack is still best pony.
  */
 public class LimitManager {
+    private static final Logger LOGGER = Logger.getLogger("LimitManager");
     // private final Map<ItemInfo, ItemLimits> buyItemLimits = new DefaultHashMap<ItemInfo, ItemLimits>(() -> ItemLimits.DEFAULT);
     private final Map<ItemInfo, ItemLimits> sellItemLimits = new DefaultHashMap<>(() -> ItemLimits.DEFAULT);
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
@@ -48,7 +50,7 @@ public class LimitManager {
             return;
         }
 
-        throw new IllegalArgumentException("Don't know how to set limits for that TransactionDorection!");
+        throw new IllegalArgumentException("Don't know how to set limits for that TransactionDirection!");
     }
 
     public boolean shouldAllowTransaction(ShopTransaction transaction) {
@@ -74,14 +76,15 @@ public class LimitManager {
     }
 
     public void loadLimits(ConfigurationSection config) {
-        for (Map<?, ?> map : config.getMapList("")) {
+        for (Map<?, ?> map : config.getMapList("sell")) {
             String itemName = String.valueOf(map.get("item"));
-            int sellLimit = Integer.valueOf(String.valueOf(map.get("buyLimit")));
+            int sellLimit = Integer.valueOf(String.valueOf(map.get("limit")));
             int hourlyGain = Integer.valueOf(String.valueOf(map.get("gain")));
 
             Optional<ItemDatabase.Pair<Integer, Short>> pair = ItemDatabase.getIDAndDamageForName(itemName);
 
             if (!pair.isPresent()) {
+                LOGGER.warning(String.format("You tried to load the item '%s' in limits.yml, but I have no idea what that is.", map.get("item")));
                 continue;
             }
 

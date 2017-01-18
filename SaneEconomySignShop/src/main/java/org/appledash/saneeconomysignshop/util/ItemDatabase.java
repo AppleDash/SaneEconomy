@@ -1,6 +1,7 @@
 package org.appledash.saneeconomysignshop.util;
 
 import com.google.common.collect.ImmutableMap;
+import org.bukkit.Material;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,7 +31,7 @@ public class ItemDatabase {
                 int id = Integer.valueOf(split[1]);
                 short damage = Short.valueOf(split[2]);
 
-                itemMap.put(name, Pair.of(id, damage));
+                itemMap.put(name.toLowerCase(), Pair.of(id, damage));
             }
 
             itemMap = ImmutableMap.copyOf(itemMap);
@@ -40,7 +41,10 @@ public class ItemDatabase {
     }
 
     public static Optional<Pair<Integer, Short>> getIDAndDamageForName(String name) {
-        return Optional.ofNullable(itemMap.get(name));
+        if (Material.getMaterial(name) != null) {
+            return Optional.of(Pair.of(Material.getMaterial(name).getId(), (short) 0));
+        }
+        return Optional.ofNullable(itemMap.get(name.toLowerCase()));
     }
 
     public static class Pair<K, V> {
