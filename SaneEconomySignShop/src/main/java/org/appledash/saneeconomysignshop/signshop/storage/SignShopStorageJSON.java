@@ -20,7 +20,7 @@ import java.util.Map;
 public class SignShopStorageJSON implements SignShopStorage {
     private final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
     private final File storageFile;
-    private Map<Location, SignShop> cachedSignShops = new HashMap<>();
+    private final Map<Location, SignShop> cachedSignShops = new HashMap<>();
 
     public SignShopStorageJSON(File storageFile) {
         this.storageFile = storageFile;

@@ -23,7 +23,7 @@ public class SignShop implements Serializable {
     private final double sellPrice;
 
     public SignShop(UUID ownerUuid, Location location, ItemStack item, int quantity, double buyPrice, double sellPrice) {
-        if (ownerUuid == null || location == null || item == null) {
+        if ((ownerUuid == null) || (location == null) || (item == null)) {
             throw new IllegalArgumentException("ownerUuid, location, and item must not be null.");
         }
 

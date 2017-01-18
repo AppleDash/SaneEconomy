@@ -2,6 +2,7 @@ package org.appledash.saneeconomysignshop.util;
 
 import org.appledash.saneeconomysignshop.signshop.ShopTransaction;
 import org.appledash.saneeconomysignshop.signshop.ShopTransaction.TransactionDirection;
+import org.appledash.saneeconomysignshop.util.ItemDatabase.InvalidItemException;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -66,9 +67,8 @@ public class LimitManager {
         sellPlayerLimits.forEach((playerUuid, itemToLimit) -> {
             Map<ItemInfo, Integer> newLimits = new HashMap<>();
 
-            itemToLimit.forEach((itemInfo, currentLimit) -> {
-                newLimits.put(itemInfo, currentLimit + (sellItemLimits.get(itemInfo).getHourlyGain()));
-            });
+            itemToLimit.forEach((itemInfo, currentLimit) ->
+                    newLimits.put(itemInfo, currentLimit + (sellItemLimits.get(itemInfo).getHourlyGain())));
 
             itemToLimit.putAll(newLimits);
         });
@@ -83,7 +83,7 @@ public class LimitManager {
 
             try {
                 stack = ItemDatabase.parseGive(itemName);
-            } catch (ItemDatabase.InvalidItemException e) {
+            } catch (InvalidItemException e) {
                 LOGGER.warning(String.format("You tried to load the item '%s' in limits.yml, but I have no idea what that is.", map.get("item")));
                 continue;
             }

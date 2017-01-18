@@ -11,7 +11,7 @@ import org.bukkit.event.block.BlockBreakEvent;
  * Blackjack is best pony.
  */
 public class BreakListener implements Listener {
-    private SaneEconomySignShop plugin;
+    private final SaneEconomySignShop plugin;
 
     public BreakListener(SaneEconomySignShop plugin) {
         this.plugin = plugin;

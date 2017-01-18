@@ -6,6 +6,7 @@ import org.appledash.saneeconomy.utils.MessageUtils;
 import org.appledash.saneeconomysignshop.SaneEconomySignShop;
 import org.appledash.saneeconomysignshop.signshop.SignShop;
 import org.appledash.saneeconomysignshop.util.ItemDatabase;
+import org.appledash.saneeconomysignshop.util.ItemDatabase.InvalidItemException;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,7 +22,7 @@ import java.util.regex.Pattern;
  * Blackjack is still best pony.
  */
 public class SignChangeListener implements Listener {
-    private SaneEconomySignShop plugin;
+    private final SaneEconomySignShop plugin;
 
     public SignChangeListener(SaneEconomySignShop plugin) {
         this.plugin = plugin;
@@ -91,7 +92,7 @@ public class SignChangeListener implements Listener {
         ItemStack itemStack;
         try {
             itemStack = ItemDatabase.parseGive(itemName);
-        } catch (ItemDatabase.InvalidItemException e) {
+        } catch (InvalidItemException e) {
             return new ParsedSignShop("Invalid item name or ID specified.");
         }
 
