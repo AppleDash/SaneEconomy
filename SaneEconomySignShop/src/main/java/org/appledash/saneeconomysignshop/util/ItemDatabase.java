@@ -60,7 +60,7 @@ public class ItemDatabase {
         }
 
         public static <K, V> Pair of(K k, V v) {
-            return new Pair(k, v);
+            return new Pair<>(k, v);
         }
     }
 }

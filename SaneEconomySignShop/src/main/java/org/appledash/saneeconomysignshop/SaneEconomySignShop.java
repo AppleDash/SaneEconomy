@@ -8,6 +8,7 @@ import org.appledash.saneeconomysignshop.signshop.SignShopManager;
 import org.appledash.saneeconomysignshop.signshop.storage.SignShopStorageFlatfile;
 import org.appledash.saneeconomysignshop.util.ItemDatabase;
 import org.appledash.saneeconomysignshop.util.LimitManager;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -39,6 +40,7 @@ public class SaneEconomySignShop extends JavaPlugin {
 
         saveDefaultConfig();
 
+        limitManager.loadLimits(YamlConfiguration.loadConfiguration(getClass().getResourceAsStream("/limits.yml"))); // Always load from JAR
         signShopManager.loadSignShops();
 
         getServer().getScheduler().scheduleSyncRepeatingTask(this, limitManager::incrementLimitsHourly, 0, 20 * 60 * 60);
@@ -46,6 +48,7 @@ public class SaneEconomySignShop extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SignChangeListener(this), this);
         getServer().getPluginManager().registerEvents(new InteractListener(this), this);
         getServer().getPluginManager().registerEvents(new BreakListener(this), this);
+
     }
 
     public SignShopManager getSignShopManager() {
