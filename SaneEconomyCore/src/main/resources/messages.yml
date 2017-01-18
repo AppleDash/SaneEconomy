@@ -4,7 +4,7 @@
 #   translation: Ce joueur n'est pas en ligne.
 # Colors can also be used, by means of prefixing color codes with an '&' symbol.
 # The order of placeholders can be changed. Anything after the :, like the '02d' in {1:02d} is a Java String.format specifier. If you don't know what that is, I recommend leaving it as-is.
-# INPORTANT: If your translation has a colon ( : ) character inside of it, you must enclose the entire part after "message: " in single quotes ( ' ).
+# IMPORTANT: If your translation has a colon ( : ) character inside of it, you must enclose the entire part after "message: " in single quotes ( ' ).
 # If this file doesn't work for some reason, check your console for errors with "SnakeYAML" included in them.
 messages:
   - message: You don't have permission to check the balance of {1}.
