@@ -28,13 +28,13 @@ public class SignShopStorageFlatfile implements SignShopStorage {
     }
 
     @Override
-    public void putSignShop(SignShop signShop) {
+    public synchronized void putSignShop(SignShop signShop) {
         cachedSignShops.put(signShop.getLocation(), signShop);
         writeSignShops();
     }
 
     @Override
-    public void removeSignShop(SignShop signShop) {
+    public synchronized void removeSignShop(SignShop signShop) {
         cachedSignShops.remove(signShop.getLocation());
         writeSignShops();
     }

@@ -86,12 +86,14 @@ public class InteractListener implements Listener {
 
         ShopTransaction shopTransaction = shop.makeTransaction(player, ShopTransaction.TransactionDirection.BUY, quantity);
 
+        /* No buy limits for now!
         if (!plugin.getLimitManager().shouldAllowTransaction(shopTransaction)) {
             MessageUtils.sendMessage(player, "You have reached your buying limit for the time being. Try back in an hour or so.");
             return;
         }
 
         plugin.getLimitManager().setRemainingLimit(player, ShopTransaction.TransactionDirection.BUY, shop.getItem(), plugin.getLimitManager().getRemainingLimit(player, ShopTransaction.TransactionDirection.BUY, shop.getItem()) - quantity);
+        */
 
         Transaction ecoTransaction = shopTransaction.makeEconomyTransaction();
         TransactionResult result = ecoMan.transact(ecoTransaction);
@@ -126,7 +128,7 @@ public class InteractListener implements Listener {
             return;
         }
 
-        plugin.getLimitManager().setRemainingLimit(player, ShopTransaction.TransactionDirection.SELL, shop.getItem(), plugin.getLimitManager().getRemainingLimit(player, ShopTransaction.TransactionDirection.BUY, shop.getItem()) - quantity);
+        plugin.getLimitManager().setRemainingLimit(player, ShopTransaction.TransactionDirection.SELL, shop.getItem(), plugin.getLimitManager().getRemainingLimit(player, ShopTransaction.TransactionDirection.SELL, shop.getItem()) - quantity);
 
 
         ItemStack stack = shop.getItemStack().clone();
