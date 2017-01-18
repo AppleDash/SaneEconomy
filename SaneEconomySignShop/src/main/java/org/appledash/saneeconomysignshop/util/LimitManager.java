@@ -8,7 +8,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -80,15 +79,17 @@ public class LimitManager {
             String itemName = String.valueOf(map.get("item"));
             int sellLimit = Integer.valueOf(String.valueOf(map.get("limit")));
             int hourlyGain = Integer.valueOf(String.valueOf(map.get("gain")));
+            ItemStack stack;
 
-            Optional<ItemDatabase.Pair<Integer, Short>> pair = ItemDatabase.getIDAndDamageForName(itemName);
-
-            if (!pair.isPresent()) {
+            try {
+                stack = ItemDatabase.parseGive(itemName);
+            } catch (ItemDatabase.InvalidItemException e) {
                 LOGGER.warning(String.format("You tried to load the item '%s' in limits.yml, but I have no idea what that is.", map.get("item")));
                 continue;
             }
 
-            ItemInfo itemInfo = new ItemInfo(new ItemStack(pair.get().getLeft(), pair.get().getRight()));
+
+            ItemInfo itemInfo = new ItemInfo(stack);
 
             sellItemLimits.put(itemInfo, new ItemLimits(sellLimit, hourlyGain));
         }

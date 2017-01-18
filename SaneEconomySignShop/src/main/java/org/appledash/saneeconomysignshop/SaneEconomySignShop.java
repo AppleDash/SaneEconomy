@@ -5,7 +5,7 @@ import org.appledash.saneeconomysignshop.listeners.BreakListener;
 import org.appledash.saneeconomysignshop.listeners.InteractListener;
 import org.appledash.saneeconomysignshop.listeners.SignChangeListener;
 import org.appledash.saneeconomysignshop.signshop.SignShopManager;
-import org.appledash.saneeconomysignshop.signshop.storage.SignShopStorageFlatfile;
+import org.appledash.saneeconomysignshop.signshop.storage.SignShopStorageJSON;
 import org.appledash.saneeconomysignshop.util.ItemDatabase;
 import org.appledash.saneeconomysignshop.util.LimitManager;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -20,7 +20,7 @@ import java.io.File;
  */
 public class SaneEconomySignShop extends JavaPlugin {
     private ISaneEconomy saneEconomy;
-    private final SignShopManager signShopManager = new SignShopManager(new SignShopStorageFlatfile(new File(getDataFolder(), "shops.db")));
+    private final SignShopManager signShopManager = new SignShopManager(new SignShopStorageJSON(new File(getDataFolder(), "shops.json")));
     private final LimitManager limitManager = new LimitManager();
 
     @Override

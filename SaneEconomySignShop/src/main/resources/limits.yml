@@ -53,7 +53,7 @@ sell:
   - item: PORKCHOP
     limit: 1280
     gain: 128
-  - item: CHICKEN
+  - item: RAW_CHICKEN
     limit: 1280
     gain: 128
   - item: DYE:3
@@ -162,7 +162,7 @@ sell:
   - item: CACTUS
     limit: 1600
     gain: 160
-  - item: WHEAT_SEEDS
+  - item: SEEDS
     limit: 1600
     gain: 160
   - item: PUMPKIN_SEEDS
@@ -399,51 +399,51 @@ sell:
   - item: WOOL:15
     limit: 1600
     gain: 80
-  - item: STAINED_HARDENED_CLAY:14
+  - item: STAINED_CLAY:14
     limit: 1600
     gain: 80
-  - item: STAINED_HARDENED_CLAY:1
+  - item: STAINED_CLAY:1
     limit: 1600
     gain: 80
-  - item: STAINED_HARDENED_CLAY:4
+  - item: STAINED_CLAY:4
     limit: 1600
     gain: 80
-  - item: STAINED_HARDENED_CLAY:5
+  - item: STAINED_CLAY:5
     limit: 1600
     gain: 80
-  - item: STAINED_HARDENED_CLAY:13
+  - item: STAINED_CLAY:13
     limit: 1600
     gain: 80
-  - item: STAINED_HARDENED_CLAY:9
+  - item: STAINED_CLAY:9
     limit: 1600
     gain: 80
-  - item: STAINED_HARDENED_CLAY:3
+  - item: STAINED_CLAY:3
     limit: 1600
     gain: 80
-  - item: STAINED_HARDENED_CLAY:11
+  - item: STAINED_CLAY:11
     limit: 1600
     gain: 80
-  - item: STAINED_HARDENED_CLAY:10
+  - item: STAINED_CLAY:10
     limit: 1600
     gain: 80
-  - item: STAINED_HARDENED_CLAY:2
+  - item: STAINED_CLAY:2
     limit: 1600
     gain: 80
-  - item: STAINED_HARDENED_CLAY:6
+  - item: STAINED_CLAY:6
     limit: 1600
     gain: 80
-  - item: STAINED_HARDENED_CLAY:12
+  - item: STAINED_CLAY:12
     limit: 1600
     gain: 80
-  - item: STAINED_HARDENED_CLAY:0
+  - item: STAINED_CLAY:0
     limit: 1600
     gain: 80
-  - item: STAINED_HARDENED_CLAY:8
+  - item: STAINED_CLAY:8
     limit: 1600
     gain: 80
-  - item: STAINED_HARDENED_CLAY:7
+  - item: STAINED_CLAY:7
     limit: 1600
     gain: 80
-  - item: STAINED_HARDENED_CLAY:15
+  - item: STAINED_CLAY:15
     limit: 1600
     gain: 80

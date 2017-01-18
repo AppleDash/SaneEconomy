@@ -7,14 +7,12 @@ import org.appledash.saneeconomysignshop.SaneEconomySignShop;
 import org.appledash.saneeconomysignshop.signshop.SignShop;
 import org.appledash.saneeconomysignshop.util.ItemDatabase;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -92,8 +90,8 @@ public class SignChangeListener implements Listener {
 
         ItemStack itemStack;
         try {
-            itemStack = parseGive(itemName);
-        } catch (InvalidItemException e) {
+            itemStack = ItemDatabase.parseGive(itemName);
+        } catch (ItemDatabase.InvalidItemException e) {
             return new ParsedSignShop("Invalid item name or ID specified.");
         }
 
@@ -139,67 +137,6 @@ public class SignChangeListener implements Listener {
 
         private ParsedSignShop(SignShop shop) {
             this.shop = shop;
-        }
-    }
-
-    private ItemStack parseGive(String rawItemName) throws InvalidItemException {
-        String itemName;
-        short damage;
-
-        if (rawItemName.contains(":")) {
-            String[] splitItemName = rawItemName.split(":");
-            itemName = splitItemName[0];
-            if (splitItemName.length == 1) { // They just typed 'tnt:'
-                damage = 0;
-            } else { // They typed 'tnt:something'
-                try {
-                    damage = Short.valueOf(splitItemName[1]);
-                } catch (NumberFormatException e) {
-                    throw new InvalidItemException("Damage value must be a number.");
-                }
-            }
-        } else { // No damage value
-            itemName = rawItemName;
-            damage = 0;
-        }
-
-        Optional<Material> materialOptional = parseMaterialFromName(itemName);
-
-        if (!materialOptional.isPresent()) {
-            Optional<ItemDatabase.Pair<Integer, Short>> parsedItem = ItemDatabase.getIDAndDamageForName(normalizeItemName(itemName));
-            if (!parsedItem.isPresent()) {
-                throw new InvalidItemException("Item by that name does not exist.");
-            }
-            return new ItemStack(parsedItem.get().getLeft(), 1, parsedItem.get().getRight());
-        }
-
-        return new ItemStack(materialOptional.get(), 1, damage);
-
-    }
-
-    private Optional<Material> parseMaterialFromName(String materialName) {
-        // Try to parse an integral item ID first, for legacy reasons.
-        try {
-            Material mat = Material.getMaterial(Integer.valueOf(materialName));
-            return Optional.ofNullable(mat);
-        } catch (NumberFormatException ignored) { }
-
-        for (Material mat : Material.values()) {
-            if (normalizeItemName(mat.name()).equals(normalizeItemName(materialName))) {
-                return Optional.of(mat);
-            }
-        }
-
-        return Optional.empty();
-    }
-
-    private String normalizeItemName(String itemName) {
-        return itemName.toLowerCase().replace("_", "").replace(" ", "");
-    }
-
-    private class InvalidItemException extends Exception {
-        public InvalidItemException(String message) {
-            super(message);
         }
     }
 }
