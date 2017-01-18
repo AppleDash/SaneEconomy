@@ -2,6 +2,7 @@ package org.appledash.saneeconomysignshop.util;
 
 import com.google.common.collect.ImmutableMap;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -47,6 +48,66 @@ public class ItemDatabase {
         return Optional.ofNullable(itemMap.get(name.toLowerCase()));
     }
 
+    public static ItemStack parseGive(String rawItemName) throws InvalidItemException {
+        String itemName;
+        short damage;
+
+        if (rawItemName.contains(":")) {
+            String[] splitItemName = rawItemName.split(":");
+            itemName = splitItemName[0];
+            if (splitItemName.length == 1) { // They just typed 'tnt:'
+                damage = 0;
+            } else { // They typed 'tnt:something'
+                try {
+                    damage = Short.valueOf(splitItemName[1]);
+                } catch (NumberFormatException e) {
+                    throw new InvalidItemException("Damage value must be a number.");
+                }
+            }
+        } else { // No damage value
+            itemName = rawItemName;
+            damage = 0;
+        }
+
+        Optional<Material> materialOptional = parseMaterialFromName(itemName);
+
+        if (!materialOptional.isPresent()) {
+            Optional<Pair<Integer, Short>> parsedItem = getIDAndDamageForName(normalizeItemName(itemName));
+            if (!parsedItem.isPresent()) {
+                throw new InvalidItemException("Item by that name does not exist.");
+            }
+
+            if (damage == 0) {
+                damage = parsedItem.get().getRight();
+            }
+
+            return new ItemStack(parsedItem.get().getLeft(), 1, damage);
+        }
+
+        return new ItemStack(materialOptional.get(), 1, damage);
+
+    }
+
+    private static Optional<Material> parseMaterialFromName(String materialName) {
+        // Try to parse an integral item ID first, for legacy reasons.
+        try {
+            Material mat = Material.getMaterial(Integer.valueOf(materialName));
+            return Optional.ofNullable(mat);
+        } catch (NumberFormatException ignored) { }
+
+        for (Material mat : Material.values()) {
+            if (normalizeItemName(mat.name()).equals(normalizeItemName(materialName))) {
+                return Optional.of(mat);
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    private static String normalizeItemName(String itemName) {
+        return itemName.toLowerCase().replace("_", "").replace(" ", "");
+    }
+
     public static class Pair<K, V> {
         private K k;
         private V v;
@@ -65,6 +126,12 @@ public class ItemDatabase {
 
         public static <K, V> Pair of(K k, V v) {
             return new Pair<>(k, v);
+        }
+    }
+
+    public static class InvalidItemException extends Exception {
+        public InvalidItemException(String message) {
+            super(message);
         }
     }
 }
