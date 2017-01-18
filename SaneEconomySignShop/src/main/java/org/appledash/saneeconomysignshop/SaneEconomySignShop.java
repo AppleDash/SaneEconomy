@@ -43,7 +43,7 @@ public class SaneEconomySignShop extends JavaPlugin {
         limitManager.loadLimits(YamlConfiguration.loadConfiguration(getClass().getResourceAsStream("/limits.yml"))); // Always load from JAR
         signShopManager.loadSignShops();
 
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, limitManager::incrementLimitsHourly, 0, 20 * 60 * 60);
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, limitManager::incrementLimitsHourly, 0, 20 * 60);
 
         getServer().getPluginManager().registerEvents(new SignChangeListener(this), this);
         getServer().getPluginManager().registerEvents(new InteractListener(this), this);
