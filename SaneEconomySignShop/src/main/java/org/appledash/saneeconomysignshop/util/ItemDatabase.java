@@ -108,27 +108,7 @@ public class ItemDatabase {
         return itemName.toLowerCase().replace("_", "").replace(" ", "");
     }
 
-    public static class Pair<K, V> {
-        private final K left;
-        private final V right;
 
-        public Pair(K left, V right) {
-            this.left = left;
-            this.right = right;
-        }
-
-        public K getLeft() {
-            return left;
-        }
-
-        public V getRight() {
-            return right;
-        }
-
-        public static <K, V> Pair of(K k, V v) {
-            return new Pair<>(k, v);
-        }
-    }
 
     public static class InvalidItemException extends Exception {
         public InvalidItemException(String message) {
