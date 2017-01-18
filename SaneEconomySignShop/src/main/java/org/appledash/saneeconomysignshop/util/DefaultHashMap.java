@@ -19,15 +19,16 @@ public class DefaultHashMap<K, V> extends HashMap<K, V> {
     }
 
     @Override
-    public V get(Object k) {
-        V v = super.get(k);
+    @SuppressWarnings("unchecked")
+    public V get(Object key) {
+        V value = super.get(key);
 
-        if (v == null) {
-            v = defaultSupplier.get((K)k);
-            this.put((K) k, v);
+        if (value == null) {
+            value = defaultSupplier.get((K)key);
+            this.put((K) key, value);
         }
 
-        return v;
+        return value;
     }
 
     public interface KeyBasedSupplier<K, V> {

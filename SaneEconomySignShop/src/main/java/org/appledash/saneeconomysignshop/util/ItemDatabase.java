@@ -109,19 +109,20 @@ public class ItemDatabase {
     }
 
     public static class Pair<K, V> {
-        private K k;
-        private V v;
-        public Pair(K k, V v) {
-            this.k = k;
-            this.v = v;
+        private final K left;
+        private final V right;
+
+        public Pair(K left, V right) {
+            this.left = left;
+            this.right = right;
         }
 
         public K getLeft() {
-            return k;
+            return left;
         }
 
         public V getRight() {
-            return v;
+            return right;
         }
 
         public static <K, V> Pair of(K k, V v) {

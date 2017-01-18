@@ -11,9 +11,12 @@ import java.util.UUID;
  * Blackjack is best pony.
  */
 public class SerializableLocation implements Serializable {
-    private double x, y, z;
-    private float yaw, pitch;
-    private UUID worldUuid;
+    private final double x;
+    private final double y;
+    private final double z;
+    private final float yaw;
+    private final float pitch;
+    private final UUID worldUuid;
 
     public SerializableLocation(Location location) {
         this.x = location.getX();

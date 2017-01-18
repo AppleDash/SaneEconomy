@@ -6,6 +6,7 @@ import org.appledash.saneeconomy.economy.transaction.TransactionResult;
 import org.appledash.saneeconomy.utils.MessageUtils;
 import org.appledash.saneeconomysignshop.SaneEconomySignShop;
 import org.appledash.saneeconomysignshop.signshop.ShopTransaction;
+import org.appledash.saneeconomysignshop.signshop.ShopTransaction.TransactionDirection;
 import org.appledash.saneeconomysignshop.signshop.SignShop;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -84,7 +85,7 @@ public class InteractListener implements Listener {
         EconomyManager ecoMan = plugin.getSaneEconomy().getEconomyManager();
         int quantity = player.isSneaking() ? 1 : shop.getQuantity();
 
-        ShopTransaction shopTransaction = shop.makeTransaction(player, ShopTransaction.TransactionDirection.BUY, quantity);
+        ShopTransaction shopTransaction = shop.makeTransaction(player, TransactionDirection.BUY, quantity);
 
         /* No buy limits for now!
         if (!plugin.getLimitManager().shouldAllowTransaction(shopTransaction)) {
@@ -121,14 +122,14 @@ public class InteractListener implements Listener {
             return;
         }
 
-        ShopTransaction shopTransaction = shop.makeTransaction(player, ShopTransaction.TransactionDirection.SELL, quantity);
+        ShopTransaction shopTransaction = shop.makeTransaction(player, TransactionDirection.SELL, quantity);
 
         if (!plugin.getLimitManager().shouldAllowTransaction(shopTransaction)) {
             MessageUtils.sendMessage(player, "You have reached your selling limit for the time being. Try back in an hour or so.");
             return;
         }
 
-        plugin.getLimitManager().setRemainingLimit(player, ShopTransaction.TransactionDirection.SELL, shop.getItem(), plugin.getLimitManager().getRemainingLimit(player, ShopTransaction.TransactionDirection.SELL, shop.getItem()) - quantity);
+        plugin.getLimitManager().setRemainingLimit(player, TransactionDirection.SELL, shop.getItem(), plugin.getLimitManager().getRemainingLimit(player, TransactionDirection.SELL, shop.getItem()) - quantity);
 
 
         ItemStack stack = shop.getItemStack().clone();

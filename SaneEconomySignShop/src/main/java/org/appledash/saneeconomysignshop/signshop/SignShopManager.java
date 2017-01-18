@@ -10,7 +10,7 @@ import java.util.Optional;
  * Blackjack is still best pony.
  */
 public class SignShopManager {
-    private SignShopStorage storage;
+    private final SignShopStorage storage;
 
     public SignShopManager(SignShopStorage storage) {
         this.storage = storage;
