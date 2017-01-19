@@ -26,7 +26,7 @@ public class SaneEconomyMobKills extends JavaPlugin {
         YamlConfiguration amountsConfig;
 
         if (!(new File(getDataFolder(), "amounts.yml").exists())) {
-            amountsConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(getClass().getResourceAsStream("amounts.yml")));
+            amountsConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(getClass().getResourceAsStream("/amounts.yml")));
             try {
                 amountsConfig.save(new File(getDataFolder(), "amounts.yml"));
             } catch (IOException e) {
