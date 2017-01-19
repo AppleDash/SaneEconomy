@@ -91,8 +91,7 @@ public class ItemDatabase {
     private static Optional<Material> parseMaterialFromName(String materialName) {
         // Try to parse an integral item ID first, for legacy reasons.
         try {
-            Material mat = Material.getMaterial(Integer.valueOf(materialName));
-            return Optional.ofNullable(mat);
+            return Optional.ofNullable(Material.getMaterial(Integer.valueOf(materialName)));
         } catch (NumberFormatException ignored) { }
 
         for (Material mat : Material.values()) {
@@ -107,8 +106,6 @@ public class ItemDatabase {
     private static String normalizeItemName(String itemName) {
         return itemName.toLowerCase().replace("_", "").replace(" ", "");
     }
-
-
 
     public static class InvalidItemException extends Exception {
         public InvalidItemException(String message) {
