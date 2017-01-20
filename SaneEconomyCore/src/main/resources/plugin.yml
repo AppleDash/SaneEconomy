@@ -2,7 +2,8 @@ name: SaneEconomy
 author: AppleDash
 main: org.appledash.saneeconomy.SaneEconomy
 version: 0.10.1
-loadbefore: [Vault]
+load: STARTUP
+softdepend: [Vault]
 commands:
   balance:
     aliases: [bal, money]
