@@ -28,3 +28,4 @@ messages:
   - message: "{1} is not a valid number."
   - message: "There aren't enough players to display that page."
   - message: "[{1:02d}] {2} - {3}"
+  - message: 'Too few arguments for that command!'
