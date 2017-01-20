@@ -6,7 +6,7 @@
 
     <groupId>org.appledash</groupId>
     <artifactId>SaneEconomy</artifactId>
-    <version>0.10.2-SNAPSHOT</version>
+    <version>0.10.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
