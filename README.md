@@ -12,6 +12,12 @@ both in the comments on BukkitDev/SpigotMC, and on GitHub, all with no response 
 
 I decided that it was time for a change. I wanted a working, updated economy plugin for Bukkit, built against the latest API. So I wrote one myself.
 
+## Components
+
+* SaneEconomyCore - The main economy provider.
+* SaneEconomySignShop - A side project written for a specific server. Unsupported.
+* SaneEconomyMobKills - Another side project for the same server. Unsupported, unfinished.
+
 ## Development
 
 We manage dependencies with Maven.
