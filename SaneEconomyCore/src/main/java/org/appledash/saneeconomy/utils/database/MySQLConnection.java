@@ -1,19 +1,22 @@
-package org.appledash.saneeconomy.utils;
+package org.appledash.saneeconomy.utils.database;
 
 import org.appledash.saneeconomy.SaneEconomy;
 import org.bukkit.Bukkit;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 /**
  * Created by appledash on 9/19/16.
  * Blackjack is best pony.
  */
 public class MySQLConnection {
+    private static final Logger LOGGER = Logger.getLogger("MySQLConnection");
     private static final int MAX_OPEN_TRANSACTIONS = 5;
     private final DatabaseCredentials dbCredentials;
     private final AtomicInteger openTransactions = new AtomicInteger(0);
@@ -36,6 +39,18 @@ public class MySQLConnection {
         }
     }
 
+    public PreparedStatement prepareStatement(Connection conn, String sql) throws SQLException {
+        PreparedStatement preparedStatement = conn.prepareStatement(sql);
+
+        preparedStatement.setQueryTimeout(dbCredentials.getQueryTimeout()); // 5 second timeout
+
+        return preparedStatement;
+    }
+
+    public PreparedStatement prepareStatement(String sql) throws SQLException {
+        return prepareStatement(openConnection(), sql);
+    }
+
     public boolean testConnection() {
         try (Connection ignored = openConnection()) {
             return true;
@@ -47,16 +62,31 @@ public class MySQLConnection {
 
     public void executeAsyncOperation(Consumer<Connection> callback) {
         Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(SaneEconomy.getInstance(), () -> {
+            doExecuteAsyncOperation(1, callback);
+        });
+    }
+
+    // This is a big weird because it has to account for recursion...
+    private void doExecuteAsyncOperation(int levels, Consumer<Connection> callback) {
+        if (levels == 1) {
             waitForSlot();
             openTransactions.incrementAndGet();
-            try (Connection conn = openConnection()) {
-                callback.accept(conn);
-            } catch (Exception e) {
+        }
+        try (Connection conn = openConnection()) {
+            callback.accept(conn);
+        } catch (Exception e) {
+            if (levels > dbCredentials.getMaxRetries()) {
                 throw new RuntimeException("This shouldn't happen (database error)", e);
-            } finally {
+            }
+            LOGGER.severe("An internal SQL error has occured, trying up to " + (5 - levels) + " more times...");
+            e.printStackTrace();
+            levels++;
+            doExecuteAsyncOperation(levels, callback);
+        } finally {
+            if (levels == 1) {
                 openTransactions.decrementAndGet();
             }
-        });
+        }
     }
 
     public DatabaseCredentials getCredentials() {

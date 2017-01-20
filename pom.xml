@@ -6,7 +6,7 @@
 
     <groupId>org.appledash</groupId>
     <artifactId>SaneEconomy</artifactId>
-    <version>0.10.1-SNAPSHOT</version>
+    <version>0.10.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -32,7 +32,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.10-R0.1-SNAPSHOT</version>
+            <version>1.11-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>

@@ -1,4 +1,4 @@
-package org.appledash.saneeconomy.utils;
+package org.appledash.saneeconomy.utils.database;
 
 /**
  * Created by appledash on 9/18/16.
@@ -11,6 +11,8 @@ public class DatabaseCredentials {
     private final String password;
     private final String databaseName;
     private final String tablePrefix;
+    private final int maxRetries;
+    private final int queryTimeout;
 
     public DatabaseCredentials(String hostname, int port, String username, String password, String databaseName, String tablePrefix) {
         this.hostname = hostname;
@@ -19,6 +21,8 @@ public class DatabaseCredentials {
         this.password = password;
         this.databaseName = databaseName;
         this.tablePrefix = tablePrefix;
+        maxRetries = 5;
+        queryTimeout = 5000;
     }
 
     public String getHostname() {
@@ -47,5 +51,13 @@ public class DatabaseCredentials {
 
     public String getTablePrefix() {
         return tablePrefix;
+    }
+
+    public int getMaxRetries() {
+        return maxRetries;
+    }
+
+    public int getQueryTimeout() {
+        return queryTimeout;
     }
 }
