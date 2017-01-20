@@ -4,6 +4,7 @@ import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.command.SaneEconomyCommand;
 import org.appledash.saneeconomy.command.exception.CommandException;
 import org.appledash.saneeconomy.command.exception.type.usage.InvalidUsageException;
+import org.appledash.saneeconomy.utils.I18n;
 import org.appledash.saneeconomy.utils.MessageUtils;
 import org.bukkit.command.CommandSender;
 
@@ -24,7 +25,7 @@ public class SaneEcoCommand extends SaneEconomyCommand {
     @Override
     public String[] getUsage() {
         return new String[] {
-                "/<command> reload-database"
+                I18n._("/<command> reload-database")
         };
     }
 

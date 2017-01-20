@@ -11,6 +11,7 @@ import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.economy.transaction.Transaction;
 import org.appledash.saneeconomy.economy.transaction.TransactionReason;
 import org.appledash.saneeconomy.economy.transaction.TransactionResult;
+import org.appledash.saneeconomy.utils.I18n;
 import org.appledash.saneeconomy.utils.MessageUtils;
 import org.appledash.saneeconomy.utils.NumberUtils;
 import org.appledash.saneeconomy.utils.PlayerUtils;
@@ -35,7 +36,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
     @Override
     public String[] getUsage() {
         return new String[] {
-                "/<command> <give/take/set> [player] <amount>"
+                I18n._("/<command> <give/take/set> [player] <amount>")
         };
     }
 

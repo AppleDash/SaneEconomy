@@ -29,3 +29,9 @@ messages:
   - message: "There aren't enough players to display that page."
   - message: "[{1:02d}] {2} - {3}"
   - message: 'Too few arguments for that command!'
+  - message: /pay <player> <amount>
+  - message: /<command> [player]
+  - message: /<command>
+  - message: /<command> <page>
+  - message: /<command> <give/take/set> [player] <amount>
+  - message: /<command> reload-database
