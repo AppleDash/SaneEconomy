@@ -1,7 +1,7 @@
 name: SaneEconomy
 author: AppleDash
 main: org.appledash.saneeconomy.SaneEconomy
-version: 0.10.1
+version: 0.10.2
 load: STARTUP
 softdepend: [Vault]
 commands:
