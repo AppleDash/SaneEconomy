@@ -9,12 +9,14 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 /**
  * Created by appledash on 9/19/16.
  * Blackjack is best pony.
  */
 public class MySQLConnection {
+    private static final Logger LOGGER = Logger.getLogger("MySQLConnection");
     private static final int MAX_OPEN_TRANSACTIONS = 5;
     private final DatabaseCredentials dbCredentials;
     private final AtomicInteger openTransactions = new AtomicInteger(0);
@@ -60,16 +62,26 @@ public class MySQLConnection {
 
     public void executeAsyncOperation(Consumer<Connection> callback) {
         Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(SaneEconomy.getInstance(), () -> {
-            waitForSlot();
-            openTransactions.incrementAndGet();
-            try (Connection conn = openConnection()) {
-                callback.accept(conn);
-            } catch (Exception e) {
-                throw new RuntimeException("This shouldn't happen (database error)", e);
-            } finally {
-                openTransactions.decrementAndGet();
-            }
+            doExecuteAsyncOperation(1, callback);
         });
+    }
+
+    private void doExecuteAsyncOperation(int levels, Consumer<Connection> callback) {
+        waitForSlot();
+        openTransactions.incrementAndGet();
+        try (Connection conn = openConnection()) {
+            callback.accept(conn);
+        } catch (Exception e) {
+            if (levels < 5) {
+                LOGGER.severe("An internal SQL error has occured, trying up to " + (5 - levels) + " more times...");
+                e.printStackTrace();
+                levels++;
+                doExecuteAsyncOperation(levels, callback);
+            }
+            throw new RuntimeException("This shouldn't happen (database error)", e);
+        } finally {
+            openTransactions.decrementAndGet();
+        }
     }
 
     public DatabaseCredentials getCredentials() {
