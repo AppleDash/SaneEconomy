@@ -42,7 +42,7 @@ public class MySQLConnection {
     public PreparedStatement prepareStatement(Connection conn, String sql) throws SQLException {
         PreparedStatement preparedStatement = conn.prepareStatement(sql);
 
-        preparedStatement.setQueryTimeout(5000); // 5 second timeout
+        preparedStatement.setQueryTimeout(dbCredentials.getQueryTimeout()); // 5 second timeout
 
         return preparedStatement;
     }
@@ -66,21 +66,26 @@ public class MySQLConnection {
         });
     }
 
+    // This is a big weird because it has to account for recursion...
     private void doExecuteAsyncOperation(int levels, Consumer<Connection> callback) {
-        waitForSlot();
-        openTransactions.incrementAndGet();
+        if (levels == 1) {
+            waitForSlot();
+            openTransactions.incrementAndGet();
+        }
         try (Connection conn = openConnection()) {
             callback.accept(conn);
         } catch (Exception e) {
-            if (levels < 5) {
-                LOGGER.severe("An internal SQL error has occured, trying up to " + (5 - levels) + " more times...");
-                e.printStackTrace();
-                levels++;
-                doExecuteAsyncOperation(levels, callback);
+            if (levels > dbCredentials.getMaxRetries()) {
+                throw new RuntimeException("This shouldn't happen (database error)", e);
             }
-            throw new RuntimeException("This shouldn't happen (database error)", e);
+            LOGGER.severe("An internal SQL error has occured, trying up to " + (5 - levels) + " more times...");
+            e.printStackTrace();
+            levels++;
+            doExecuteAsyncOperation(levels, callback);
         } finally {
-            openTransactions.decrementAndGet();
+            if (levels == 1) {
+                openTransactions.decrementAndGet();
+            }
         }
     }
 
