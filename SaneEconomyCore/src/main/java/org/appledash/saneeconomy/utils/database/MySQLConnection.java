@@ -1,10 +1,11 @@
-package org.appledash.saneeconomy.utils;
+package org.appledash.saneeconomy.utils.database;
 
 import org.appledash.saneeconomy.SaneEconomy;
 import org.bukkit.Bukkit;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -34,6 +35,18 @@ public class MySQLConnection {
         } catch (SQLException e) {
             throw new RuntimeException("Database unavailable.", e);
         }
+    }
+
+    public PreparedStatement prepareStatement(Connection conn, String sql) throws SQLException {
+        PreparedStatement preparedStatement = conn.prepareStatement(sql);
+
+        preparedStatement.setQueryTimeout(5000); // 5 second timeout
+
+        return preparedStatement;
+    }
+
+    public PreparedStatement prepareStatement(String sql) throws SQLException {
+        return prepareStatement(openConnection(), sql);
     }
 
     public boolean testConnection() {

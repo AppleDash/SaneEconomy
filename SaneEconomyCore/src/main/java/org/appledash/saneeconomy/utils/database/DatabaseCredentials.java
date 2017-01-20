@@ -1,4 +1,4 @@
-package org.appledash.saneeconomy.utils;
+package org.appledash.saneeconomy.utils.database;
 
 /**
  * Created by appledash on 9/18/16.

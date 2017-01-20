@@ -2,8 +2,8 @@ package org.appledash.saneeconomy.economy.backend.type;
 
 import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.economy.economable.Economable;
-import org.appledash.saneeconomy.utils.DatabaseCredentials;
-import org.appledash.saneeconomy.utils.MySQLConnection;
+import org.appledash.saneeconomy.utils.database.DatabaseCredentials;
+import org.appledash.saneeconomy.utils.database.MySQLConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -101,7 +101,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         waitUntilFlushed();
         createTables();
         try (Connection conn = dbConn.openConnection()) {
-            PreparedStatement ps = conn.prepareStatement(String.format("SELECT * FROM `%s`", dbConn.getTable("saneeconomy_balances")));
+            PreparedStatement ps = dbConn.prepareStatement(conn, String.format("SELECT * FROM `%s`", dbConn.getTable("saneeconomy_balances")));
             ResultSet rs = ps.executeQuery();
 
             balances.clear();
@@ -122,7 +122,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         dbConn.executeAsyncOperation((conn) -> {
             try {
                 ensureAccountExists(economable, conn);
-                PreparedStatement statement = conn.prepareStatement(String.format("UPDATE `%s` SET balance = ? WHERE `unique_identifier` = ?", dbConn.getTable("saneeconomy_balances")));
+                PreparedStatement statement = dbConn.prepareStatement(conn, String.format("UPDATE `%s` SET balance = ? WHERE `unique_identifier` = ?", dbConn.getTable("saneeconomy_balances")));
                 statement.setDouble(1, newBalance);
                 statement.setString(2, economable.getUniqueIdentifier());
                 statement.executeUpdate();
@@ -135,14 +135,14 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
 
     private synchronized void ensureAccountExists(Economable economable, Connection conn) throws SQLException {
         if (!accountExists(economable, conn)) {
-            PreparedStatement statement = conn.prepareStatement(String.format("INSERT INTO `%s` (unique_identifier, balance) VALUES (?, 0.0)", dbConn.getTable("saneeconomy_balances")));
+            PreparedStatement statement = dbConn.prepareStatement(conn, String.format("INSERT INTO `%s` (unique_identifier, balance) VALUES (?, 0.0)", dbConn.getTable("saneeconomy_balances")));
             statement.setString(1, economable.getUniqueIdentifier());
             statement.executeUpdate();
         }
     }
 
     private synchronized boolean accountExists(Economable economable, Connection conn) throws SQLException {
-        PreparedStatement statement = conn.prepareStatement(String.format("SELECT 1 FROM `%s` WHERE `unique_identifier` = ?", dbConn.getTable("saneeconomy_balances")));
+        PreparedStatement statement = dbConn.prepareStatement(conn, String.format("SELECT 1 FROM `%s` WHERE `unique_identifier` = ?", dbConn.getTable("saneeconomy_balances")));
         statement.setString(1, economable.getUniqueIdentifier());
 
         ResultSet rs = statement.executeQuery();

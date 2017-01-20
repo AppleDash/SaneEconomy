@@ -2,8 +2,8 @@ package org.appledash.saneeconomy.economy.logger;
 
 import org.appledash.saneeconomy.economy.transaction.Transaction;
 import org.appledash.saneeconomy.economy.transaction.TransactionReason;
-import org.appledash.saneeconomy.utils.DatabaseCredentials;
-import org.appledash.saneeconomy.utils.MySQLConnection;
+import org.appledash.saneeconomy.utils.database.DatabaseCredentials;
+import org.appledash.saneeconomy.utils.database.MySQLConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
