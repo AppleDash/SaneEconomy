@@ -2,6 +2,7 @@ package org.appledash.saneeconomy.utils;
 
 import com.google.common.base.Strings;
 import org.appledash.saneeconomy.SaneEconomy;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -23,7 +24,7 @@ public class MessageUtils {
      * @param fmt String#format format
      * @param args String#format args
      */
-    public static synchronized void sendMessage(CommandSender target, String fmt, Object... args) {
+    public static void sendMessage(CommandSender target, String fmt, Object... args) {
         fmt = _(fmt);
 
         String prefix = ChatColor.translateAlternateColorCodes('&', SaneEconomy.getInstance().getConfig().getString("chat.prefix", ""));
@@ -36,11 +37,11 @@ public class MessageUtils {
             formatted = indexedFormat(fmt, (Object[]) args);
         }
 
-        target.sendMessage(prefix + formatted);
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SaneEconomy.getInstance(), () -> target.sendMessage(prefix + formatted));
     }
 
-    public static synchronized void sendMessage(OfflinePlayer target, String fmt, Object... args) {
-        if (target.isOnline() && (target instanceof CommandSender)) {
+    public static void sendMessage(Object target, String fmt, Object... args) {
+        if ((target instanceof OfflinePlayer) && ((OfflinePlayer) target).isOnline() && (target instanceof CommandSender)) {
             sendMessage(((CommandSender) target), fmt, (Object[])args);
         }
     }
