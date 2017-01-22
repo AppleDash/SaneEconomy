@@ -63,6 +63,10 @@ public class BalanceCommand extends SaneEconomyCommand {
             return;
         }
 
-        MessageUtils.sendMessage(sender, "Balance for {1} is {2}.", playerName, saneEconomy.getEconomyManager().getFormattedBalance(Economable.wrap(player)));
+        if (sender == player) {
+            MessageUtils.sendMessage(sender, "Your balance is {1}.", saneEconomy.getEconomyManager().getFormattedBalance(Economable.wrap(player)));
+        } else {
+            MessageUtils.sendMessage(sender, "Balance for {1} is {2}.", playerName, saneEconomy.getEconomyManager().getFormattedBalance(Economable.wrap(player)));
+        }
     }
 }
