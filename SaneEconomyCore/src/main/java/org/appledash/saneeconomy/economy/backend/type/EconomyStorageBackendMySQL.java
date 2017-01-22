@@ -12,12 +12,18 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by AppleDash on 6/14/2016.
  * Blackjack is still best pony.
  */
 public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
+    private static final Logger LOGGER = Logger.getLogger("EconomyStorageBackendMySQL");
+    static {
+        LOGGER.setLevel(Level.FINEST);
+    }
     private final MySQLConnection dbConn;
 
     public EconomyStorageBackendMySQL(DatabaseCredentials dbCredentials) {
@@ -115,7 +121,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
     }
 
     @Override
-    public synchronized void setBalance(final Economable economable, final double newBalance) {
+    public void setBalance(final Economable economable, final double newBalance) {
         final double oldBalance = getBalance(economable);
         balances.put(economable.getUniqueIdentifier(), newBalance);
 
@@ -133,7 +139,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         });
     }
 
-    private synchronized void ensureAccountExists(Economable economable, Connection conn) throws SQLException {
+    private void ensureAccountExists(Economable economable, Connection conn) throws SQLException {
         if (!accountExists(economable, conn)) {
             PreparedStatement statement = dbConn.prepareStatement(conn, String.format("INSERT INTO `%s` (unique_identifier, balance) VALUES (?, 0.0)", dbConn.getTable("saneeconomy_balances")));
             statement.setString(1, economable.getUniqueIdentifier());
@@ -141,7 +147,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         }
     }
 
-    private synchronized boolean accountExists(Economable economable, Connection conn) throws SQLException {
+    private boolean accountExists(Economable economable, Connection conn) throws SQLException {
         PreparedStatement statement = dbConn.prepareStatement(conn, String.format("SELECT 1 FROM `%s` WHERE `unique_identifier` = ?", dbConn.getTable("saneeconomy_balances")));
         statement.setString(1, economable.getUniqueIdentifier());
 

@@ -71,7 +71,7 @@ public class EntityDamageListener implements Listener {
         }
 
         Map<UUID, Double> damageDoneToThisEntity = damageDealt.get(entity.getEntityId());
-        double totalDmg = sumValues(damageDoneToThisEntity);
+        double totalDmg = ((LivingEntity) entity).getMaxHealth();//sumValues(damageDoneToThisEntity);
 
         for (Map.Entry<UUID, Double> entry : damageDoneToThisEntity.entrySet()) {
             double thisDmg = entry.getValue();
