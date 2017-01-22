@@ -4,6 +4,7 @@ import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.command.SaneEconomyCommand;
 import org.appledash.saneeconomy.command.exception.CommandException;
 import org.appledash.saneeconomy.command.exception.type.usage.TooManyArgumentsException;
+import org.appledash.saneeconomy.utils.I18n;
 import org.appledash.saneeconomy.utils.MessageUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -28,8 +29,8 @@ public class BalanceTopCommand extends SaneEconomyCommand {
     @Override
     public String[] getUsage() {
         return new String[] {
-                "/<command>",
-                "/<command> <page>"
+                I18n._("/<command>"),
+                        I18n._("/<command> <page>")
         };
     }
 
