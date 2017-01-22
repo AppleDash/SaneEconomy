@@ -3,6 +3,7 @@ package org.appledash.saneeconomy.utils;
 import com.google.common.base.Strings;
 import org.appledash.saneeconomy.SaneEconomy;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
 import java.util.regex.Matcher;
@@ -36,6 +37,12 @@ public class MessageUtils {
         }
 
         target.sendMessage(prefix + formatted);
+    }
+
+    public static synchronized void sendMessage(OfflinePlayer target, String fmt, Object... args) {
+        if (target.isOnline() && (target instanceof CommandSender)) {
+            sendMessage(((CommandSender) target), fmt, (Object[])args);
+        }
     }
 
     public static String indexedFormat(String fmt, Object... arguments) {

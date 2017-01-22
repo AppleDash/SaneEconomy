@@ -11,7 +11,8 @@ import org.appledash.saneeconomy.economy.transaction.TransactionReason;
 import org.appledash.saneeconomy.economy.transaction.TransactionResult;
 import org.appledash.saneeconomy.utils.MessageUtils;
 import org.appledash.saneeconomy.utils.NumberUtils;
-import org.bukkit.Bukkit;
+import org.appledash.saneeconomy.utils.PlayerUtils;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -53,10 +54,10 @@ public class PayCommand extends SaneEconomyCommand {
         Player fromPlayer = (Player) sender;
 
         String sToPlayer = args[0];
-        Player toPlayer = Bukkit.getServer().getPlayer(sToPlayer);
+        OfflinePlayer toPlayer = PlayerUtils.getOfflinePlayer(sToPlayer);
 
         if (toPlayer == null) {
-            MessageUtils.sendMessage(sender, "That player is not online.");
+            MessageUtils.sendMessage(sender, "That player does not exist or has never played before.");
             return;
         }
 
@@ -93,9 +94,11 @@ public class PayCommand extends SaneEconomyCommand {
                 sToPlayer
         );
 
-        MessageUtils.sendMessage(toPlayer, "You have received {1} from {2}.",
-                ecoMan.getCurrency().formatAmount(amount),
-                fromPlayer.getDisplayName()
-        );
+        if (toPlayer.isOnline()) {
+            MessageUtils.sendMessage(((CommandSender) toPlayer), "You have received {1} from {2}.",
+                    ecoMan.getCurrency().formatAmount(amount),
+                    fromPlayer.getDisplayName()
+            );
+        }
     }
 }

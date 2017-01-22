@@ -19,7 +19,7 @@ public class PlayerUtils {
     public static OfflinePlayer getOfflinePlayer(String playerNameOrUUID) {
         OfflinePlayer player = tryGetFromUUID(playerNameOrUUID);
 
-        if (player != null && (player.hasPlayedBefore() || player.isOnline())) {
+        if ((player != null) && (player.hasPlayedBefore() || player.isOnline())) {
             return player;
         }
 
