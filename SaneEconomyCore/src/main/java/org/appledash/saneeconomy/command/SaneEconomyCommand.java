@@ -8,6 +8,7 @@ import org.appledash.saneeconomy.utils.MessageUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import static org.appledash.saneeconomy.utils.I18n._;
 
 /**
  * Created by AppleDash on 6/13/2016.
@@ -36,7 +37,7 @@ public abstract class SaneEconomyCommand implements CommandExecutor {
 
 
                 for (String s : getUsage()) {
-                    MessageUtils.sendMessage(sender, "Usage: {1}", s.replace("<command>", label));
+                    MessageUtils.sendMessage(sender, _("Usage: {1}"), _(s).replace("<command>", label));
                 }
             } catch (CommandException e) {
                 MessageUtils.sendMessage(sender, e.getMessage());

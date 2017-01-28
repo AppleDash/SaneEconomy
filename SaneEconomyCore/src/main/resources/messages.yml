@@ -7,24 +7,33 @@
 # IMPORTANT: If your translation has a colon ( : ) character inside of it, you must enclose the entire part after "message: " in single quotes ( ' ).
 # If this file doesn't work for some reason, check your console for errors with "SnakeYAML" included in them.
 messages:
-  - message: You don't have permission to check the balance of {1}.
-  - message: That player is not online.
-  - message: You cannot pay yourself.
+  - message: "You don't have permission to check the balance of {1}."
+  - message: "That player is not online."
+  - message: "You cannot pay yourself."
   - message: "Usage: {1}"
-  - message: That player does not exist.
-  - message: Balance for {1} is {2}.
+  - message: "That player does not exist."
+  - message: "Your balance is {1}."
+  - message: "Balance for {1} is {2}."
   - message: "Top {1} players on page {2}:"
-  - message: That player does not exist.
+  - message: "That player does not exist."
   - message: "{1} is not a positive number."
-  - message: Added {1} to {2}. Their balance is now {3}.
-  - message: Took {1} from {2}. Their balance is now {3}.
-  - message: Balance for {1} set to {2}.
-  - message: You do not have enough money to transfer {1} to {2}.
-  - message: You have transferred {1} to {2}.
-  - message: You have received {1} from {2}.
-  - message: Reloading database...
-  - message: Database reloaded.
-  - message: You've been issued a starting balance of {1}!
+  - message: "Added {1} to {2}. Their balance is now {3}."
+  - message: "Took {1} from {2}. Their balance is now {3}."
+  - message: "Balance for {1} set to {2}."
+  - message: "You do not have enough money to transfer {1} to {2}."
+  - message: "You have transferred {1} to {2}."
+  - message: "You have received {1} from {2}."
+  - message: "Reloading database..."
+  - message: "Database reloaded."
+  - message: "You've been issued a starting balance of {1}!"
   - message: "{1} is not a valid number."
   - message: "There aren't enough players to display that page."
   - message: "[{1:02d}] {2} - {3}"
+  - message: "Too few arguments for that command!"
+  - message: "Usage: {1}"
+  - message: "/pay <player> <amount>"
+  - message: "/<command> [player]"
+  - message: "/<command>"
+  - message: "/<command> <page>"
+  - message: "/<command> <give/take/set> [player] <amount>"
+  - message: "/<command> reload-database"
