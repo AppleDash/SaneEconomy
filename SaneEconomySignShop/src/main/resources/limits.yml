@@ -289,10 +289,10 @@ sell:
     gain: 320
   - item: IRON_INGOT
     limit: 2560
-    gain: 128
+    gain: 64
   - item: GOLD_INGOT
     limit: 1280
-    gain: 64
+    gain: 32
   - item: DIAMOND
     limit: 640
     gain: 32
@@ -353,52 +353,52 @@ sell:
 
   - item: WOOL:14
     limit: 1600
-    gain: 80
+    gain: 64
   - item: WOOL:1
     limit: 1600
-    gain: 80
+    gain: 64
   - item: WOOL:4
     limit: 1600
-    gain: 80
+    gain: 64
   - item: WOOL:5
     limit: 1600
-    gain: 80
+    Gain: 64
   - item: WOOL:13
     limit: 1600
-    gain: 80
+    gain: 64
   - item: WOOL:9
     limit: 1600
-    gain: 80
+    gain: 64
   - item: WOOL:3
     limit: 1600
-    gain: 80
+    gain: 64
   - item: WOOL:11
     limit: 1600
-    gain: 80
+    gain: 64
   - item: WOOL:10
     limit: 1600
-    gain: 80
+    gain: 64
   - item: WOOL:2
     limit: 1600
-    gain: 80
+    gain: 64
   - item: WOOL:6
     limit: 1600
-    gain: 80
+    gain: 64
   - item: WOOL:12
     limit: 1600
-    gain: 80
+    gain: 64
   - item: WOOL:0
     limit: 1600
-    gain: 80
+    gain: 64
   - item: WOOL:8
     limit: 1600
-    gain: 80
+    gain: 64
   - item: WOOL:7
     limit: 1600
-    gain: 80
+    gain: 64
   - item: WOOL:15
     limit: 1600
-    gain: 80
+    gain: 64
   - item: STAINED_CLAY:14
     limit: 1600
     gain: 80
@@ -438,7 +438,7 @@ sell:
   - item: STAINED_CLAY:0
     limit: 1600
     gain: 80
-  - item: STAINED_CLAY:8
+  - item: STAINED_CLAY8:
     limit: 1600
     gain: 80
   - item: STAINED_CLAY:7
