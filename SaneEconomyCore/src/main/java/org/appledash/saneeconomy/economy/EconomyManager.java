@@ -23,11 +23,13 @@ public class EconomyManager {
     private final ISaneEconomy saneEconomy;
     private final Currency currency;
     private final EconomyStorageBackend backend;
+    private final String serverAccountName;
 
-    public EconomyManager(ISaneEconomy saneEconomy, Currency currency, EconomyStorageBackend backend) {
+    public EconomyManager(ISaneEconomy saneEconomy, Currency currency, EconomyStorageBackend backend, String serverAccountName) {
         this.saneEconomy = saneEconomy;
         this.currency = currency;
         this.backend = backend;
+        this.serverAccountName = serverAccountName;
     }
 
     /**
@@ -195,5 +197,13 @@ public class EconomyManager {
 
     public EconomyStorageBackend getBackend() {
         return backend;
+    }
+
+    /**
+     * Get the name of the "Server" economy account. This account has an infinite balance and deposits do nothing.
+     * @return Server economy account, or null if none.
+     */
+    public String getServerAccountName() {
+        return serverAccountName;
     }
 }

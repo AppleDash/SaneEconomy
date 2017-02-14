@@ -362,7 +362,7 @@ sell:
     gain: 64
   - item: WOOL:5
     limit: 1600
-    Gain: 64
+    gain: 64
   - item: WOOL:13
     limit: 1600
     gain: 64
@@ -438,7 +438,7 @@ sell:
   - item: STAINED_CLAY:0
     limit: 1600
     gain: 80
-  - item: STAINED_CLAY8:
+  - item: STAINED_CLAY:8
     limit: 1600
     gain: 80
   - item: STAINED_CLAY:7

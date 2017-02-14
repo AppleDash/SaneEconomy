@@ -65,7 +65,7 @@ public class SaneEconomyConfiguration {
             rootConfig.set("old-backend", null);
         }
 
-        return new EconomyManager(saneEconomy, currency, backend);
+        return new EconomyManager(saneEconomy, currency, backend, rootConfig.getString("economy.server-account", null));
     }
 
     /**
