@@ -15,5 +15,6 @@ chat:
 economy:
   start-balance: 0.0
   notify-start-balance: true
+  server-account: '$SERVER$'
 
 debug: false

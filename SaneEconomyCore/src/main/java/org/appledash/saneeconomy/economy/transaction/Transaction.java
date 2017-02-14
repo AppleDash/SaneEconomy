@@ -41,10 +41,18 @@ public class Transaction {
     }
 
     public boolean isSenderAffected() {
+        if (sender == Economable.CONSOLE) {
+            return false;
+        }
+
         return (reason.getAffectedParties() == AffectedParties.SENDER) || (reason.getAffectedParties() == AffectedParties.BOTH);
     }
 
     public boolean isReceiverAffected() {
+        if (receiver == Economable.CONSOLE) {
+            return false;
+        }
+
         return (reason.getAffectedParties() == AffectedParties.RECEIVER) || (reason.getAffectedParties() == AffectedParties.BOTH);
     }
 }
