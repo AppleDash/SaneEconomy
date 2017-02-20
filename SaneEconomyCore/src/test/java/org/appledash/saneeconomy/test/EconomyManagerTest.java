@@ -26,7 +26,7 @@ public class EconomyManagerTest {
     public void setupEconomyManager()  {
         economyManager = new EconomyManager(new MockSaneEconomy(),
                 new Currency("test dollar", "test dollars", new DecimalFormat("0.00")),
-                new MockEconomyStorageBackend());
+                new MockEconomyStorageBackend(), null);
     }
 
     @Test
