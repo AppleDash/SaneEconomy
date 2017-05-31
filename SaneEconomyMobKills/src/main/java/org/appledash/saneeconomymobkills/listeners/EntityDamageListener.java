@@ -88,7 +88,8 @@ public class EntityDamageListener implements Listener {
                     Economable.PLUGIN, Economable.wrap(offlinePlayer), thisAmount, TransactionReason.PLUGIN_GIVE
             ));
         }
-
+        
+        damageDealt.remove(evt.getEntity().getEntityId());
     }
 
     private String getEntityType(Entity entity) {
