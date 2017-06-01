@@ -2,7 +2,7 @@ sell:
   - item: APPLE
     limit: 1600
     gain: 160
-  - item: CARROT
+  - item: CARROT_ITEM
     limit: 3200
     gain: 320
   - item: MELON
