@@ -16,11 +16,20 @@ public class Currency {
     private final String nameSingular;
     private final String namePlural;
     private final DecimalFormat format;
+    private final String formatBalance;
 
     public Currency(String nameSingular, String namePlural, DecimalFormat format) {
         this.nameSingular = nameSingular;
         this.namePlural = namePlural;
         this.format = format;
+        this.formatBalance = "%s %s";
+    }
+
+    public Currency(String nameSingular,String namePlural,DecimalFormat format,String formatBalance){
+        this.nameSingular = nameSingular;
+        this.namePlural = namePlural;
+        this.format = format;
+        this.formatBalance = formatBalance;
     }
 
     public static Currency fromConfig(ConfigurationSection config) {
@@ -48,7 +57,8 @@ public class Currency {
         return new Currency(
                 config.getString("name.singular", "dollar"),
                 config.getString("name.plural", "dollars"),
-                format
+                format,
+                config.getString("balance-format","%s %s")
         );
     }
 
@@ -59,10 +69,10 @@ public class Currency {
      */
     public String formatAmount(double amount) {
         if (amount == 1) {
-            return String.format("%s %s", format.format(amount), nameSingular);
+            return String.format(formatBalance, format.format(amount), nameSingular);
         }
 
-        return String.format("%s %s", format.format(amount), namePlural);
+        return String.format(formatBalance, format.format(amount), namePlural);
     }
 
     /**
