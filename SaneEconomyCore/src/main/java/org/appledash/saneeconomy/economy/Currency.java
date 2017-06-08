@@ -1,6 +1,7 @@
 package org.appledash.saneeconomy.economy;
 
 import com.google.common.base.Strings;
+import org.appledash.saneeconomy.utils.MessageUtils;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.text.DecimalFormat;
@@ -22,7 +23,7 @@ public class Currency {
         this.nameSingular = nameSingular;
         this.namePlural = namePlural;
         this.format = format;
-        this.formatBalance = "%s %s";
+        this.formatBalance = "{1} {2}";
     }
 
     public Currency(String nameSingular,String namePlural,DecimalFormat format,String formatBalance){
@@ -69,10 +70,11 @@ public class Currency {
      */
     public String formatAmount(double amount) {
         if (amount == 1) {
-            return String.format(formatBalance, format.format(amount), nameSingular);
+            return MessageUtils.indexedFormat(formatBalance, format.format(amount), nameSingular);
+//            return String.format(formatBalance, format.format(amount), nameSingular);
         }
-
-        return String.format(formatBalance, format.format(amount), namePlural);
+		return MessageUtils.indexedFormat(formatBalance, format.format(amount), namePlural);
+//		return String.format(formatBalance, format.format(amount), namePlural);
     }
 
     /**
