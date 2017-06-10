@@ -3,6 +3,8 @@ SaneEconomy
 
 Finally, a **sane** economy plugin for Bukkit.
 
+This project is not dead. It just happens that I am busy and get a lot of difficult feature requests. The code doesn't magically break just by sitting around - even if the last commit was a month ago, the released version of the plugin probably still works fine! :)
+
 ## About
 
 I was looking for an economy plugin for a server I administrate, and I noticed something quite strange.
@@ -16,7 +18,7 @@ I decided that it was time for a change. I wanted a working, updated economy plu
 
 * SaneEconomyCore - The main economy provider.
 * SaneEconomySignShop - A side project written for a specific server. Unsupported.
-* SaneEconomyMobKills - Another side project for the same server. Unsupported, unfinished.
+* SaneEconomyMobKills - Another side project for the same server. Unsupported.
 
 ## Development
 
