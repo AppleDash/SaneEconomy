@@ -128,10 +128,12 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         dbConn.executeAsyncOperation((conn) -> {
             try {
                 ensureAccountExists(economable, conn);
+                conn.prepareStatement("LOCK TABLE " + dbConn.getTable("saneeconomy_balances") + " WRITE").execute();
                 PreparedStatement statement = dbConn.prepareStatement(conn, String.format("UPDATE `%s` SET balance = ? WHERE `unique_identifier` = ?", dbConn.getTable("saneeconomy_balances")));
                 statement.setDouble(1, newBalance);
                 statement.setString(2, economable.getUniqueIdentifier());
                 statement.executeUpdate();
+                conn.prepareStatement("UNLOCK TABLES").execute();
             } catch (Exception e) {
                 balances.put(economable.getUniqueIdentifier(), oldBalance);
                 throw new RuntimeException("SQL error has occurred.", e);

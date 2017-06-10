@@ -66,24 +66,26 @@ public class MySQLConnection {
         });
     }
 
-    // This is a big weird because it has to account for recursion...
+    // This is a bit weird because it has to account for recursion...
     private void doExecuteAsyncOperation(int levels, Consumer<Connection> callback) {
-        if (levels == 1) {
+        if (levels == 1) { // First level
             waitForSlot();
             openTransactions.incrementAndGet();
         }
+
         try (Connection conn = openConnection()) {
             callback.accept(conn);
         } catch (Exception e) {
             if (levels > dbCredentials.getMaxRetries()) {
                 throw new RuntimeException("This shouldn't happen (database error)", e);
             }
+
             LOGGER.severe("An internal SQL error has occured, trying up to " + (5 - levels) + " more times...");
             e.printStackTrace();
             levels++;
             doExecuteAsyncOperation(levels, callback);
         } finally {
-            if (levels == 1) {
+            if (levels == 1) { // The recursion is done, we may have thrown an exception, maybe not - but either way we need to mark the transaction as closed.
                 openTransactions.decrementAndGet();
             }
         }
