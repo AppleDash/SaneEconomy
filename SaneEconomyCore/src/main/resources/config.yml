@@ -5,6 +5,7 @@ currency:
   name:
     singular: dollar
     plural: dollars
+  balance-format: '{1} {2}'
   format: '0.00'
   grouping: 3
   grouping-separator: ','
