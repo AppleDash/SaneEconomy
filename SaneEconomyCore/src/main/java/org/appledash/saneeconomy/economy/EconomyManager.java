@@ -190,7 +190,11 @@ public class EconomyManager {
         Map<UUID, Double> uuidBalances = backend.getTopPlayerBalances(amount, offset);
         Map<OfflinePlayer, Double> playerBalances = new LinkedHashMap<>();
 
-        uuidBalances.forEach((uuid, balance) -> playerBalances.put(Bukkit.getServer().getOfflinePlayer(uuid), balance));
+        uuidBalances.forEach((uuid, balance) -> {
+            if (Bukkit.getServer().getOfflinePlayer(uuid) != null) {
+                playerBalances.put(Bukkit.getServer().getOfflinePlayer(uuid), balance);
+            }
+        });
 
         return playerBalances;
     }
