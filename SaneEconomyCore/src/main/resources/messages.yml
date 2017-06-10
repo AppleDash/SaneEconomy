@@ -2,6 +2,7 @@
 # Add a translation to the messages you wish to change, like this:
 # - message: That player is not online.
 #   translation: Ce joueur n'est pas en ligne.
+# To be clear: DO NOT change 'message'. Simply add a new, indented 'translation' line below it, with the changed message.
 # Colors can also be used, by means of prefixing color codes with an '&' symbol.
 # The order of placeholders can be changed. Anything after the :, like the '02d' in {1:02d} is a Java String.format specifier. If you don't know what that is, I recommend leaving it as-is.
 # IMPORTANT: If your translation has a colon ( : ) character inside of it, you must enclose the entire part after "message: " in single quotes ( ' ).
