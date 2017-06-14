@@ -17,20 +17,17 @@ public class Currency {
     private final String nameSingular;
     private final String namePlural;
     private final DecimalFormat format;
-    private final String formatBalance;
+    private final String balanceFormat;
 
     public Currency(String nameSingular, String namePlural, DecimalFormat format) {
-        this.nameSingular = nameSingular;
-        this.namePlural = namePlural;
-        this.format = format;
-        this.formatBalance = "{1} {2}";
+        this(nameSingular, namePlural, format, "{1} {2}");
     }
 
-    public Currency(String nameSingular,String namePlural,DecimalFormat format,String formatBalance){
+    public Currency(String nameSingular, String namePlural, DecimalFormat format, String balanceFormat) {
         this.nameSingular = nameSingular;
         this.namePlural = namePlural;
         this.format = format;
-        this.formatBalance = formatBalance;
+        this.balanceFormat = balanceFormat;
     }
 
     public static Currency fromConfig(ConfigurationSection config) {
@@ -59,7 +56,7 @@ public class Currency {
                 config.getString("name.singular", "dollar"),
                 config.getString("name.plural", "dollars"),
                 format,
-                config.getString("balance-format","%s %s")
+                config.getString("balance-format", "{1} {2}")
         );
     }
 
@@ -70,11 +67,10 @@ public class Currency {
      */
     public String formatAmount(double amount) {
         if (amount == 1) {
-            return MessageUtils.indexedFormat(formatBalance, format.format(amount), nameSingular);
-//            return String.format(formatBalance, format.format(amount), nameSingular);
+            return MessageUtils.indexedFormat(balanceFormat, format.format(amount), nameSingular);
         }
-		return MessageUtils.indexedFormat(formatBalance, format.format(amount), namePlural);
-//		return String.format(formatBalance, format.format(amount), namePlural);
+
+		return MessageUtils.indexedFormat(balanceFormat, format.format(amount), namePlural);
     }
 
     /**
