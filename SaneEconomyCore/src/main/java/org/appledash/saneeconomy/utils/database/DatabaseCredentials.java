@@ -13,14 +13,16 @@ public class DatabaseCredentials {
     private final String tablePrefix;
     private final int maxRetries;
     private final int queryTimeout;
+    private final boolean useSsl;
 
-    public DatabaseCredentials(String hostname, int port, String username, String password, String databaseName, String tablePrefix) {
+    public DatabaseCredentials(String hostname, int port, String username, String password, String databaseName, String tablePrefix, boolean useSsl) {
         this.hostname = hostname;
         this.port = port;
         this.username = username;
         this.password = password;
         this.databaseName = databaseName;
         this.tablePrefix = tablePrefix;
+        this.useSsl = useSsl;
         maxRetries = 5;
         queryTimeout = 5000;
     }
@@ -46,7 +48,7 @@ public class DatabaseCredentials {
     }
 
     public String getJDBCURL() {
-        return String.format("jdbc:mysql://%s:%d/%s", hostname, port, databaseName);
+        return String.format("jdbc:mysql://%s:%d/%s?useSSL=%s", hostname, port, databaseName, useSsl);
     }
 
     public String getTablePrefix() {
