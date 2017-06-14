@@ -13,6 +13,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.InputStreamReader;
 
 /**
  * Created by appledash on 10/2/16.
@@ -40,7 +41,7 @@ public class SaneEconomySignShop extends JavaPlugin {
 
         saveDefaultConfig();
 
-        limitManager.loadLimits(YamlConfiguration.loadConfiguration(getClass().getResourceAsStream("/limits.yml"))); // Always load from JAR
+        limitManager.loadLimits(YamlConfiguration.loadConfiguration(new InputStreamReader(getClass().getResourceAsStream("/limits.yml")))); // Always load from JAR
         signShopManager.loadSignShops();
 
         getServer().getScheduler().scheduleSyncRepeatingTask(this, limitManager::incrementLimitsHourly, 0, 20 * 60 * 60);
