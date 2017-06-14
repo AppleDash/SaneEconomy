@@ -106,11 +106,16 @@ public class MySQLConnection {
     }
 
     public void waitUntilFlushed() {
+        long startTime = System.currentTimeMillis();
         while (openTransactions.get() > 0) {
+            if ((System.currentTimeMillis() - startTime) > 5000) {
+                LOGGER.warning("Took too long to flush all transactions - something has probably hung :(");
+                break;
+            }
+
             try {
                 Thread.sleep(50);
             } catch (InterruptedException ignored) {
-
             }
         }
     }
