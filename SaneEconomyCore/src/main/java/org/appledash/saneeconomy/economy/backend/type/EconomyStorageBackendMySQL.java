@@ -30,7 +30,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         this.dbConn = new MySQLConnection(dbCredentials);
     }
 
-    private void createTables() {
+        private void createTables() {
         try (Connection conn = dbConn.openConnection()) {
             int schemaVersion;
             if (!checkTableExists(dbConn.getTable("saneeconomy_schema"))) {

@@ -47,10 +47,6 @@ public class MySQLConnection {
         return preparedStatement;
     }
 
-    public PreparedStatement prepareStatement(String sql) throws SQLException {
-        return prepareStatement(openConnection(), sql);
-    }
-
     public boolean testConnection() {
         try (Connection ignored = openConnection()) {
             return true;

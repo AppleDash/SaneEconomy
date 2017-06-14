@@ -27,14 +27,6 @@ public class DatabaseCredentials {
         queryTimeout = 5000;
     }
 
-    public String getHostname() {
-        return hostname;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
     public String getUsername() {
         return username;
     }

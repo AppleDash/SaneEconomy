@@ -47,11 +47,6 @@ public class MockOfflinePlayer implements OfflinePlayer {
     }
 
     @Override
-    public void setBanned(boolean banned) {
-
-    }
-
-    @Override
     public boolean isWhitelisted() {
         return false;
     }

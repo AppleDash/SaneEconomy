@@ -21,6 +21,7 @@ public class EconomyStorageBackendFlatfile extends EconomyStorageBackendCaching 
         this.file = file;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public synchronized void reloadDatabase() {
         if (!file.exists()) {
@@ -46,7 +47,7 @@ public class EconomyStorageBackendFlatfile extends EconomyStorageBackendCaching 
             balances = (Map<String, Double>) ois.readObject();
 
             ois.close();
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException | ClassCastException e) {
             SaneEconomy.logger().severe("Failed to load flatfile database!");
             e.printStackTrace();
         }

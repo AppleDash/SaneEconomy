@@ -105,14 +105,4 @@ public class EntityDamageListener implements Listener {
 
         return entityType.toString();
     }
-
-    private double sumValues(Map<?, Double> map) {
-        double sum = 0;
-
-        for (Map.Entry<?, Double> entry : map.entrySet()) {
-            sum += entry.getValue();
-        }
-
-        return sum;
-    }
 }

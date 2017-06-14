@@ -29,10 +29,6 @@ public class ItemInfo implements Serializable {
         return new ItemStack(material, amount, damage);
     }
 
-    public Material getMaterial() {
-        return material;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof ItemInfo)) {

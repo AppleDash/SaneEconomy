@@ -87,13 +87,7 @@ public class I18n {
             String convertedValue = convertOldTranslations(String.valueOf(currentTranslation));
 
             // Remove current key from map of things to go to the disk
-            Iterator<Map<?, ?>> iter = finalKeys.iterator();
-
-            while (iter.hasNext()) {
-                if (String.valueOf(iter.next().get("message")).equals(currentKey)) {
-                    iter.remove();
-                }
-            }
+            finalKeys.removeIf(map -> String.valueOf(map.get("message")).equals(currentKey));
 
             // Add the converted one.
             if (convertedValue.equals("null")) {
