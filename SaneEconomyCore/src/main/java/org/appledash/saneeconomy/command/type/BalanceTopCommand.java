@@ -4,7 +4,6 @@ import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.command.SaneEconomyCommand;
 import org.appledash.saneeconomy.command.exception.CommandException;
 import org.appledash.saneeconomy.command.exception.type.usage.TooManyArgumentsException;
-import org.appledash.saneeconomy.utils.MessageUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
@@ -46,7 +45,7 @@ public class BalanceTopCommand extends SaneEconomyCommand {
             try {
                 page = Math.abs(Integer.parseInt(args[0]));
             } catch (NumberFormatException e) {
-                MessageUtils.sendMessage(sender, "{1} is not a valid number.");
+                this.saneEconomy.getMessenger().sendMessage(sender, "{1} is not a valid number.");
                 return;
             }
         }
@@ -56,13 +55,13 @@ public class BalanceTopCommand extends SaneEconomyCommand {
         Map<OfflinePlayer, Double> topBalances = saneEconomy.getEconomyManager().getTopPlayerBalances(nPerPage, offset);
 
         if (topBalances.isEmpty()) {
-            MessageUtils.sendMessage(sender, "There aren't enough players to display that page.");
+            this.saneEconomy.getMessenger().sendMessage(sender, "There aren't enough players to display that page.");
             return;
         }
 
         AtomicInteger index = new AtomicInteger(offset + 1); /* I know it's stupid, but you can't do some_int++ from within the lambda. */
 
-        MessageUtils.sendMessage(sender, "Top {1} players on page {2}:", topBalances.size(), page);
-        topBalances.forEach((player, balance) -> MessageUtils.sendMessage(sender, "[{1:02d}] {2} - {3}", index.getAndIncrement(), player.getName(), SaneEconomy.getInstance().getEconomyManager().getCurrency().formatAmount(balance)));
+        this.saneEconomy.getMessenger().sendMessage(sender, "Top {1} players on page {2}:", topBalances.size(), page);
+        topBalances.forEach((player, balance) -> this.saneEconomy.getMessenger().sendMessage(sender, "[{1:02d}] {2} - {3}", index.getAndIncrement(), player.getName(), SaneEconomy.getInstance().getEconomyManager().getCurrency().formatAmount(balance)));
     }
 }

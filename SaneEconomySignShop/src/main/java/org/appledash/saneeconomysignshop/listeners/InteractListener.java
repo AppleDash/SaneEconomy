@@ -3,7 +3,6 @@ package org.appledash.saneeconomysignshop.listeners;
 import org.appledash.saneeconomy.economy.EconomyManager;
 import org.appledash.saneeconomy.economy.transaction.Transaction;
 import org.appledash.saneeconomy.economy.transaction.TransactionResult;
-import org.appledash.saneeconomy.utils.MessageUtils;
 import org.appledash.saneeconomysignshop.SaneEconomySignShop;
 import org.appledash.saneeconomysignshop.signshop.ShopTransaction;
 import org.appledash.saneeconomysignshop.signshop.ShopTransaction.TransactionDirection;
@@ -62,7 +61,7 @@ public class InteractListener implements Listener {
         if (evt.getAction() == Action.RIGHT_CLICK_BLOCK) {
             evt.setCancelled(true);
             if (!shop.canBuy()) {
-                MessageUtils.sendMessage(evt.getPlayer(), "This shop does not permit buying.");
+                this.plugin.getMessenger().sendMessage(evt.getPlayer(), "This shop does not permit buying.");
                 return;
             }
 
@@ -73,7 +72,7 @@ public class InteractListener implements Listener {
         if (evt.getAction() == Action.LEFT_CLICK_BLOCK) {
             evt.setCancelled(true);
             if (!shop.canSell()) {
-                MessageUtils.sendMessage(evt.getPlayer(), "This shop does not permit selling.");
+                this.plugin.getMessenger().sendMessage(evt.getPlayer(), "This shop does not permit selling.");
                 return;
             }
 
@@ -100,7 +99,7 @@ public class InteractListener implements Listener {
         TransactionResult result = ecoMan.transact(ecoTransaction);
 
         if (result.getStatus() != TransactionResult.Status.SUCCESS) {
-            MessageUtils.sendMessage(player, "An error occurred attempting to perform that transaction: {1}", result.getStatus());
+            this.plugin.getMessenger().sendMessage(player, "An error occurred attempting to perform that transaction: {1}", result.getStatus());
             return;
         }
 
@@ -108,7 +107,7 @@ public class InteractListener implements Listener {
         stack.setAmount(quantity);
         player.getInventory().addItem(stack);
 
-        MessageUtils.sendMessage(player, "You have bought {1} {2} for {3}.", quantity, shop.getItemStack().getType().name(), ecoMan.getCurrency().formatAmount(shopTransaction.getPrice()));
+        this.plugin.getMessenger().sendMessage(player, "You have bought {1} {2} for {3}.", quantity, shop.getItemStack().getType().name(), ecoMan.getCurrency().formatAmount(shopTransaction.getPrice()));
         LOGGER.info(String.format("%s just bought %s for %s.", player.getName(), shop.getItemStack(), ecoMan.getCurrency().formatAmount(shopTransaction.getPrice())));
     }
 
@@ -118,14 +117,14 @@ public class InteractListener implements Listener {
         double price = shop.getSellPrice(quantity);
 
         if (!player.getInventory().containsAtLeast(new ItemStack(shop.getItemStack()), quantity)) {
-            MessageUtils.sendMessage(player, "You do not have {1} {2}!", quantity, shop.getItemStack().getType().name());
+            this.plugin.getMessenger().sendMessage(player, "You do not have {1} {2}!", quantity, shop.getItemStack().getType().name());
             return;
         }
 
         ShopTransaction shopTransaction = shop.makeTransaction(player, TransactionDirection.SELL, quantity);
 
         if (!plugin.getLimitManager().shouldAllowTransaction(shopTransaction)) {
-            MessageUtils.sendMessage(player, "You have reached your selling limit for the time being. Try back in an hour or so.");
+            this.plugin.getMessenger().sendMessage(player, "You have reached your selling limit for the time being. Try back in an hour or so.");
             return;
         }
 
@@ -138,7 +137,7 @@ public class InteractListener implements Listener {
 
         ecoMan.transact(shopTransaction.makeEconomyTransaction());
 
-        MessageUtils.sendMessage(player, "You have sold {1} {2} for {3}.", quantity, shop.getItemStack().getType().name(), ecoMan.getCurrency().formatAmount(price));
+        this.plugin.getMessenger().sendMessage(player, "You have sold {1} {2} for {3}.", quantity, shop.getItemStack().getType().name(), ecoMan.getCurrency().formatAmount(price));
         LOGGER.info(String.format("%s just sold %s for %s.", player.getName(), shop.getItemStack(), ecoMan.getCurrency().formatAmount(price)));
     }
 

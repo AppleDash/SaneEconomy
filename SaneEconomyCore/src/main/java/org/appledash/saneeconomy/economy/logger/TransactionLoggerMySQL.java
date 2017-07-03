@@ -2,8 +2,8 @@ package org.appledash.saneeconomy.economy.logger;
 
 import org.appledash.saneeconomy.economy.transaction.Transaction;
 import org.appledash.saneeconomy.economy.transaction.TransactionReason;
-import org.appledash.saneeconomy.utils.database.DatabaseCredentials;
 import org.appledash.saneeconomy.utils.database.MySQLConnection;
+import org.appledash.sanelib.database.DatabaseCredentials;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,9 +21,9 @@ public class TransactionLoggerMySQL implements TransactionLogger {
     }
 
     private void logGeneric(String from, String to, double change, TransactionReason reason) {
-        this.dbConn.executeAsyncOperation((conn) -> {
+        this.dbConn.executeAsyncOperation("log_transaction", (conn) -> {
             try {
-            PreparedStatement ps = conn.prepareStatement(String.format("INSERT INTO `%s` (`source`, `destination`, `amount`, `reason`) VALUES (?, ?, ?, ?)", dbConn.getTable("transaction_logs")));
+                PreparedStatement ps = conn.prepareStatement(String.format("INSERT INTO `%s` (`source`, `destination`, `amount`, `reason`) VALUES (?, ?, ?, ?)", dbConn.getTable("transaction_logs")));
                 ps.setString(1, from);
                 ps.setString(2, to);
                 ps.setDouble(3, change);

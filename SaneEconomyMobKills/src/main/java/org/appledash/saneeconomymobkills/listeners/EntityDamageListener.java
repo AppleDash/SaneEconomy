@@ -3,7 +3,6 @@ package org.appledash.saneeconomymobkills.listeners;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.economy.transaction.Transaction;
 import org.appledash.saneeconomy.economy.transaction.TransactionReason;
-import org.appledash.saneeconomy.utils.MessageUtils;
 import org.appledash.saneeconomymobkills.SaneEconomyMobKills;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -24,7 +23,6 @@ import java.util.UUID;
 public class EntityDamageListener implements Listener {
     private SaneEconomyMobKills plugin;
     private Map<Integer, Map<UUID, Double>> damageDealt = new HashMap<>();
-    private Map<Integer, Double> damageDealtNonPlayers = new HashMap<>();
 
     public EntityDamageListener(SaneEconomyMobKills plugin) {
         this.plugin = plugin;
@@ -81,7 +79,7 @@ public class EntityDamageListener implements Listener {
 
             if (offlinePlayer.isOnline()) {
                 Player player = Bukkit.getServer().getPlayer(offlinePlayer.getUniqueId());
-                MessageUtils.sendMessage(player, "You have been awarded {1} for doing {2:.2f}% of the damage required to kill that {3}!", plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(thisAmount), thisPercent, entity.getName());
+                this.plugin.getMessenger().sendMessage(player, "You have been awarded {1} for doing {2:.2f}% of the damage required to kill that {3}!", plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(thisAmount), thisPercent, entity.getName());
             }
 
             plugin.getSaneEconomy().getEconomyManager().transact(new Transaction(

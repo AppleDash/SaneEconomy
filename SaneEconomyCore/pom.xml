@@ -6,10 +6,10 @@
     <parent>
         <groupId>org.appledash</groupId>
         <artifactId>SaneEconomy</artifactId>
-        <version>0.11.0-SNAPSHOT</version>
+        <version>0.12.0-SNAPSHOT</version>
     </parent>
     <artifactId>SaneEconomyCore</artifactId>
-    <version>0.11.0-SNAPSHOT</version>
+    <version>0.12.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
@@ -17,6 +17,11 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>6.0.6</version>
         </dependency>
     </dependencies>
 
@@ -36,6 +41,48 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>org.appledash:sanelib</include>
+                                    <include>mysql:mysql-connector-java</include>
+                                    <include>com.zaxxer:HikariCP</include>
+                                    <include>org.slf4j:slf4j-api</include>
+                                    <include>org.slf4j:slf4j-nop</include>
+                                </includes>
+                            </artifactSet>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.appledash.sanelib</pattern>
+                                    <shadedPattern>org.appledash.saneeconomy.shaded.sanelib</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.mysql</pattern>
+                                    <shadedPattern>org.appledash.saneeconomy.shaded.mysql</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.zaxxer.hikari</pattern>
+                                    <shadedPattern>org.appledash.saneeconomy.shaded.hikari</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.slf4j</pattern>
+                                    <shadedPattern>org.appledash.saneeconomy.shaded.slf4j</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -11,7 +11,6 @@ import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.economy.transaction.Transaction;
 import org.appledash.saneeconomy.economy.transaction.TransactionReason;
 import org.appledash.saneeconomy.economy.transaction.TransactionResult;
-import org.appledash.saneeconomy.utils.MessageUtils;
 import org.appledash.saneeconomy.utils.NumberUtils;
 import org.appledash.saneeconomy.utils.PlayerUtils;
 import org.bukkit.OfflinePlayer;
@@ -64,7 +63,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
         OfflinePlayer targetPlayer = PlayerUtils.getOfflinePlayer(sTargetPlayer);
 
         if (targetPlayer == null) {
-            MessageUtils.sendMessage(sender, "That player does not exist.");
+            this.saneEconomy.getMessenger().sendMessage(sender, "That player does not exist.");
             return;
         }
 
@@ -74,7 +73,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
         double amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount);
 
         if (amount <= 0) {
-            MessageUtils.sendMessage(sender, "{1} is not a positive number.", ((amount == -1) ? sAmount : String.valueOf(amount)));
+            this.saneEconomy.getMessenger().sendMessage(sender, "{1} is not a positive number.", ((amount == -1) ? sAmount : String.valueOf(amount)));
             return;
         }
 
@@ -84,7 +83,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
 
             double newAmount = result.getToBalance();
 
-            MessageUtils.sendMessage(sender, "Added {1} to {2}. Their balance is now {3}.",
+            this.saneEconomy.getMessenger().sendMessage(sender, "Added {1} to {2}. Their balance is now {3}.",
                     ecoMan.getCurrency().formatAmount(amount),
                     sTargetPlayer,
                     ecoMan.getCurrency().formatAmount(newAmount)
@@ -98,7 +97,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
 
             double newAmount = result.getFromBalance();
 
-            MessageUtils.sendMessage(sender, "Took {1} from {2}. Their balance is now {3}.",
+            this.saneEconomy.getMessenger().sendMessage(sender, "Took {1} from {2}. Their balance is now {3}.",
                     ecoMan.getCurrency().formatAmount(amount),
                     sTargetPlayer,
                     ecoMan.getCurrency().formatAmount(newAmount)
@@ -109,7 +108,7 @@ public class EconomyAdminCommand extends SaneEconomyCommand {
         if (subCommand.equalsIgnoreCase("set")) {
             double oldBal = ecoMan.getBalance(economable);
             ecoMan.setBalance(economable, amount);
-            MessageUtils.sendMessage(sender, "Balance for {1} set to {2}.", sTargetPlayer, ecoMan.getCurrency().formatAmount(amount));
+            this.saneEconomy.getMessenger().sendMessage(sender, "Balance for {1} set to {2}.", sTargetPlayer, ecoMan.getCurrency().formatAmount(amount));
 
             saneEconomy.getTransactionLogger().ifPresent((logger) -> {
                 // FIXME: This is a silly hack to get it to log.

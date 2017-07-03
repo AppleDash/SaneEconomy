@@ -4,11 +4,9 @@ import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.command.exception.CommandException;
 import org.appledash.saneeconomy.command.exception.type.NoPermissionException;
 import org.appledash.saneeconomy.command.exception.type.usage.UsageException;
-import org.appledash.saneeconomy.utils.MessageUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import static org.appledash.saneeconomy.utils.I18n._;
 
 /**
  * Created by AppleDash on 6/13/2016.
@@ -33,14 +31,14 @@ public abstract class SaneEconomyCommand implements CommandExecutor {
                 onCommand(sender, args);
             } catch (UsageException e) {
                 /* Invalid usage in some way, print out exactly what went wrong along with the proper usage. */
-                MessageUtils.sendMessage(sender, e.getMessage());
+                this.saneEconomy.getMessenger().sendMessage(sender, e.getMessage());
 
 
                 for (String s : getUsage()) {
-                    MessageUtils.sendMessage(sender, _("Usage: {1}"), _(s).replace("<command>", label));
+                    this.saneEconomy.getMessenger().sendMessage(sender, "Usage: {1}", this.saneEconomy.getI18n().translate(s.replace("<command>", label)));
                 }
             } catch (CommandException e) {
-                MessageUtils.sendMessage(sender, e.getMessage());
+                this.saneEconomy.getMessenger().sendMessage(sender, e.getMessage());
             }
         });
         return true;

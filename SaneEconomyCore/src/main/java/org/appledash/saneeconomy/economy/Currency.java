@@ -1,7 +1,7 @@
 package org.appledash.saneeconomy.economy;
 
 import com.google.common.base.Strings;
-import org.appledash.saneeconomy.utils.MessageUtils;
+import org.appledash.sanelib.messages.MessageUtils;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.text.DecimalFormat;

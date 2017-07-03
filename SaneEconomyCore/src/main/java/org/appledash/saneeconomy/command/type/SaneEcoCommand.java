@@ -4,7 +4,6 @@ import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.command.SaneEconomyCommand;
 import org.appledash.saneeconomy.command.exception.CommandException;
 import org.appledash.saneeconomy.command.exception.type.usage.InvalidUsageException;
-import org.appledash.saneeconomy.utils.MessageUtils;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -37,9 +36,9 @@ public class SaneEcoCommand extends SaneEconomyCommand {
         String subCommand = args[0];
 
         if (subCommand.equalsIgnoreCase("reload-database")) {
-            MessageUtils.sendMessage(sender, "Reloading database...");
+            this.saneEconomy.getMessenger().sendMessage(sender, "Reloading database...");
             saneEconomy.getEconomyManager().getBackend().reloadDatabase();
-            MessageUtils.sendMessage(sender, "Database reloaded.");
+            this.saneEconomy.getMessenger().sendMessage(sender, "Database reloaded.");
         } else {
             throw new InvalidUsageException();
         }

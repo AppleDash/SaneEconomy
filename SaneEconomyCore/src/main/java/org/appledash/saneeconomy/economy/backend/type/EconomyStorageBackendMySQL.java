@@ -1,17 +1,13 @@
 package org.appledash.saneeconomy.economy.backend.type;
 
-import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.economy.economable.Economable;
-import org.appledash.saneeconomy.utils.database.DatabaseCredentials;
 import org.appledash.saneeconomy.utils.database.MySQLConnection;
+import org.appledash.sanelib.database.DatabaseCredentials;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,15 +26,12 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         this.dbConn = new MySQLConnection(dbCredentials);
     }
 
-        private void createTables() {
+    private void createTables() {
         try (Connection conn = dbConn.openConnection()) {
             int schemaVersion;
+
             if (!checkTableExists(dbConn.getTable("saneeconomy_schema"))) {
-                if (checkTableExists(dbConn.getTable("player_balances"))) {
-                    schemaVersion = 1;
-                } else {
-                    schemaVersion = 0;
-                }
+                schemaVersion = -1;
             } else {
                 PreparedStatement ps = conn.prepareStatement(String.format("SELECT `val` FROM `%s` WHERE `key` = 'schema_version'", dbConn.getTable("saneeconomy_schema")));
                 ps.executeQuery();
@@ -51,41 +44,19 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
                 schemaVersion = Integer.valueOf(rs.getString("val"));
             }
 
-            if (schemaVersion < 2) {
-                if (schemaVersion < 1) {
-                    PreparedStatement ps = conn.prepareStatement(String.format("CREATE TABLE IF NOT EXISTS `%s` (player_uuid CHAR(36), balance DECIMAL(18, 2))", dbConn.getTable("player_balances")));
-                    ps.executeUpdate();
-                }
+            if (schemaVersion == -1) {
                 conn.prepareStatement(String.format("CREATE TABLE IF NOT EXISTS `%s` (`key` VARCHAR(32) PRIMARY KEY, `val` TEXT)", dbConn.getTable("saneeconomy_schema"))).executeUpdate();
-                upgradeSchema1To2(conn);
+                conn.prepareStatement(String.format("REPLACE INTO %s (`key`, `val`) VALUES ('schema_version', 2)", dbConn.getTable("saneeconomy_schema")));
+                conn.prepareStatement(String.format("CREATE TABLE `%s` (unique_identifier VARCHAR(128) PRIMARY KEY, balance DECIMAL(18, 2))", dbConn.getTable("saneeconomy_balances"))).executeUpdate();
+                schemaVersion = 2;
+            }
+
+            if (schemaVersion != 2) {
+                throw new RuntimeException("Invalid database schema version!");
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to create tables!", e);
         }
-    }
-
-    private void upgradeSchema1To2(Connection conn) throws SQLException {
-        SaneEconomy.logger().info("Upgrading database schema from version 1 to version 2. This might take a little while...");
-        PreparedStatement ps = conn.prepareStatement(String.format("REPLACE INTO `%s` (`key`, `val`) VALUES ('schema_version', '2')", dbConn.getTable("saneeconomy_schema")));
-        ps.executeUpdate();
-        conn.prepareStatement(String.format("CREATE TABLE `%s` (unique_identifier VARCHAR(128) PRIMARY KEY, balance DECIMAL(18, 2))", dbConn.getTable("saneeconomy_balances"))).executeUpdate();
-        ps = conn.prepareStatement("SELECT * FROM `player_balances`");
-        ResultSet rs = ps.executeQuery();
-
-        Map<String, Double> oldBalances = new HashMap<>();
-
-        while (rs.next()) {
-            oldBalances.put(rs.getString("player_uuid"), rs.getDouble("balance"));
-        }
-
-        for (Entry<String, Double> e : oldBalances.entrySet()) {
-            ps = conn.prepareStatement(String.format("INSERT INTO `%s` (unique_identifier, balance) VALUES (?, ?)", dbConn.getTable("saneeconomy_balances")));
-            ps.setString(1, "player:" + e.getKey());
-            ps.setDouble(2, e.getValue());
-            ps.executeUpdate();
-        }
-        reloadDatabase();
-        SaneEconomy.logger().info("Schema upgrade complete!");
     }
 
     private boolean checkTableExists(String tableName) {
@@ -104,7 +75,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
 
     @Override
     public synchronized void reloadDatabase() {
-        waitUntilFlushed();
+        // waitUntilFlushed();
         createTables();
         try (Connection conn = dbConn.openConnection()) {
             PreparedStatement ps = dbConn.prepareStatement(conn, String.format("SELECT * FROM `%s`", dbConn.getTable("saneeconomy_balances")));
@@ -125,7 +96,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
         final double oldBalance = getBalance(economable);
         balances.put(economable.getUniqueIdentifier(), newBalance);
 
-        dbConn.executeAsyncOperation((conn) -> {
+        dbConn.executeAsyncOperation("set_balance_" + economable.getUniqueIdentifier(), (conn) -> {
             try {
                 ensureAccountExists(economable, conn);
                 conn.prepareStatement("LOCK TABLE " + dbConn.getTable("saneeconomy_balances") + " WRITE").execute();
@@ -165,5 +136,9 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
 
     public MySQLConnection getConnection() {
         return dbConn;
+    }
+
+    public void closeConnections() {
+        this.dbConn.getConnection().cleanup();
     }
 }

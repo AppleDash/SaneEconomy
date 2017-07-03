@@ -3,13 +3,13 @@ package org.appledash.saneeconomy;
 import org.appledash.saneeconomy.command.SaneEconomyCommand;
 import org.appledash.saneeconomy.command.type.*;
 import org.appledash.saneeconomy.economy.EconomyManager;
+import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendMySQL;
 import org.appledash.saneeconomy.economy.logger.TransactionLogger;
 import org.appledash.saneeconomy.listeners.JoinQuitListener;
 import org.appledash.saneeconomy.updates.GithubVersionChecker;
-import org.appledash.saneeconomy.utils.I18n;
 import org.appledash.saneeconomy.utils.SaneEconomyConfiguration;
 import org.appledash.saneeconomy.vault.VaultHook;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.appledash.sanelib.SanePlugin;
 
 import java.io.File;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  * Created by AppleDash on 6/13/2016.
  * Blackjack is still best pony.
  */
-public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
+public class SaneEconomy extends SanePlugin implements ISaneEconomy {
     private static SaneEconomy instance;
     private EconomyManager economyManager;
     private VaultHook vaultHook;
@@ -42,6 +42,8 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
 
     @Override
     public void onEnable() {
+        super.onEnable();
+
         if (!loadConfig()) { /* Invalid backend type or connection error of some sort */
             shutdown();
             return;
@@ -64,7 +66,7 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
         getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
             economyManager.getBackend().reloadTopPlayerBalances();
         }, 0, (20 * 300) /* Update baltop every 5 minutes */);
-        I18n.getInstance().loadTranslations();
+        this.getI18n().loadTranslations();
     }
 
     @Override
@@ -77,6 +79,9 @@ public class SaneEconomy extends JavaPlugin implements ISaneEconomy {
         if (economyManager != null) {
             getLogger().info("Flushing database...");
             economyManager.getBackend().waitUntilFlushed();
+            if (economyManager.getBackend() instanceof EconomyStorageBackendMySQL) {
+                ((EconomyStorageBackendMySQL) economyManager.getBackend()).closeConnections();
+            }
         }
     }
 

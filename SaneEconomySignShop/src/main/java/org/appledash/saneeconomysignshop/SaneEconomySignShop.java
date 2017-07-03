@@ -8,9 +8,9 @@ import org.appledash.saneeconomysignshop.signshop.SignShopManager;
 import org.appledash.saneeconomysignshop.signshop.storage.SignShopStorageJSON;
 import org.appledash.saneeconomysignshop.util.ItemDatabase;
 import org.appledash.saneeconomysignshop.util.LimitManager;
+import org.appledash.sanelib.SanePlugin;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.InputStreamReader;
@@ -19,7 +19,7 @@ import java.io.InputStreamReader;
  * Created by appledash on 10/2/16.
  * Blackjack is still best pony.
  */
-public class SaneEconomySignShop extends JavaPlugin {
+public class SaneEconomySignShop extends SanePlugin {
     private ISaneEconomy saneEconomy;
     private final SignShopManager signShopManager = new SignShopManager(new SignShopStorageJSON(new File(getDataFolder(), "shops.json")));
     private final LimitManager limitManager = new LimitManager();
@@ -31,6 +31,8 @@ public class SaneEconomySignShop extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+
+        super.onEnable();
 
         ItemDatabase.initItemDB();
 
@@ -49,7 +51,7 @@ public class SaneEconomySignShop extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SignChangeListener(this), this);
         getServer().getPluginManager().registerEvents(new InteractListener(this), this);
         getServer().getPluginManager().registerEvents(new BreakListener(this), this);
-
+        this.getI18n().loadTranslations();
     }
 
     public SignShopManager getSignShopManager() {

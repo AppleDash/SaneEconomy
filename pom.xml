@@ -6,7 +6,7 @@
 
     <groupId>org.appledash</groupId>
     <artifactId>SaneEconomy</artifactId>
-    <version>0.11.0-SNAPSHOT</version>
+    <version>0.12.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -26,6 +26,10 @@
             <name>Vault</name>
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
+        <repository>
+            <id>votuvo</id>
+            <url>https://mvn.votuvo.com/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -38,6 +42,11 @@
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.appledash</groupId>
+            <artifactId>sanelib</artifactId>
+            <version>0.2.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

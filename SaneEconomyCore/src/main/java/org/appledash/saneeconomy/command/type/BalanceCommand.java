@@ -5,7 +5,6 @@ import org.appledash.saneeconomy.command.SaneEconomyCommand;
 import org.appledash.saneeconomy.command.exception.CommandException;
 import org.appledash.saneeconomy.command.exception.type.usage.NeedPlayerException;
 import org.appledash.saneeconomy.economy.economable.Economable;
-import org.appledash.saneeconomy.utils.MessageUtils;
 import org.appledash.saneeconomy.utils.PlayerUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -51,7 +50,7 @@ public class BalanceCommand extends SaneEconomyCommand {
             playerName = args[0];
 
             if (!sender.hasPermission("saneeconomy.balance.other")) {
-                MessageUtils.sendMessage(sender, "You don't have permission to check the balance of {1}.", playerIdentifier);
+                this.saneEconomy.getMessenger().sendMessage(sender, "You don't have permission to check the balance of {1}.", playerIdentifier);
                 return;
             }
         }
@@ -59,14 +58,14 @@ public class BalanceCommand extends SaneEconomyCommand {
         OfflinePlayer player = PlayerUtils.getOfflinePlayer(playerIdentifier);
 
         if (player == null) {
-            MessageUtils.sendMessage(sender, "That player does not exist.");
+            this.saneEconomy.getMessenger().sendMessage(sender, "That player does not exist.");
             return;
         }
 
         if (sender == player) {
-            MessageUtils.sendMessage(sender, "Your balance is {1}.", saneEconomy.getEconomyManager().getFormattedBalance(Economable.wrap(player)));
+            this.saneEconomy.getMessenger().sendMessage(sender, "Your balance is {1}.", saneEconomy.getEconomyManager().getFormattedBalance(Economable.wrap(player)));
         } else {
-            MessageUtils.sendMessage(sender, "Balance for {1} is {2}.", playerName, saneEconomy.getEconomyManager().getFormattedBalance(Economable.wrap(player)));
+            this.saneEconomy.getMessenger().sendMessage(sender, "Balance for {1} is {2}.", playerName, saneEconomy.getEconomyManager().getFormattedBalance(Economable.wrap(player)));
         }
     }
 }

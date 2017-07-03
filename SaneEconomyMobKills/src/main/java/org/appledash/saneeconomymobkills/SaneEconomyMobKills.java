@@ -2,8 +2,8 @@ package org.appledash.saneeconomymobkills;
 
 import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomymobkills.listeners.EntityDamageListener;
+import org.appledash.sanelib.SanePlugin;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,13 +15,14 @@ import java.util.Map;
  * Created by appledash on 12/27/16.
  * Blackjack is still best pony.
  */
-public class SaneEconomyMobKills extends JavaPlugin {
+public class SaneEconomyMobKills extends SanePlugin {
     private SaneEconomy saneEconomy;
     private final Map<String, Double> killAmounts = new HashMap<>();
 
     @Override
     public void onEnable() {
         saneEconomy = (SaneEconomy)getServer().getPluginManager().getPlugin("SaneEconomy");
+        super.onEnable();
 
         YamlConfiguration amountsConfig;
 
@@ -42,6 +43,7 @@ public class SaneEconomyMobKills extends JavaPlugin {
         }
 
         getServer().getPluginManager().registerEvents(new EntityDamageListener(this), this);
+        this.getI18n().loadTranslations();
     }
 
     public SaneEconomy getSaneEconomy() {

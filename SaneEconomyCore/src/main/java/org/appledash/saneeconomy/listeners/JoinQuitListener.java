@@ -5,7 +5,6 @@ import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.economy.transaction.Transaction;
 import org.appledash.saneeconomy.economy.transaction.TransactionReason;
 import org.appledash.saneeconomy.updates.GithubVersionChecker;
-import org.appledash.saneeconomy.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -37,13 +36,13 @@ public class JoinQuitListener implements Listener {
                     Economable.CONSOLE, economable, startBalance, TransactionReason.STARTING_BALANCE
             ));
             if (plugin.getConfig().getBoolean("economy.notify-start-balance", true)) {
-                MessageUtils.sendMessage(player, "You've been issued a starting balance of {1}!", plugin.getEconomyManager().getCurrency().formatAmount(startBalance));
+                this.plugin.getMessenger().sendMessage(player, "You've been issued a starting balance of {1}!", plugin.getEconomyManager().getCurrency().formatAmount(startBalance));
             }
         }
 
         /* Update notification */
         if (player.hasPermission("saneeconomy.update-notify") && plugin.getVersionChecker().isUpdateAvailable()) {
-            MessageUtils.sendMessage(player, "An update is available! The currently-installed version is {1}, but the newest available is {2}. Please go to {3} to update!", plugin.getDescription().getVersion(), plugin.getVersionChecker().getNewestVersion(), GithubVersionChecker.DOWNLOAD_URL);
+            this.plugin.getMessenger().sendMessage(player, "An update is available! The currently-installed version is {1}, but the newest available is {2}. Please go to {3} to update!", plugin.getDescription().getVersion(), plugin.getVersionChecker().getNewestVersion(), GithubVersionChecker.DOWNLOAD_URL);
         }
     }
 

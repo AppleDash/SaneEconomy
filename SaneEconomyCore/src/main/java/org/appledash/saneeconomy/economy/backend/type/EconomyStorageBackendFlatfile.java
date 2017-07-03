@@ -5,7 +5,6 @@ import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.economy.economable.Economable;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -67,7 +66,7 @@ public class EconomyStorageBackendFlatfile extends EconomyStorageBackendCaching 
             ois.readInt(); // We already know it's 1.
 
 
-            Map<UUID, Double> oldBalances = (HashMap<UUID, Double>)ois.readObject();
+            Map<UUID, Double> oldBalances = (Map<UUID, Double>) ois.readObject();
             oldBalances.forEach((uuid, balance) -> balances.put("player:" + uuid, balance));
 
             ois.close();

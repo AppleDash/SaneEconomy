@@ -2,7 +2,6 @@ package org.appledash.saneeconomysignshop.listeners;
 
 import com.google.common.base.Strings;
 import net.md_5.bungee.api.ChatColor;
-import org.appledash.saneeconomy.utils.MessageUtils;
 import org.appledash.saneeconomysignshop.SaneEconomySignShop;
 import org.appledash.saneeconomysignshop.signshop.SignShop;
 import org.appledash.saneeconomysignshop.util.ItemDatabase;
@@ -37,7 +36,7 @@ public class SignChangeListener implements Listener {
         ParsedSignShop pss = parseSignShop(evt);
 
         if (pss.error != null) {
-            MessageUtils.sendMessage(evt.getPlayer(), "Cannot create shop: {1}", pss.error);
+            this.plugin.getMessenger().sendMessage(evt.getPlayer(), "Cannot create shop: {1}", pss.error);
             return;
         }
 
@@ -48,17 +47,17 @@ public class SignChangeListener implements Listener {
         SignShop signShop = pss.shop;
         plugin.getSignShopManager().addSignShop(signShop);
         evt.setLine(0, ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("admin-shop-title")));
-        MessageUtils.sendMessage(evt.getPlayer(), "Sign shop created!");
-        MessageUtils.sendMessage(evt.getPlayer(), "Item: {1} x {2}", signShop.getQuantity(), signShop.getItemStack());
+        this.plugin.getMessenger().sendMessage(evt.getPlayer(), "Sign shop created!");
+        this.plugin.getMessenger().sendMessage(evt.getPlayer(), "Item: {1} x {2}", signShop.getQuantity(), signShop.getItemStack());
 
         if (signShop.canBuy()) { // The player be buying from the shop, not the other way around.
-            MessageUtils.sendMessage(evt.getPlayer(), "Will sell to players for {1}.",
+            this.plugin.getMessenger().sendMessage(evt.getPlayer(), "Will sell to players for {1}.",
                     plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(signShop.getBuyPrice())
             );
         }
 
         if (signShop.canSell()) { // The player be selling to the shop, not the other way around.
-            MessageUtils.sendMessage(evt.getPlayer(), "Will buy from players for {1}.",
+            this.plugin.getMessenger().sendMessage(evt.getPlayer(), "Will buy from players for {1}.",
                     plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(signShop.getSellPrice())
             );
         }

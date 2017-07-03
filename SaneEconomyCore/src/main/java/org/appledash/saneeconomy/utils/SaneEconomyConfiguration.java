@@ -11,7 +11,7 @@ import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendMySQL
 import org.appledash.saneeconomy.economy.economable.EconomableGeneric;
 import org.appledash.saneeconomy.economy.logger.TransactionLogger;
 import org.appledash.saneeconomy.economy.logger.TransactionLoggerMySQL;
-import org.appledash.saneeconomy.utils.database.DatabaseCredentials;
+import org.appledash.sanelib.database.DatabaseCredentials;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -152,6 +152,7 @@ public class SaneEconomyConfiguration {
      * @return DatabaseCredentials with the information from the config.
      */
     private DatabaseCredentials loadCredentials(ConfigurationSection config) {
+        String databaseType = config.getString("type", "mysql");
         String backendHost = config.getString("host");
         int backendPort = config.getInt("port", 3306);
         String backendDb = config.getString("database");
@@ -161,7 +162,7 @@ public class SaneEconomyConfiguration {
         boolean useSsl = config.getBoolean("use_ssl", false);
 
         return new DatabaseCredentials(
-                backendHost, backendPort, backendUser, backendPass, backendDb, tablePrefix, useSsl
+                databaseType, backendHost, backendPort, backendUser, backendPass, backendDb, tablePrefix, useSsl
         );
     }
 }
