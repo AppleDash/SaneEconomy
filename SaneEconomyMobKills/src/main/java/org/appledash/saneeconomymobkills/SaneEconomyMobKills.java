@@ -43,7 +43,6 @@ public class SaneEconomyMobKills extends SanePlugin {
         }
 
         getServer().getPluginManager().registerEvents(new EntityDamageListener(this), this);
-        this.getI18n().loadTranslations();
     }
 
     public SaneEconomy getSaneEconomy() {

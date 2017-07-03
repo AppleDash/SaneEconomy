@@ -51,7 +51,6 @@ public class SaneEconomySignShop extends SanePlugin {
         getServer().getPluginManager().registerEvents(new SignChangeListener(this), this);
         getServer().getPluginManager().registerEvents(new InteractListener(this), this);
         getServer().getPluginManager().registerEvents(new BreakListener(this), this);
-        this.getI18n().loadTranslations();
     }
 
     public SignShopManager getSignShopManager() {

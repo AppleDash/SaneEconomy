@@ -78,7 +78,7 @@ public class MySQLConnection {
 
     public void waitUntilFlushed() {
         long startTime = System.currentTimeMillis();
-        while (!this.saneDatabase.isFinished()) {
+        while (!this.saneDatabase.areAllTransactionsDone()) {
             if ((System.currentTimeMillis() - startTime) > 5000) {
                 LOGGER.warning("Took too long to flush all transactions - something has probably hung :(");
                 break;
