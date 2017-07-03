@@ -37,6 +37,10 @@ public class EntityDamageListener implements Listener {
         Player damager = ((Player) evt.getDamager());
         Entity damagee = evt.getEntity();
 
+        if (!damager.hasPermission("saneeconomy.mobkills.use")) {
+            return;
+        }
+
         if (!plugin.getKillAmounts().containsKey(getEntityType(damagee))) {
             return;
         }
