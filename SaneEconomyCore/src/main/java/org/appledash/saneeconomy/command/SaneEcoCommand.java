@@ -1,18 +1,21 @@
-package org.appledash.saneeconomy.command.type;
+package org.appledash.saneeconomy.command;
 
 import org.appledash.saneeconomy.SaneEconomy;
-import org.appledash.saneeconomy.command.SaneEconomyCommand;
-import org.appledash.saneeconomy.command.exception.CommandException;
-import org.appledash.saneeconomy.command.exception.type.usage.InvalidUsageException;
+import org.appledash.sanelib.command.SaneCommand;
+import org.appledash.sanelib.command.exception.CommandException;
+import org.appledash.sanelib.command.exception.type.usage.InvalidUsageException;
 import org.bukkit.command.CommandSender;
 
 /**
  * Created by AppleDash on 6/14/2016.
  * Blackjack is still best pony.
  */
-public class SaneEcoCommand extends SaneEconomyCommand {
+public class SaneEcoCommand extends SaneCommand {
+    private final SaneEconomy saneEconomy;
+
     public SaneEcoCommand(SaneEconomy saneEconomy) {
         super(saneEconomy);
+        this.saneEconomy = saneEconomy;
     }
 
     @Override

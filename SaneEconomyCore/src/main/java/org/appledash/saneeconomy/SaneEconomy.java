@@ -1,7 +1,6 @@
 package org.appledash.saneeconomy;
 
-import org.appledash.saneeconomy.command.SaneEconomyCommand;
-import org.appledash.saneeconomy.command.type.*;
+import org.appledash.saneeconomy.command.*;
 import org.appledash.saneeconomy.economy.EconomyManager;
 import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendMySQL;
 import org.appledash.saneeconomy.economy.logger.TransactionLogger;
@@ -10,6 +9,7 @@ import org.appledash.saneeconomy.updates.GithubVersionChecker;
 import org.appledash.saneeconomy.utils.SaneEconomyConfiguration;
 import org.appledash.saneeconomy.vault.VaultHook;
 import org.appledash.sanelib.SanePlugin;
+import org.appledash.sanelib.command.SaneCommand;
 
 import java.io.File;
 import java.util.HashMap;
@@ -28,7 +28,7 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
     private TransactionLogger transactionLogger;
     private GithubVersionChecker versionChecker;
 
-    private final Map<String, SaneEconomyCommand> COMMANDS = new HashMap<String, SaneEconomyCommand>() {{
+    private final Map<String, SaneCommand> COMMANDS = new HashMap<String, SaneCommand>() {{
         put("balance", new BalanceCommand(SaneEconomy.this));
         put("ecoadmin", new EconomyAdminCommand(SaneEconomy.this));
         put("pay", new PayCommand(SaneEconomy.this));

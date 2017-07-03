@@ -1,11 +1,11 @@
-package org.appledash.saneeconomy.command.type;
+package org.appledash.saneeconomy.command;
 
 import org.appledash.saneeconomy.SaneEconomy;
-import org.appledash.saneeconomy.command.SaneEconomyCommand;
-import org.appledash.saneeconomy.command.exception.CommandException;
-import org.appledash.saneeconomy.command.exception.type.usage.NeedPlayerException;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.utils.PlayerUtils;
+import org.appledash.sanelib.command.SaneCommand;
+import org.appledash.sanelib.command.exception.CommandException;
+import org.appledash.sanelib.command.exception.type.usage.NeedPlayerException;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -14,9 +14,12 @@ import org.bukkit.entity.Player;
  * Created by AppleDash on 6/13/2016.
  * Blackjack is still best pony.
  */
-public class BalanceCommand extends SaneEconomyCommand {
+public class BalanceCommand extends SaneCommand {
+    private final SaneEconomy saneEconomy;
+
     public BalanceCommand(SaneEconomy saneEconomy) {
         super(saneEconomy);
+        this.saneEconomy = saneEconomy;
     }
 
     @Override

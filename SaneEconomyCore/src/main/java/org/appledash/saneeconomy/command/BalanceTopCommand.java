@@ -1,9 +1,9 @@
-package org.appledash.saneeconomy.command.type;
+package org.appledash.saneeconomy.command;
 
 import org.appledash.saneeconomy.SaneEconomy;
-import org.appledash.saneeconomy.command.SaneEconomyCommand;
-import org.appledash.saneeconomy.command.exception.CommandException;
-import org.appledash.saneeconomy.command.exception.type.usage.TooManyArgumentsException;
+import org.appledash.sanelib.command.SaneCommand;
+import org.appledash.sanelib.command.exception.CommandException;
+import org.appledash.sanelib.command.exception.type.usage.TooManyArgumentsException;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
@@ -14,9 +14,12 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by AppleDash on 6/13/2016.
  * Blackjack is still best pony.
  */
-public class BalanceTopCommand extends SaneEconomyCommand {
+public class BalanceTopCommand extends SaneCommand {
+    private final SaneEconomy saneEconomy;
+
     public BalanceTopCommand(SaneEconomy saneEconomy) {
         super(saneEconomy);
+        this.saneEconomy = saneEconomy;
     }
 
     @Override
