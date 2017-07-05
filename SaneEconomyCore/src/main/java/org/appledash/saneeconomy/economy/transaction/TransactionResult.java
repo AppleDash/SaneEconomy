@@ -40,6 +40,7 @@ public class TransactionResult {
 
     public enum Status {
         SUCCESS("Success."),
+        CANCELLED_BY_PLUGIN("That transaction was cancelled by a plugin."), // In theory this message should never be shown.
         ERR_NOT_ENOUGH_FUNDS("Not enough money is available for you to complete that transaction.");
 
         private final String message;

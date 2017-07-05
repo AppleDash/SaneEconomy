@@ -5,6 +5,7 @@ import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.economy.transaction.Transaction;
 import org.appledash.saneeconomy.economy.transaction.TransactionResult;
+import org.appledash.saneeconomy.event.SaneEconomyTransactionEvent;
 import org.appledash.saneeconomy.utils.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -163,6 +164,12 @@ public class EconomyManager {
         Economable sender = transaction.getSender();
         Economable receiver = transaction.getReceiver();
         double amount = transaction.getAmount(); // This amount is validated upon creation of Transaction
+
+        SaneEconomyTransactionEvent evt = new SaneEconomyTransactionEvent(transaction);
+        Bukkit.getServer().getPluginManager().callEvent(evt);
+        if (evt.isCancelled()) {
+            return new TransactionResult(transaction, TransactionResult.Status.CANCELLED_BY_PLUGIN);
+        }
 
         if (transaction.isSenderAffected()) { // Sender should have balance taken from them
             if (!hasBalance(sender, amount)) {
