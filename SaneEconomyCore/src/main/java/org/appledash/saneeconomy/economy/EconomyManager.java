@@ -165,10 +165,12 @@ public class EconomyManager {
         Economable receiver = transaction.getReceiver();
         double amount = transaction.getAmount(); // This amount is validated upon creation of Transaction
 
-        SaneEconomyTransactionEvent evt = new SaneEconomyTransactionEvent(transaction);
-        Bukkit.getServer().getPluginManager().callEvent(evt);
-        if (evt.isCancelled()) {
-            return new TransactionResult(transaction, TransactionResult.Status.CANCELLED_BY_PLUGIN);
+        if (Bukkit.getServer() != null) { // Bukkit.getServer() == null from our JUnit tests.
+            SaneEconomyTransactionEvent evt = new SaneEconomyTransactionEvent(transaction);
+            Bukkit.getServer().getPluginManager().callEvent(evt);
+            if (evt.isCancelled()) {
+                return new TransactionResult(transaction, TransactionResult.Status.CANCELLED_BY_PLUGIN);
+            }
         }
 
         if (transaction.isSenderAffected()) { // Sender should have balance taken from them
