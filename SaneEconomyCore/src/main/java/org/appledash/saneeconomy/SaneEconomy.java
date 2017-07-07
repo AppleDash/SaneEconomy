@@ -66,7 +66,6 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
         getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
             economyManager.getBackend().reloadTopPlayerBalances();
         }, 0, (20 * 300) /* Update baltop every 5 minutes */);
-        this.getI18n().loadTranslations();
     }
 
     @Override
