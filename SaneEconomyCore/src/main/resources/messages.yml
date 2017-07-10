@@ -12,7 +12,6 @@ messages:
   - message: "That player is not online."
   - message: "You cannot pay yourself."
   - message: "Usage: {1}"
-  - message: "That player does not exist."
   - message: "Your balance is {1}."
   - message: "Balance for {1} is {2}."
   - message: "Top {1} players on page {2}:"

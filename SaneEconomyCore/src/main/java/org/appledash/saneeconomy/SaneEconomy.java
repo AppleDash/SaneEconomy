@@ -78,6 +78,7 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
         if (economyManager != null) {
             getLogger().info("Flushing database...");
             economyManager.getBackend().waitUntilFlushed();
+
             if (economyManager.getBackend() instanceof EconomyStorageBackendMySQL) {
                 ((EconomyStorageBackendMySQL) economyManager.getBackend()).closeConnections();
                 if (!((EconomyStorageBackendMySQL) economyManager.getBackend()).getConnection().getConnection().isFinished()) {
