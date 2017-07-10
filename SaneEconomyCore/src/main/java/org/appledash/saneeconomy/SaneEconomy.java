@@ -80,7 +80,7 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
             economyManager.getBackend().waitUntilFlushed();
             if (economyManager.getBackend() instanceof EconomyStorageBackendMySQL) {
                 ((EconomyStorageBackendMySQL) economyManager.getBackend()).closeConnections();
-                if (((EconomyStorageBackendMySQL) economyManager.getBackend()).getConnection().getConnection().isFinished()) {
+                if (!((EconomyStorageBackendMySQL) economyManager.getBackend()).getConnection().getConnection().isFinished()) {
                     this.getLogger().warning("SaneDatabase didn't terminate all threads, something weird is going on?");
                 }
             }
