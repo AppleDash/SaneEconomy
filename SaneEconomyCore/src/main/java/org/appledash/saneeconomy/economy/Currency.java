@@ -2,6 +2,7 @@ package org.appledash.saneeconomy.economy;
 
 import com.google.common.base.Strings;
 import org.appledash.sanelib.messages.MessageUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.text.DecimalFormat;
@@ -66,11 +67,14 @@ public class Currency {
      * @return Formatted amount string.
      */
     public String formatAmount(double amount) {
+        String formatted;
         if (amount == 1) {
-            return MessageUtils.indexedFormat(balanceFormat, format.format(amount), nameSingular);
+            formatted = MessageUtils.indexedFormat(balanceFormat, format.format(amount), nameSingular);
+        } else {
+            formatted = MessageUtils.indexedFormat(balanceFormat, format.format(amount), namePlural);
         }
 
-		return MessageUtils.indexedFormat(balanceFormat, format.format(amount), namePlural);
+        return ChatColor.translateAlternateColorCodes('&', formatted);
     }
 
     /**
