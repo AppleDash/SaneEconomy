@@ -6,7 +6,7 @@
 
     <groupId>org.appledash</groupId>
     <artifactId>SaneEconomy</artifactId>
-    <version>0.12.3-SNAPSHOT</version>
+    <version>0.12.4-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -46,7 +46,7 @@
         <dependency>
             <groupId>org.appledash</groupId>
             <artifactId>sanelib</artifactId>
-            <version>0.3.1-SNAPSHOT</version>
+            <version>0.3.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

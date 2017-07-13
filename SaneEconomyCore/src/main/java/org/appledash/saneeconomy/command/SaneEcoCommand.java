@@ -26,7 +26,9 @@ public class SaneEcoCommand extends SaneCommand {
     @Override
     public String[] getUsage() {
         return new String[] {
-                "/<command> reload-database"
+                "/<command> reload - Reload everything.",
+                "/<command> reload-database - Reload the database.",
+                "/<command> reload-config - Reload the configuration."
         };
     }
 
@@ -42,6 +44,15 @@ public class SaneEcoCommand extends SaneCommand {
             this.saneEconomy.getMessenger().sendMessage(sender, "Reloading database...");
             saneEconomy.getEconomyManager().getBackend().reloadDatabase();
             this.saneEconomy.getMessenger().sendMessage(sender, "Database reloaded.");
+        } else if (subCommand.equalsIgnoreCase("reload-config")) {
+            this.saneEconomy.getMessenger().sendMessage(sender, "Reloading configuration...");
+            this.saneEconomy.loadConfig();
+            this.saneEconomy.getMessenger().sendMessage(sender, "Configuration reloaded.");
+        } else if (subCommand.equalsIgnoreCase("reload")) {
+            this.saneEconomy.getMessenger().sendMessage(sender, "Reloading configuration and database...");
+            this.saneEconomy.loadConfig();
+            this.saneEconomy.getEconomyManager().getBackend().reloadDatabase();
+            this.saneEconomy.getMessenger().sendMessage(sender, "Configuration and database reloaded.");
         } else {
             throw new InvalidUsageException();
         }

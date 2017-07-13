@@ -1,2 +1,4 @@
 admin-shop-trigger: '[Shop]'
 admin-shop-title: '&8[&6Shop&8]&r'
+chat:
+  prefix: '&b[&9Shops&b]&r '

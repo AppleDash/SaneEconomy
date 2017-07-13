@@ -75,11 +75,15 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
             vaultHook.unhook();
         }
 
-        if (economyManager != null) {
-            getLogger().info("Flushing database...");
-            economyManager.getBackend().waitUntilFlushed();
+        this.flushEconomyManager();
+    }
 
-            if (economyManager.getBackend() instanceof EconomyStorageBackendMySQL) {
+    private void flushEconomyManager() {
+        if (this.economyManager != null) {
+            this.getLogger().info("Flushing database...");
+            this.economyManager.getBackend().waitUntilFlushed();
+
+            if (this.economyManager.getBackend() instanceof EconomyStorageBackendMySQL) {
                 ((EconomyStorageBackendMySQL) economyManager.getBackend()).closeConnections();
                 if (!((EconomyStorageBackendMySQL) economyManager.getBackend()).getConnection().getConnection().isFinished()) {
                     this.getLogger().warning("SaneDatabase didn't terminate all threads, something weird is going on?");
@@ -88,7 +92,7 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
         }
     }
 
-    private boolean loadConfig() {
+    public boolean loadConfig() {
         File configFile = new File(getDataFolder(), "config.yml");
 
         if (configFile.exists() && getConfig().getBoolean("debug", false)) {
@@ -99,9 +103,13 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
             getConfig().set("debug", true);
             saveConfig();
         } else {
-            saveDefaultConfig();
-            reloadConfig();
+            if (!configFile.exists()) {
+                this.saveDefaultConfig();
+            }
+            this.reloadConfig();
         }
+
+        this.flushEconomyManager(); // If we're reloading the configuration, we flush the old economy manager first
 
         SaneEconomyConfiguration config = new SaneEconomyConfiguration(this);
 
