@@ -6,13 +6,14 @@
 
     <groupId>org.appledash</groupId>
     <artifactId>SaneEconomy</artifactId>
-    <version>0.12.4-SNAPSHOT</version>
+    <version>0.12.5-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
         <module>SaneEconomyCore</module>
         <module>SaneEconomySignShop</module>
         <module>SaneEconomyMobKills</module>
+        <module>SaneEconomyOnlineTime</module>
     </modules>
 
     <repositories>

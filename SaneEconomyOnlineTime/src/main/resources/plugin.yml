@@ -1,0 +1,6 @@
+name: SaneEconomyOnlineTime
+main: org.appledash.saneeconomy.onlinetime.SaneEconomyOnlineTime
+description: Pays players for being online!
+author: AppleDash
+version: 0.1.0
+depend: [SaneEconomy]

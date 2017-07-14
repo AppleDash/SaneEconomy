@@ -1,0 +1,9 @@
+chat:
+  prefix: '&b[&OnlineTime&b]&r '
+  silent: false
+
+payouts:
+  - seconds: 10
+    amount: 1000
+    message: 'You have been paid {1} in the past {2} seconds of being online!'
+    report_interval: 30

@@ -19,6 +19,7 @@ I decided that it was time for a change. I wanted a working, updated economy plu
 * SaneEconomyCore - The main economy provider.
 * SaneEconomySignShop - A side project written for a specific server. Unsupported.
 * SaneEconomyMobKills - Another side project for the same server. Unsupported.
+* SaneEconomyOnlineTime - A replacement for the old plugin TimeIsMoney. Unsupported for now.
 
 ## Development
 
