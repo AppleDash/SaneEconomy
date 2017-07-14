@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.appledash</groupId>
         <artifactId>SaneEconomy</artifactId>
-        <version>0.12.5-SNAPSHOT</version>
+        <version>0</version>
     </parent>
     <artifactId>SaneEconomyCore</artifactId>
     <version>0.12.5-SNAPSHOT</version>
