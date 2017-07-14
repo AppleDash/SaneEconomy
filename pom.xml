@@ -28,7 +28,7 @@
         </repository>
         <repository>
             <id>votuvo</id>
-            <url>https://mvn.votuvo.com/content/repositories/snapshots/</url>
+            <url>https://mvn.votuvo.com/maven2</url>
         </repository>
     </repositories>
 
