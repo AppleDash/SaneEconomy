@@ -34,8 +34,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
                 schemaVersion = -1;
             } else {
                 PreparedStatement ps = conn.prepareStatement(String.format("SELECT `val` FROM `%s` WHERE `key` = 'schema_version'", dbConn.getTable("saneeconomy_schema")));
-                ps.executeQuery();
-                ResultSet rs = ps.getResultSet();
+                ResultSet rs = ps.executeQuery();
 
                 if (!rs.next()) {
                     throw new RuntimeException("Invalid database schema!");
@@ -46,7 +45,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
 
             if (schemaVersion == -1) {
                 conn.prepareStatement(String.format("CREATE TABLE IF NOT EXISTS `%s` (`key` VARCHAR(32) PRIMARY KEY, `val` TEXT)", dbConn.getTable("saneeconomy_schema"))).executeUpdate();
-                conn.prepareStatement(String.format("REPLACE INTO %s (`key`, `val`) VALUES ('schema_version', 2)", dbConn.getTable("saneeconomy_schema")));
+                conn.prepareStatement(String.format("REPLACE INTO %s (`key`, `val`) VALUES ('schema_version', 2)", dbConn.getTable("saneeconomy_schema"))).executeUpdate();
                 conn.prepareStatement(String.format("CREATE TABLE `%s` (unique_identifier VARCHAR(128) PRIMARY KEY, balance DECIMAL(18, 2))", dbConn.getTable("saneeconomy_balances"))).executeUpdate();
                 schemaVersion = 2;
             }
