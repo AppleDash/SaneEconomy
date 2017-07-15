@@ -6,6 +6,7 @@ import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.economy.transaction.Transaction;
 import org.appledash.saneeconomy.economy.transaction.TransactionResult;
 import org.appledash.saneeconomy.event.SaneEconomyTransactionEvent;
+import org.appledash.saneeconomy.utils.MapUtil;
 import org.appledash.saneeconomy.utils.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -165,7 +166,7 @@ public class EconomyManager {
         Economable receiver = transaction.getReceiver();
         double amount = transaction.getAmount(); // This amount is validated upon creation of Transaction
 
-        if (Bukkit.getServer() != null) { // Bukkit.getServer() == null from our JUnit tests.
+        if (Bukkit.getServer().getPluginManager() != null) { // Bukkit.getServer() == null from our JUnit tests.
             SaneEconomyTransactionEvent evt = new SaneEconomyTransactionEvent(transaction);
             Bukkit.getServer().getPluginManager().callEvent(evt);
             if (evt.isCancelled()) {
@@ -196,16 +197,19 @@ public class EconomyManager {
      * @return Map of OfflinePlayer to Double
      */
     public Map<OfflinePlayer, Double> getTopPlayerBalances(int amount, int offset) {
-        Map<UUID, Double> uuidBalances = backend.getTopPlayerBalances(amount, offset);
-        Map<OfflinePlayer, Double> playerBalances = new LinkedHashMap<>();
+        Map<UUID, Double> uuidBalances = backend.getTopPlayerBalances();
+        LinkedHashMap<OfflinePlayer, Double> playerBalances = new LinkedHashMap<>();
 
         uuidBalances.forEach((uuid, balance) -> {
-            if (Bukkit.getServer().getOfflinePlayer(uuid) != null) {
-                playerBalances.put(Bukkit.getServer().getOfflinePlayer(uuid), balance);
+            OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(uuid);
+            if (offlinePlayer != null) {
+                if (this.saneEconomy.getVaultHook() == null || !this.saneEconomy.getVaultHook().hasPermission(offlinePlayer, "saneeconomy.balancetop.hide")) {
+                    playerBalances.put(Bukkit.getServer().getOfflinePlayer(uuid), balance);
+                }
             }
         });
 
-        return playerBalances;
+        return MapUtil.skipAndTake(playerBalances, offset, amount);
     }
 
     public EconomyStorageBackend getBackend() {

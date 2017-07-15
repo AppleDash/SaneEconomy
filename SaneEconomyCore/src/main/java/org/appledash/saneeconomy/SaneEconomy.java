@@ -174,4 +174,8 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
     public static Logger logger(){
         return instance.getLogger();
     }
+
+    public VaultHook getVaultHook() {
+        return vaultHook;
+    }
 }

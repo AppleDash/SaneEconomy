@@ -20,6 +20,7 @@ public class MockOfflinePlayer implements OfflinePlayer {
     private MockOfflinePlayer(UUID uuid, String name) {
         this.uuid = uuid;
         this.name = name;
+        MockServer.getInstance().addOfflinePlayer(this);
     }
 
     public MockOfflinePlayer(String name) {

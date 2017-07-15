@@ -1,5 +1,6 @@
 package org.appledash.saneeconomy.test;
 
+import com.google.common.collect.ImmutableList;
 import org.appledash.saneeconomy.economy.Currency;
 import org.appledash.saneeconomy.economy.EconomyManager;
 import org.appledash.saneeconomy.economy.economable.Economable;
@@ -14,6 +15,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * Created by AppleDash on 7/29/2016.
@@ -77,9 +82,44 @@ public class EconomyManagerTest {
 
     }
 
+    @Test
+    public void testTopBalances() {
+        Random random = new Random();
+        List<Economable> economables = new ArrayList<>(10);
+
+        for (int i = 0; i < 10; i++) {
+            Economable economable = Economable.wrap(new MockOfflinePlayer("Dude" + i));
+            economables.add(economable);
+            this.economyManager.setBalance(economable, random.nextInt(1000));
+        }
+
+        this.economyManager.getBackend().reloadTopPlayerBalances();
+
+        List<Double> javaSortedBalances = economables.stream().map(this.economyManager::getBalance).sorted((left, right) -> -left.compareTo(right)).collect(Collectors.toList());
+        List<Double> ecoManTopBalances = ImmutableList.copyOf(this.economyManager.getTopPlayerBalances(10, 0).values());
+
+        Assert.assertTrue("List is not correctly sorted!", areListsEqual(javaSortedBalances, ecoManTopBalances));
+        Assert.assertEquals("Wrong number of top balances!", 5, this.economyManager.getTopPlayerBalances(5, 0).size());
+    }
+
+    private <T> boolean areListsEqual(List<T> first, List<T> second) {
+        if (first.size() != second.size()) {
+            throw new IllegalArgumentException("Lists must be same length (first=" + first.size() + ", second=" + second.size() + ")");
+        }
+
+        for (int i = 0; i < first.size(); i++) {
+            if (!first.get(i).equals(second.get(i))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testNegativeBalance() {
         Economable economable = Economable.wrap(new MockOfflinePlayer("Bob"));
         economyManager.setBalance(economable, -1.0);
     }
+
 }

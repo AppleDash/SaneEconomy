@@ -2,6 +2,7 @@ package org.appledash.saneeconomy;
 
 import org.appledash.saneeconomy.economy.EconomyManager;
 import org.appledash.saneeconomy.economy.logger.TransactionLogger;
+import org.appledash.saneeconomy.vault.VaultHook;
 
 import java.util.Optional;
 
@@ -24,4 +25,6 @@ public interface ISaneEconomy {
      * @return TransactionLogger, if there is one. Otherwise, Optional.empty()
      */
     Optional<TransactionLogger> getTransactionLogger();
+
+    VaultHook getVaultHook();
 }

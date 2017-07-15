@@ -1,8 +1,11 @@
 package org.appledash.saneeconomy.vault;
 
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import org.appledash.saneeconomy.SaneEconomy;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 
 /**
@@ -23,5 +26,11 @@ public class VaultHook {
 
     public void unhook() {
         Bukkit.getServicesManager().unregister(Economy.class, provider);
+    }
+
+    public boolean hasPermission(OfflinePlayer offlinePlayer, String permNode) {
+        RegisteredServiceProvider<Permission> rsp = this.plugin.getServer().getServicesManager().getRegistration(Permission.class);
+
+        return rsp != null && rsp.getProvider().playerHas(null, offlinePlayer, permNode);
     }
 }

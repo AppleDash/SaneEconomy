@@ -39,7 +39,7 @@ public interface EconomyStorageBackend {
      * @param amount Maximum number to get.
      * @return Map of player UUIDs to amounts.
      */
-    LinkedHashMap<UUID, Double> getTopPlayerBalances(int amount, int offset);
+    LinkedHashMap<UUID, Double> getTopPlayerBalances();
 
     /**
      * Reload this backend's database from disk.

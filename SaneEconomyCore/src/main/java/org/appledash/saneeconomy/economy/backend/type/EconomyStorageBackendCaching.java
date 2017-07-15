@@ -33,9 +33,8 @@ public abstract class EconomyStorageBackendCaching implements EconomyStorageBack
         return balances.get(economable.getUniqueIdentifier());
     }
 
-    @Override
-    public LinkedHashMap<UUID, Double> getTopPlayerBalances(int amount, int offset) {
-        return MapUtil.skipAndTake(topPlayerBalances, offset, amount);
+    public LinkedHashMap<UUID, Double> getTopPlayerBalances() {
+        return topPlayerBalances;
     }
 
     @Override
