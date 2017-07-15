@@ -13,9 +13,10 @@ import org.appledash.saneeconomy.utils.WebUtils;
 public class GithubVersionChecker {
     public static final String DOWNLOAD_URL = "https://github.com/AppleDash/SaneEconomy/releases";
     private static final String RELEASES_URL = "https://api.github.com/repos/AppleDash/SaneEconomy/releases";
+    private static String newestFound;
+
     private boolean updateChecked;
     private boolean updateAvailable;
-    private static String newestVersion;
     private final String pluginName;
     private final String currentVersion;
 
@@ -29,9 +30,8 @@ public class GithubVersionChecker {
 
         JsonArray array = (JsonArray)new JsonParser().parse(jsonContent);
 
-        int currentVersion = releaseToInt(this.currentVersion);
-        int newestVersion = -1;
-        // JsonObject newestObj = null;
+        String currentVersion = this.currentVersion;
+        String newestFound = null;
 
         for (JsonElement elem : array) {
             if (elem instanceof JsonObject) {
@@ -49,22 +49,16 @@ public class GithubVersionChecker {
                 }
 
                 String versionStr = releaseObj.get("tag_name").getAsString();
-                int version = releaseToInt(versionStr);
 
-                if (version > newestVersion) {
-                    newestVersion = version;
-                    GithubVersionChecker.newestVersion = versionStr;
-                    // newestObj = releaseObj;
+                if (VersionComparer.isSemVerGreaterThan(newestFound, versionStr)) {
+                    newestFound = versionStr;
+                    GithubVersionChecker.newestFound = versionStr;
                 }
             }
         }
 
         updateChecked = true;
-        updateAvailable = newestVersion > currentVersion;
-    }
-
-    private int releaseToInt(String release) {
-        return Integer.valueOf(release.trim().replace(".", ""));
+        updateAvailable = VersionComparer.isSemVerGreaterThan(currentVersion, newestFound);
     }
 
     public boolean isUpdateAvailable() {
@@ -72,6 +66,6 @@ public class GithubVersionChecker {
     }
 
     public String getNewestVersion() {
-        return newestVersion;
+        return newestFound;
     }
 }

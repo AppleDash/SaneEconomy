@@ -18,4 +18,5 @@ economy:
   notify-start-balance: true
   server-account: '$SERVER$'
 
+locale-override: false
 debug: false

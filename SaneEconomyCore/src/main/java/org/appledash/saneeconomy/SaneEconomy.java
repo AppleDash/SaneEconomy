@@ -13,6 +13,7 @@ import org.appledash.sanelib.command.SaneCommand;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -47,6 +48,10 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
         if (!loadConfig()) { /* Invalid backend type or connection error of some sort */
             shutdown();
             return;
+        }
+
+        if (this.getConfig().getBoolean("locale-override", false)) {
+            Locale.setDefault(Locale.ENGLISH);
         }
 
         loadCommands();
