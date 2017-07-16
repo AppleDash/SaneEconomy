@@ -15,5 +15,6 @@ public class VersionComparerTest {
         Assert.assertFalse(VersionComparer.isSemVerGreaterThan("2.0.0", "1.0.0"));
         Assert.assertTrue(VersionComparer.isSemVerGreaterThan("0.1.0", "0.2.0"));
         Assert.assertTrue(VersionComparer.isSemVerGreaterThan("1.0.0", "2.0.0"));
+        Assert.assertFalse(VersionComparer.isSemVerGreaterThan("0.12.6", "0.5.7"));
     }
 }

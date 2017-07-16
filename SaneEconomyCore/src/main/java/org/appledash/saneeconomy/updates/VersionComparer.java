@@ -17,20 +17,16 @@ public class VersionComparer {
         int[] firstParts = intifyParts(first);
         int[] secondParts = intifyParts(second);
 
-        if (secondParts[0] > firstParts[0]) {
-            return true;
-        }
-
-        if (secondParts[1] > firstParts[1]) {
-            return true;
-        }
-
-        return secondParts[2] > firstParts[2];
+        return computeInt(secondParts) > computeInt(firstParts);
     }
 
     private static int[] intifyParts(String version) {
         String[] firstParts = version.split("\\.");
 
         return new int[] { Integer.valueOf(firstParts[0]), Integer.valueOf(firstParts[1]), Integer.valueOf(firstParts[2]) };
+    }
+
+    private static int computeInt(int[] parts) {
+        return (parts[0] * 1000000) + (parts[1] * 1000) + parts[2];
     }
 }
