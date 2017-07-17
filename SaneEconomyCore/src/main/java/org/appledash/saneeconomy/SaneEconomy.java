@@ -168,6 +168,7 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
      * Get the current plugin instance.
      * @return Instance
      */
+    @Deprecated
     public static SaneEconomy getInstance() {
         return instance;
     }

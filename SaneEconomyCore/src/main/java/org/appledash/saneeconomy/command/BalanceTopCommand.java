@@ -55,7 +55,7 @@ public class BalanceTopCommand extends SaneCommand {
 
         int offset = (page - 1) * nPerPage;
 
-        Map<OfflinePlayer, Double> topBalances = saneEconomy.getEconomyManager().getTopPlayerBalances(nPerPage, offset);
+        Map<OfflinePlayer, Double> topBalances = this.saneEconomy.getEconomyManager().getTopPlayerBalances(nPerPage, offset);
 
         if (topBalances.isEmpty()) {
             this.saneEconomy.getMessenger().sendMessage(sender, "There aren't enough players to display that page.");
@@ -65,6 +65,6 @@ public class BalanceTopCommand extends SaneCommand {
         AtomicInteger index = new AtomicInteger(offset + 1); /* I know it's stupid, but you can't do some_int++ from within the lambda. */
 
         this.saneEconomy.getMessenger().sendMessage(sender, "Top {1} players on page {2}:", topBalances.size(), page);
-        topBalances.forEach((player, balance) -> this.saneEconomy.getMessenger().sendMessage(sender, "[{1:02d}] {2} - {3}", index.getAndIncrement(), player.getName(), SaneEconomy.getInstance().getEconomyManager().getCurrency().formatAmount(balance)));
+        topBalances.forEach((player, balance) -> this.saneEconomy.getMessenger().sendMessage(sender, "[{1:02d}] {2} - {3}", index.getAndIncrement(), player.getName(), this.saneEconomy.getEconomyManager().getCurrency().formatAmount(balance)));
     }
 }
