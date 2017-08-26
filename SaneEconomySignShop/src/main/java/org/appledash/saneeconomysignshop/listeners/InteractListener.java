@@ -108,7 +108,7 @@ public class InteractListener implements Listener {
         player.getInventory().addItem(stack);
 
         this.plugin.getMessenger().sendMessage(player, "You have bought {1} {2} for {3}.", quantity, shop.getItemStack().getType().name(), ecoMan.getCurrency().formatAmount(shopTransaction.getPrice()));
-        LOGGER.info(String.format("%s just bought %s for %s.", player.getName(), shop.getItemStack(), ecoMan.getCurrency().formatAmount(shopTransaction.getPrice())));
+        LOGGER.info(String.format("%s just bought %d %s for %s.", player.getName(), quantity, shop.getItemStack().getType().name(), ecoMan.getCurrency().formatAmount(shopTransaction.getPrice())));
     }
 
     private void doSell(SignShop shop, Player player) { // TODO: Selling enchanted items
@@ -138,7 +138,7 @@ public class InteractListener implements Listener {
         ecoMan.transact(shopTransaction.makeEconomyTransaction());
 
         this.plugin.getMessenger().sendMessage(player, "You have sold {1} {2} for {3}.", quantity, shop.getItemStack().getType().name(), ecoMan.getCurrency().formatAmount(price));
-        LOGGER.info(String.format("%s just sold %s for %s.", player.getName(), shop.getItemStack(), ecoMan.getCurrency().formatAmount(price)));
+        LOGGER.info(String.format("%s just sold %d %s for %s.", player.getName(), quantity, shop.getItemStack().getType().name(), ecoMan.getCurrency().formatAmount(price)));
     }
 
 }

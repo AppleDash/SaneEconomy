@@ -75,7 +75,7 @@ public class EconomyAdminCommand extends SaneCommand {
 
         double amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount);
 
-        if (amount <= 0) {
+        if (!(subCommand.equalsIgnoreCase("set") && amount == 0) && amount <= 0) { // If they're setting it to 0 it's fine, otherwise reject numbers under 1.
             this.saneEconomy.getMessenger().sendMessage(sender, "{1} is not a positive number.", ((amount == -1) ? sAmount : String.valueOf(amount)));
             return;
         }
@@ -117,7 +117,7 @@ public class EconomyAdminCommand extends SaneCommand {
                 // FIXME: This is a silly hack to get it to log.
                 if (oldBal > 0.0) {
                     logger.logTransaction(new Transaction(
-                            economable, Economable.CONSOLE, oldBal, TransactionReason.ADMIN_GIVE
+                            economable, Economable.CONSOLE, oldBal, TransactionReason.ADMIN_TAKE
                     ));
                 }
 
