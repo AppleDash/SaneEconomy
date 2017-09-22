@@ -1,15 +1,24 @@
 package org.appledash.saneeconomy;
 
+import com.google.common.collect.Iterables;
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import org.appledash.saneeconomy.command.*;
 import org.appledash.saneeconomy.economy.EconomyManager;
 import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendMySQL;
 import org.appledash.saneeconomy.economy.logger.TransactionLogger;
+import org.appledash.saneeconomy.event.SaneEconomyTransactionEvent;
 import org.appledash.saneeconomy.listeners.JoinQuitListener;
 import org.appledash.saneeconomy.updates.GithubVersionChecker;
 import org.appledash.saneeconomy.utils.SaneEconomyConfiguration;
 import org.appledash.saneeconomy.vault.VaultHook;
 import org.appledash.sanelib.SanePlugin;
 import org.appledash.sanelib.command.SaneCommand;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 import java.io.File;
 import java.util.HashMap;
@@ -71,6 +80,45 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
         getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
             economyManager.getBackend().reloadTopPlayerBalances();
         }, 0, (20 * 300) /* Update baltop every 5 minutes */);
+
+        if (this.getConfig().getBoolean("multi-server-sync", false)) {
+            this.getServer().getPluginManager().registerEvents(new Listener() {
+                @EventHandler
+                public void onTransaction(SaneEconomyTransactionEvent evt) { // Trust me, I'm a doctor.
+                    OfflinePlayer player = evt.getTransaction().getReceiver().tryCastToPlayer();
+
+                    if (player != null && !player.isOnline()) {
+                        Player fakeSender = Iterables.getFirst(SaneEconomy.this.getServer().getOnlinePlayers(), null);
+
+                        if (fakeSender != null) {
+                            ByteArrayDataOutput bado = ByteStreams.newDataOutput();
+                            bado.writeUTF("SaneEconomy");
+                            bado.writeUTF("SyncDatabase");
+                            fakeSender.sendPluginMessage(SaneEconomy.this, "BungeeCord", bado.toByteArray());
+                        }
+                    }
+                }
+            }, this);
+            this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", (channel, player, bytes) -> {
+                if (!channel.equals("BungeeCord")) {
+                    return;
+                }
+
+                ByteArrayDataInput badi = ByteStreams.newDataInput(bytes);
+                String subChannel = badi.readUTF();
+
+                if (subChannel.equals("SaneEconomy")) {
+                    String opCode = badi.readUTF();
+
+                    if (opCode.equals("SyncDatabase")) {
+                        SaneEconomy.this.getEconomyManager().getBackend().reloadDatabase();
+                    } else {
+                        SaneEconomy.this.getLogger().warning("Invalid OpCode received on SaneEconomy plugin message channel: " + opCode);
+                    }
+                }
+            });
+            this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        }
     }
 
     @Override

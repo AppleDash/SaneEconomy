@@ -13,6 +13,9 @@ public interface Economable {
     Economable PLUGIN = new EconomablePlugin();
 
     String getUniqueIdentifier();
+    default OfflinePlayer tryCastToPlayer() {
+        return null;
+    }
 
     static Economable wrap(OfflinePlayer player) {
         return new EconomablePlayer(player);

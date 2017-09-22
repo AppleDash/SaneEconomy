@@ -17,4 +17,9 @@ public class EconomablePlayer implements Economable {
     public String getUniqueIdentifier() {
         return "player:" + handle.getUniqueId();
     }
+
+    @Override
+    public OfflinePlayer tryCastToPlayer() {
+        return this.handle;
+    }
 }
