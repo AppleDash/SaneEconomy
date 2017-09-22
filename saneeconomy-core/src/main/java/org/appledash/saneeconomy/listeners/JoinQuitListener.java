@@ -48,8 +48,8 @@ public class JoinQuitListener implements Listener {
 
     @EventHandler
     public void onPlayerLogin(AsyncPlayerPreLoginEvent evt) {
-        Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, () -> {
-            plugin.getEconomyManager().getBackend().reloadDatabase(); // TODO: If servers start to lag when lots of people join, this is why.
-        }, 0);
+        Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+            plugin.getEconomyManager().getBackend().reloadUser(evt.getUniqueId().toString()); // TODO: If servers start to lag when lots of people join, this is why.
+        });
     }
 }
