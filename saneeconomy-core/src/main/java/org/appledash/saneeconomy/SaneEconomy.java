@@ -56,10 +56,6 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
             return;
         }
 
-        if (this.getConfig().getBoolean("locale-override", false)) {
-            Locale.setDefault(Locale.ENGLISH);
-        }
-
         loadCommands();
         loadListeners();
 

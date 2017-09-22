@@ -92,7 +92,7 @@ public class EconomyManager {
      * @throws IllegalArgumentException If amount is negative
      */
     private void addBalance(Economable targetPlayer, double amount) {
-        amount = NumberUtils.filterAmount(currency, amount);
+        amount = NumberUtils.filterAmount(currency, amount, currency.getFormat());
 
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot add a negative amount!");
@@ -115,7 +115,7 @@ public class EconomyManager {
      * @throws IllegalArgumentException If amount is negative
      */
     private void subtractBalance(Economable targetPlayer, double amount) {
-        amount = NumberUtils.filterAmount(currency, amount);
+        amount = NumberUtils.filterAmount(currency, amount, currency.getFormat());
 
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot subtract a negative amount!");
@@ -143,7 +143,7 @@ public class EconomyManager {
      * @throws IllegalArgumentException If amount is negative
      */
     public void setBalance(Economable targetPlayer, double amount) {
-        amount = NumberUtils.filterAmount(currency, amount);
+        amount = NumberUtils.filterAmount(currency, amount, currency.getFormat());
 
         if (amount < 0) {
             throw new IllegalArgumentException("Cannot subtract a negative amount!");

@@ -67,7 +67,7 @@ public class PayCommand extends SaneCommand {
         }
 
         String sAmount = args[1];
-        double amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount);
+        double amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount, ecoMan.getCurrency().getFormat());
 
         if (amount <= 0) {
             this.saneEconomy.getMessenger().sendMessage(sender, "{1} is not a positive number.", ((amount == -1) ? sAmount : String.valueOf(amount)));

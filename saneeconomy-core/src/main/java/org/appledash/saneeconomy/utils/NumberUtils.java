@@ -3,6 +3,7 @@ package org.appledash.saneeconomy.utils;
 import com.google.common.base.Strings;
 import org.appledash.saneeconomy.economy.Currency;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
@@ -14,7 +15,7 @@ import java.util.Locale;
 public class NumberUtils {
     private static final double INVALID_DOUBLE = -1;
 
-    public static double parsePositiveDouble(String sDouble) {
+    public static double parsePositiveDouble(String sDouble, DecimalFormat decimalFormat) {
         if (Strings.isNullOrEmpty(sDouble)) {
             return INVALID_DOUBLE;
         }
@@ -28,7 +29,7 @@ public class NumberUtils {
         double doub;
 
         try {
-            doub = NumberFormat.getNumberInstance(Locale.ENGLISH).parse(sDouble).doubleValue();
+            doub = decimalFormat.parse(sDouble).doubleValue();
         } catch (ParseException | NumberFormatException e) {
             return INVALID_DOUBLE;
         }
@@ -44,7 +45,7 @@ public class NumberUtils {
         return doub;
     }
 
-    public static double filterAmount(Currency currency, double amount) {
+    public static double filterAmount(Currency currency, double amount, DecimalFormat decimalFormat) {
         try {
             return NumberFormat.getNumberInstance(Locale.ENGLISH).parse(currency.getFormat().format(amount)).doubleValue();
         } catch (ParseException e) {
@@ -52,7 +53,7 @@ public class NumberUtils {
         }
     }
 
-    public static double parseAndFilter(Currency currency, String sDouble) {
-        return filterAmount(currency, parsePositiveDouble(sDouble));
+    public static double parseAndFilter(Currency currency, String sDouble, DecimalFormat decimalFormat) {
+        return filterAmount(currency, parsePositiveDouble(sDouble, decimalFormat), decimalFormat);
     }
 }

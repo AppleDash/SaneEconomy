@@ -7,6 +7,7 @@ currency:
     plural: dollars
   balance-format: '{1} {2}'
   format: '0.00'
+  locale: 'ENGLISH'
   grouping: 3
   grouping-separator: ','
 
@@ -26,5 +27,4 @@ bungeecord:
   section-name: 'global'
 
 update-check: true
-locale-override: false
 debug: false

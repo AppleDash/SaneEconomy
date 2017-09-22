@@ -1,17 +1,20 @@
 package org.appledash.saneeconomy.economy;
 
 import com.google.common.base.Strings;
+import org.apache.commons.lang.LocaleUtils;
 import org.appledash.sanelib.messages.MessageUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * Created by AppleDash on 6/13/2016.
  * Blackjack is still best pony.
- *
+ * <p>
  * Represents an in-game currency.
  */
 public class Currency {
@@ -32,7 +35,9 @@ public class Currency {
     }
 
     public static Currency fromConfig(ConfigurationSection config) {
-        DecimalFormat format = new DecimalFormat(config.getString("format", "0.00"));
+        Locale locale = LocaleUtils.toLocale(config.getString("locale", "ENGLISH"));
+        DecimalFormat format = (DecimalFormat) NumberFormat.getNumberInstance(locale);
+        format.applyPattern(config.getString("format", "0.00"));
 
         if (config.getInt("grouping", 0) > 0) {
             DecimalFormatSymbols symbols = format.getDecimalFormatSymbols();
@@ -63,6 +68,7 @@ public class Currency {
 
     /**
      * Format a money amount with this currency's format.
+     *
      * @param amount Money amount.
      * @return Formatted amount string.
      */
@@ -80,6 +86,7 @@ public class Currency {
     /**
      * Get this currency's singular name.
      * Example: "Dollar"
+     *
      * @return Singular name.
      */
     public String getSingularName() {
@@ -89,6 +96,7 @@ public class Currency {
     /**
      * Get this currency's plural name.
      * Example: "Dollars"
+     *
      * @return Plural name.
      */
     public String getPluralName() {
@@ -97,6 +105,7 @@ public class Currency {
 
     /**
      * Get this currency's number format.
+     *
      * @return DecimalFormat instance
      */
     public DecimalFormat getFormat() {

@@ -15,8 +15,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -25,12 +27,18 @@ import java.util.stream.Collectors;
  * Blackjack is still best pony.
  */
 public class EconomyManagerTest {
+
+    private final static DecimalFormat FORMAT = (DecimalFormat) NumberFormat.getNumberInstance(Locale.US);
+    static {
+        FORMAT.applyPattern("0.00");
+    }
+
     private EconomyManager economyManager;
 
     @Before
     public void setupEconomyManager()  {
         economyManager = new EconomyManager(new MockSaneEconomy(),
-                new Currency("test dollar", "test dollars", new DecimalFormat("0.00")),
+                new Currency("test dollar", "test dollars", FORMAT),
                 new MockEconomyStorageBackend(), null);
     }
 

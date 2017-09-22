@@ -73,7 +73,7 @@ public class EconomyAdminCommand extends SaneCommand {
         EconomyManager ecoMan = saneEconomy.getEconomyManager();
         Economable economable = Economable.wrap(targetPlayer);
 
-        double amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount);
+        double amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount, ecoMan.getCurrency().getFormat());
 
         if (!(subCommand.equalsIgnoreCase("set") && amount == 0) && amount <= 0) { // If they're setting it to 0 it's fine, otherwise reject numbers under 1.
             this.saneEconomy.getMessenger().sendMessage(sender, "{1} is not a positive number.", ((amount == -1) ? sAmount : String.valueOf(amount)));
