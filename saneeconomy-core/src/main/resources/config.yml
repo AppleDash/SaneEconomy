@@ -1,0 +1,30 @@
+backend:
+  type: json
+
+currency:
+  name:
+    singular: dollar
+    plural: dollars
+  balance-format: '{1} {2}'
+  format: '0.00'
+  locale: 'ENGLISH'
+  grouping: 3
+  grouping-separator: ','
+
+chat:
+  prefix: '&b[&9Economy&b]&r '
+
+economy:
+  start-balance: 0.0
+  notify-start-balance: true
+  server-account: '$SERVER$'
+
+baltop:
+  reload-interval: 300
+
+bungeecord:
+  enable-sync: false
+  section-name: 'global'
+
+update-check: true
+debug: false

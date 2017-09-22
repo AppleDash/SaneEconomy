@@ -5,15 +5,21 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.appledash</groupId>
-    <artifactId>SaneEconomy</artifactId>
-    <version>0</version>
+    <artifactId>saneeconomy-parent</artifactId>
+    <version>0.13.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <name>SaneEconomy</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <modules>
-        <module>SaneEconomyCore</module>
-        <module>SaneEconomySignShop</module>
-        <module>SaneEconomyMobKills</module>
-        <module>SaneEconomyOnlineTime</module>
+        <module>saneeconomy-core</module>
+        <module>saneeconomy-signshop</module>
+        <module>saneeconomy-mobkills</module>
+        <module>saneeconomy-onlinetime</module>
     </modules>
 
     <repositories>
@@ -37,30 +43,72 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.12-R0.1-SNAPSHOT</version>
+            <version>1.12.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.6</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.appledash</groupId>
             <artifactId>sanelib</artifactId>
-            <version>0.3.6-SNAPSHOT</version>
+            <version>0.3.5-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.7</version>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
                 <configuration>
-                    <skip>true</skip>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.8</version>
+                <executions>
+                    <execution>
+                        <id>default-deploy</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <serverId>nexus-snapshots</serverId>
+                    <nexusUrl>https://mvn.votuvo.com/</nexusUrl>
+                    <skipStaging>true</skipStaging>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>https://mvn.votuvo.com/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
