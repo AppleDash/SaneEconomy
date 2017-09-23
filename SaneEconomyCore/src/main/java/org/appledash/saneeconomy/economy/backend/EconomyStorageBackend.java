@@ -36,7 +36,6 @@ public interface EconomyStorageBackend {
 
     /**
      * Get the UUIDs of the players who have the most money, along with how much money they have.
-     * @param amount Maximum number to get.
      * @return Map of player UUIDs to amounts.
      */
     LinkedHashMap<UUID, Double> getTopPlayerBalances();
@@ -45,6 +44,12 @@ public interface EconomyStorageBackend {
      * Reload this backend's database from disk.
      */
     void reloadDatabase();
+
+    /**
+     * Reload data for just the Economable with the given unique identifier.
+     * @param uniqueIdentifier Unique identifier of Economable to reload data for.
+     */
+    void reloadEconomable(String uniqueIdentifier);
 
     /**
      * Reload this backend's top balances.

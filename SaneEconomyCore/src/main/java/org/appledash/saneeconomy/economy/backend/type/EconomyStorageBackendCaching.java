@@ -1,6 +1,7 @@
 package org.appledash.saneeconomy.economy.backend.type;
 
 import com.google.common.collect.ImmutableMap;
+import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.utils.MapUtil;
@@ -53,5 +54,11 @@ public abstract class EconomyStorageBackendCaching implements EconomyStorageBack
     @Override
     public Map<String, Double> getAllBalances() {
         return ImmutableMap.copyOf(balances);
+    }
+
+    @Override
+    public void reloadEconomable(String uniqueIdentifier) {
+        SaneEconomy.logger().warning("Trying to reload a single Economable from backend which does not support this - " + this.getClass().getSimpleName() + ". Recommend switching to MySQL backend for multi-server support.");
+        this.reloadDatabase();
     }
 }

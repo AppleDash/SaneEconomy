@@ -41,15 +41,15 @@ public class JoinQuitListener implements Listener {
         }
 
         /* Update notification */
-        if (player.hasPermission("saneeconomy.update-notify") && plugin.getVersionChecker().isUpdateAvailable()) {
+        if (plugin.getVersionChecker() != null && player.hasPermission("saneeconomy.update-notify") && plugin.getVersionChecker().isUpdateAvailable()) {
             this.plugin.getMessenger().sendMessage(player, "An update is available! The currently-installed version is {1}, but the newest available is {2}. Please go to {3} to update!", plugin.getDescription().getVersion(), plugin.getVersionChecker().getNewestVersion(), GithubVersionChecker.DOWNLOAD_URL);
         }
     }
 
     @EventHandler
     public void onPlayerLogin(AsyncPlayerPreLoginEvent evt) {
-        Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, () -> {
-            plugin.getEconomyManager().getBackend().reloadDatabase(); // TODO: If servers start to lag when lots of people join, this is why.
-        }, 0);
+        Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+            plugin.getEconomyManager().getBackend().reloadEconomable(String.format("player:%s", evt.getUniqueId())); // TODO: If servers start to lag when lots of people join, this is why.
+        });
     }
 }

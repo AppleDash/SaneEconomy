@@ -140,4 +140,22 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
     public void closeConnections() {
         this.dbConn.getConnection().cleanup();
     }
+
+
+    @Override
+    public void reloadEconomable(String uniqueIdentifier) {
+        dbConn.executeAsyncOperation("reload_economable_" + uniqueIdentifier, (conn) -> {
+            try {
+                PreparedStatement ps = conn.prepareStatement(String.format("SELECT balance FROM `%s` WHERE `unique_identifier` = ?", dbConn.getTable("saneeconomy_balances")));
+                ps.setString(1, uniqueIdentifier);
+                ResultSet rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    this.balances.put(uniqueIdentifier, rs.getDouble("balance"));
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException("SQL error has occured", e);
+            }
+        });
+    }
 }

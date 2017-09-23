@@ -1,5 +1,6 @@
 package org.appledash.saneeconomy;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
@@ -21,10 +22,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -74,29 +72,34 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
             getLogger().info("Not hooking into Vault because it isn't loaded.");
         }
 
-        versionChecker = new GithubVersionChecker("SaneEconomyCore", this.getDescription().getVersion());
-        getServer().getScheduler().scheduleAsyncDelayedTask(this, versionChecker::checkUpdateAvailable);
+        if (this.getConfig().getBoolean("update-check", true)) {
+            versionChecker = new GithubVersionChecker("SaneEconomyCore", this.getDescription().getVersion());
+            getServer().getScheduler().scheduleAsyncDelayedTask(this, versionChecker::checkUpdateAvailable);
+        }
 
         getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
             economyManager.getBackend().reloadTopPlayerBalances();
-        }, 0, (20 * 300) /* Update baltop every 5 minutes */);
+        }, 0, (20 * this.getConfig().getInt("economy.baltop-update-interval", 300)) /* Update baltop every 5 minutes by default */);
 
         if (this.getConfig().getBoolean("multi-server-sync", false)) {
             this.getServer().getPluginManager().registerEvents(new Listener() {
                 @EventHandler
                 public void onTransaction(SaneEconomyTransactionEvent evt) { // Trust me, I'm a doctor.
-                    OfflinePlayer player = evt.getTransaction().getReceiver().tryCastToPlayer();
+                    Set<OfflinePlayer> playersToSync = ImmutableSet.of(evt.getTransaction().getSender().tryCastToPlayer(), evt.getTransaction().getReceiver().tryCastToPlayer());
 
-                    if (player != null && !player.isOnline()) {
-                        Player fakeSender = Iterables.getFirst(SaneEconomy.this.getServer().getOnlinePlayers(), null);
+                    Player fakeSender = Iterables.getFirst(SaneEconomy.this.getServer().getOnlinePlayers(), null);
 
-                        if (fakeSender != null) {
-                            ByteArrayDataOutput bado = ByteStreams.newDataOutput();
-                            bado.writeUTF("SaneEconomy");
-                            bado.writeUTF("SyncDatabase");
-                            fakeSender.sendPluginMessage(SaneEconomy.this, "BungeeCord", bado.toByteArray());
-                        }
+                    if (fakeSender == null) {
+                        return;
                     }
+
+                    playersToSync.stream().filter(p -> p != null && !p.isOnline()).forEach(p -> {
+                        ByteArrayDataOutput bado = ByteStreams.newDataOutput();
+                        bado.writeUTF("SaneEconomy");
+                        bado.writeUTF("SyncPlayer");
+                        bado.writeUTF(p.getUniqueId().toString());
+                        fakeSender.sendPluginMessage(SaneEconomy.this, "BungeeCord", bado.toByteArray());
+                    });
                 }
             }, this);
             this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", (channel, player, bytes) -> {
@@ -110,8 +113,9 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
                 if (subChannel.equals("SaneEconomy")) {
                     String opCode = badi.readUTF();
 
-                    if (opCode.equals("SyncDatabase")) {
-                        SaneEconomy.this.getEconomyManager().getBackend().reloadDatabase();
+                    if (opCode.equals("SyncPlayer")) {
+                        String playerUuid = badi.readUTF();
+                        SaneEconomy.this.getEconomyManager().getBackend().reloadEconomable(String.format("player:%s", playerUuid));
                     } else {
                         SaneEconomy.this.getLogger().warning("Invalid OpCode received on SaneEconomy plugin message channel: " + opCode);
                     }
