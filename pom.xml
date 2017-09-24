@@ -29,7 +29,7 @@
         </repository>
         <repository>
             <id>votuvo</id>
-            <url>https://mvn.votuvo.com/</url>
+            <url>https://mvn.votuvo.com/maven2</url>
         </repository>
     </repositories>
 
