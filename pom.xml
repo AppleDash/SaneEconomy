@@ -18,18 +18,13 @@
 
     <repositories>
         <repository>
-            <id>spigot</id>
-            <name>Spigot</name>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
             <id>vault</id>
             <name>Vault</name>
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
         <repository>
             <id>votuvo</id>
-            <url>https://mvn.votuvo.com/</url>
+            <url>https://nexus.votuvo.com/repository/maven-public/</url>
         </repository>
     </repositories>
 
