@@ -73,7 +73,7 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
         }
 
         if (this.getConfig().getBoolean("update-check", true)) {
-            versionChecker = new GithubVersionChecker("SaneEconomyCore", this.getDescription().getVersion());
+            versionChecker = new GithubVersionChecker("SaneEconomyCore", this.getDescription().getVersion().replace("-SNAPSHOT", ""));
             getServer().getScheduler().scheduleAsyncDelayedTask(this, versionChecker::checkUpdateAvailable);
         }
 
