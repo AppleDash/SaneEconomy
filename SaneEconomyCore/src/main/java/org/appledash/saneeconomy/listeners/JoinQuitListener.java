@@ -1,6 +1,7 @@
 package org.appledash.saneeconomy.listeners;
 
 import org.appledash.saneeconomy.SaneEconomy;
+import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.economy.transaction.Transaction;
 import org.appledash.saneeconomy.economy.transaction.TransactionReason;
@@ -49,7 +50,7 @@ public class JoinQuitListener implements Listener {
     @EventHandler
     public void onPlayerLogin(AsyncPlayerPreLoginEvent evt) {
         Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-            plugin.getEconomyManager().getBackend().reloadEconomable(String.format("player:%s", evt.getUniqueId())); // TODO: If servers start to lag when lots of people join, this is why.
+            plugin.getEconomyManager().getBackend().reloadEconomable(String.format("player:%s", evt.getUniqueId()), EconomyStorageBackend.EconomableReloadReason.PLAYER_JOIN); // TODO: If servers start to lag when lots of people join, this is why.
         });
     }
 }

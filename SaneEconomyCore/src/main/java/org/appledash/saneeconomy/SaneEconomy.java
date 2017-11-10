@@ -6,6 +6,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import org.appledash.saneeconomy.command.*;
 import org.appledash.saneeconomy.economy.EconomyManager;
+import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendMySQL;
 import org.appledash.saneeconomy.economy.logger.TransactionLogger;
 import org.appledash.saneeconomy.event.SaneEconomyTransactionEvent;
@@ -114,7 +115,7 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
 
                     if (opCode.equals("SyncPlayer")) {
                         String playerUuid = badi.readUTF();
-                        this.economyManager.getBackend().reloadEconomable(String.format("player:%s", playerUuid));
+                        this.economyManager.getBackend().reloadEconomable(String.format("player:%s", playerUuid), EconomyStorageBackend.EconomableReloadReason.CROSS_SERVER_SYNC);
                     } else {
                         this.getLogger().warning("Invalid OpCode received on SaneEconomy plugin message channel: " + opCode);
                     }

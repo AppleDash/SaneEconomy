@@ -49,7 +49,7 @@ public interface EconomyStorageBackend {
      * Reload data for just the Economable with the given unique identifier.
      * @param uniqueIdentifier Unique identifier of Economable to reload data for.
      */
-    void reloadEconomable(String uniqueIdentifier);
+    void reloadEconomable(String uniqueIdentifier, EconomableReloadReason reason);
 
     /**
      * Reload this backend's top balances.
@@ -66,4 +66,8 @@ public interface EconomyStorageBackend {
      * Wait until all of the data in memory has been written out to disk.
      */
     void waitUntilFlushed();
+
+    enum EconomableReloadReason {
+        CROSS_SERVER_SYNC, PLAYER_JOIN
+    }
 }

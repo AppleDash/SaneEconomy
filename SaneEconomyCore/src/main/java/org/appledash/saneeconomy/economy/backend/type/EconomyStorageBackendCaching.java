@@ -57,8 +57,11 @@ public abstract class EconomyStorageBackendCaching implements EconomyStorageBack
     }
 
     @Override
-    public void reloadEconomable(String uniqueIdentifier) {
-        SaneEconomy.logger().warning("Trying to reload a single Economable from backend which does not support this - " + this.getClass().getSimpleName() + ". Recommend switching to MySQL backend for multi-server support.");
+    public void reloadEconomable(String uniqueIdentifier, EconomableReloadReason reason) {
+        if (reason == EconomableReloadReason.CROSS_SERVER_SYNC) {
+            SaneEconomy.logger().warning("Trying to reload a single Economable from backend which does not support this - " + this.getClass().getSimpleName() + ". Recommend switching to MySQL backend for multi-server support.");
+        }
+
         this.reloadDatabase();
     }
 }
