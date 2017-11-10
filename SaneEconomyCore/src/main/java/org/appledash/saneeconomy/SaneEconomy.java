@@ -1,6 +1,5 @@
 package org.appledash.saneeconomy;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
@@ -74,18 +73,18 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
 
         if (this.getConfig().getBoolean("update-check", true)) {
             versionChecker = new GithubVersionChecker("SaneEconomyCore", this.getDescription().getVersion().replace("-SNAPSHOT", ""));
-            getServer().getScheduler().scheduleAsyncDelayedTask(this, versionChecker::checkUpdateAvailable);
+            this.getServer().getScheduler().runTaskAsynchronously(this, versionChecker::checkUpdateAvailable);
         }
 
         getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
             economyManager.getBackend().reloadTopPlayerBalances();
-        }, 0, (20 * this.getConfig().getInt("economy.baltop-update-interval", 300)) /* Update baltop every 5 minutes by default */);
+        }, 0L, (20L * this.getConfig().getLong("economy.baltop-update-interval", 300L)) /* Update baltop every 5 minutes by default */);
 
         if (this.getConfig().getBoolean("multi-server-sync", false)) {
             this.getServer().getPluginManager().registerEvents(new Listener() {
                 @EventHandler
                 public void onTransaction(SaneEconomyTransactionEvent evt) { // Trust me, I'm a doctor.
-                    Set<OfflinePlayer> playersToSync = ImmutableSet.of(evt.getTransaction().getSender().tryCastToPlayer(), evt.getTransaction().getReceiver().tryCastToPlayer());
+                    OfflinePlayer[] playersToSync = { evt.getTransaction().getSender().tryCastToPlayer(), evt.getTransaction().getReceiver().tryCastToPlayer() };
 
                     Player fakeSender = Iterables.getFirst(SaneEconomy.this.getServer().getOnlinePlayers(), null);
 
@@ -93,7 +92,7 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
                         return;
                     }
 
-                    playersToSync.stream().filter(p -> p != null && !p.isOnline()).forEach(p -> {
+                    Arrays.stream(playersToSync).filter(p -> (p != null) && !p.isOnline()).forEach(p -> {
                         ByteArrayDataOutput bado = ByteStreams.newDataOutput();
                         bado.writeUTF("SaneEconomy");
                         bado.writeUTF("SyncPlayer");
@@ -115,9 +114,9 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
 
                     if (opCode.equals("SyncPlayer")) {
                         String playerUuid = badi.readUTF();
-                        SaneEconomy.this.getEconomyManager().getBackend().reloadEconomable(String.format("player:%s", playerUuid));
+                        this.economyManager.getBackend().reloadEconomable(String.format("player:%s", playerUuid));
                     } else {
-                        SaneEconomy.this.getLogger().warning("Invalid OpCode received on SaneEconomy plugin message channel: " + opCode);
+                        this.getLogger().warning("Invalid OpCode received on SaneEconomy plugin message channel: " + opCode);
                     }
                 }
             });
@@ -233,6 +232,7 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
         return instance.getLogger();
     }
 
+    @Override
     public VaultHook getVaultHook() {
         return vaultHook;
     }
