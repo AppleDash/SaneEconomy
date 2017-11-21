@@ -42,7 +42,7 @@ public class JoinQuitListener implements Listener {
         }
 
         /* Update notification */
-        if (plugin.getVersionChecker() != null && player.hasPermission("saneeconomy.update-notify") && plugin.getVersionChecker().isUpdateAvailable()) {
+        if ((plugin.getVersionChecker() != null) && player.hasPermission("saneeconomy.update-notify") && plugin.getVersionChecker().isUpdateAvailable()) {
             this.plugin.getMessenger().sendMessage(player, "An update is available! The currently-installed version is {1}, but the newest available is {2}. Please go to {3} to update!", plugin.getDescription().getVersion(), plugin.getVersionChecker().getNewestVersion(), GithubVersionChecker.DOWNLOAD_URL);
         }
     }

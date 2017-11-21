@@ -81,7 +81,7 @@ public class EconomyManager {
      * @return True if they have requiredBalance or more, false otherwise
      */
     public boolean hasBalance(Economable targetPlayer, double requiredBalance) {
-        return targetPlayer == Economable.CONSOLE || getBalance(targetPlayer) >= requiredBalance;
+        return (targetPlayer == Economable.CONSOLE) || (getBalance(targetPlayer) >= requiredBalance);
 
     }
 
@@ -203,7 +203,7 @@ public class EconomyManager {
         uuidBalances.forEach((uuid, balance) -> {
             OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(uuid);
             if (offlinePlayer != null) {
-                if (this.saneEconomy.getVaultHook() == null || !this.saneEconomy.getVaultHook().hasPermission(offlinePlayer, "saneeconomy.balancetop.hide")) {
+                if ((this.saneEconomy.getVaultHook() == null) || !this.saneEconomy.getVaultHook().hasPermission(offlinePlayer, "saneeconomy.balancetop.hide")) {
                     playerBalances.put(Bukkit.getServer().getOfflinePlayer(uuid), balance);
                 }
             }
