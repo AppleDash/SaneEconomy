@@ -44,7 +44,7 @@ sell:
   - item: RABBIT
     limit: 1280
     gain: 128
-  - item: BEEF
+  - item: RAW_BEEF
     limit: 1280
     gain: 128
   - item: MUTTON
