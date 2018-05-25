@@ -56,23 +56,23 @@ public class EconomyManagerTest {
         Assert.assertEquals(0.0, economyManager.getBalance(playerTwo), 0.0);
 
         // One should be able to transfer to two
-        Assert.assertTrue(economyManager.transact(new Transaction(playerOne, playerTwo, 50.0, TransactionReason.PLAYER_PAY)).getStatus() == TransactionResult.Status.SUCCESS);
+        Assert.assertTrue(economyManager.transact(new Transaction(economyManager.getCurrency(), playerOne, playerTwo, 50.0, TransactionReason.PLAYER_PAY)).getStatus() == TransactionResult.Status.SUCCESS);
 
         // One should now have only 50 left, two should have 50 now
-        Assert.assertEquals(50.0, economyManager.getBalance(playerOne), 0.0);
-        Assert.assertEquals(50.0, economyManager.getBalance(playerTwo), 0.0);
+        Assert.assertEquals("Player one should have 50 dollars", 50.0, economyManager.getBalance(playerOne), 0.0);
+        Assert.assertEquals("Player two should have 50 dollars", 50.0, economyManager.getBalance(playerTwo), 0.0);
 
         // Ensure that balance addition and subtraction works...
         Assert.assertEquals(25.0, economyManager.transact(
-                new Transaction(playerOne, Economable.CONSOLE, 25.0, TransactionReason.TEST_TAKE)
+                new Transaction(economyManager.getCurrency(), playerOne, Economable.CONSOLE, 25.0, TransactionReason.TEST_TAKE)
         ).getFromBalance(), 0.0);
 
         Assert.assertEquals(50.0, economyManager.transact(
-                new Transaction(Economable.CONSOLE, playerOne, 25.0, TransactionReason.TEST_GIVE)
+                new Transaction(economyManager.getCurrency(), Economable.CONSOLE, playerOne, 25.0, TransactionReason.TEST_GIVE)
         ).getToBalance(), 0.0);
 
         Assert.assertEquals(TransactionResult.Status.ERR_NOT_ENOUGH_FUNDS, economyManager.transact(
-                new Transaction(playerTwo, Economable.CONSOLE, Double.MAX_VALUE, TransactionReason.TEST_TAKE)
+                new Transaction(economyManager.getCurrency(), playerTwo, Economable.CONSOLE, Double.MAX_VALUE, TransactionReason.TEST_TAKE)
         ).getStatus());
 
         // Ensure that hasBalance works
@@ -115,11 +115,4 @@ public class EconomyManagerTest {
 
         return true;
     }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNegativeBalance() {
-        Economable economable = Economable.wrap(new MockOfflinePlayer("Bob"));
-        economyManager.setBalance(economable, -1.0);
-    }
-
 }

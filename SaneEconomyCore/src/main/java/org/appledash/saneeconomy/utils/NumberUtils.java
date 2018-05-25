@@ -45,7 +45,7 @@ public class NumberUtils {
 
     public static double filterAmount(Currency currency, double amount) {
         try {
-            return NumberFormat.getInstance().parse(currency.getFormat().format(amount)).doubleValue();
+            return NumberFormat.getInstance().parse(currency.getFormat().format(Math.abs(amount))).doubleValue();
         } catch (ParseException e) {
             throw new NumberFormatException();
         }

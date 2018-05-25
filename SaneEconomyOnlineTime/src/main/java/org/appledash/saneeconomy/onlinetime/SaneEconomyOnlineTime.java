@@ -52,7 +52,7 @@ public class SaneEconomyOnlineTime extends SanePlugin implements Listener {
                             this.reportingAmounts.put(player.getUniqueId(), payout.getAmount());
                         }
 
-                        this.saneEconomy.getEconomyManager().transact(new Transaction(Economable.PLUGIN, Economable.wrap(player), payout.getAmount(), TransactionReason.PLUGIN_GIVE));
+                        this.saneEconomy.getEconomyManager().transact(new Transaction(this.saneEconomy.getEconomyManager().getCurrency(), Economable.PLUGIN, Economable.wrap(player), payout.getAmount(), TransactionReason.PLUGIN_GIVE));
                     }
 
                     if ((onlineSeconds % payout.getReportInterval()) == 0) {

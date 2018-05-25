@@ -87,53 +87,27 @@ public class EconomyManager {
 
     /**
      * Add to a player's balance.
+     * This does not filter the amount.
      * @param targetPlayer Player to add to
      * @param amount Amount to add
      * @throws IllegalArgumentException If amount is negative
      */
     private void addBalance(Economable targetPlayer, double amount) {
-        amount = NumberUtils.filterAmount(currency, amount);
-
-        if (amount < 0) {
-            throw new IllegalArgumentException("Cannot add a negative amount!");
-        }
-
-        if (targetPlayer == Economable.CONSOLE) {
-            return;
-        }
-
-        double newAmount = backend.getBalance(targetPlayer) + amount;
-
-        setBalance(targetPlayer, newAmount);
+        setBalance(targetPlayer, backend.getBalance(targetPlayer) + amount);
     }
 
     /**
      * Subtract from a player's balance.
      * If the subtraction would result in a negative balance, the balance is instead set to 0.
+     * This does not filter the amount.
+     *
      * @param targetPlayer Player to subtract from
      * @param amount Amount to subtract
      * @throws IllegalArgumentException If amount is negative
      */
     private void subtractBalance(Economable targetPlayer, double amount) {
-        amount = NumberUtils.filterAmount(currency, amount);
-
-        if (amount < 0) {
-            throw new IllegalArgumentException("Cannot subtract a negative amount!");
-        }
-
-        if (targetPlayer == Economable.CONSOLE) {
-            return;
-        }
-
-        double newAmount = backend.getBalance(targetPlayer) - amount;
-
-
-        /* Subtracting that much would result in a negative balance - don't do that */
-        if (newAmount <= 0.0D) {
-            newAmount = 0.0D;
-        }
-
-        setBalance(targetPlayer, newAmount);
+        // Ensure we don't go negative.
+        setBalance(targetPlayer, Math.max(0.0, backend.getBalance(targetPlayer) - amount));
     }
 
     /**
@@ -144,10 +118,6 @@ public class EconomyManager {
      */
     public void setBalance(Economable targetPlayer, double amount) {
         amount = NumberUtils.filterAmount(currency, amount);
-
-        if (amount < 0) {
-            throw new IllegalArgumentException("Cannot subtract a negative amount!");
-        }
 
         if (targetPlayer == Economable.CONSOLE) {
             return;
@@ -164,9 +134,9 @@ public class EconomyManager {
     public TransactionResult transact(Transaction transaction) {
         Economable sender = transaction.getSender();
         Economable receiver = transaction.getReceiver();
-        double amount = transaction.getAmount(); // This amount is validated upon creation of Transaction
+        double amount = transaction.getAmount(); // This amount is validated and filtered upon creation of Transaction
 
-        if (Bukkit.getServer().getPluginManager() != null) { // Bukkit.getServer() == null from our JUnit tests.
+        if (Bukkit.getServer().getPluginManager() != null) { // Bukkit.getServer().getPluginManager() == null from our JUnit tests.
             SaneEconomyTransactionEvent evt = new SaneEconomyTransactionEvent(transaction);
             Bukkit.getServer().getPluginManager().callEvent(evt);
             if (evt.isCancelled()) {

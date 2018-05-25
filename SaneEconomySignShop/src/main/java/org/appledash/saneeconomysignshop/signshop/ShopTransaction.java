@@ -1,5 +1,6 @@
 package org.appledash.saneeconomysignshop.signshop;
 
+import org.appledash.saneeconomy.economy.Currency;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.economy.transaction.Transaction;
 import org.appledash.saneeconomy.economy.transaction.TransactionReason;
@@ -11,6 +12,7 @@ import org.bukkit.entity.Player;
  * Blackjack is still best pony.
  */
 public class ShopTransaction {
+    private final Currency currency;
     // Direction is always what the player is doing. BUY = player is buying from shop.
     private final TransactionDirection direction;
     private final Player player;
@@ -18,7 +20,8 @@ public class ShopTransaction {
     private final int quantity;
     private final double price;
 
-    public ShopTransaction(TransactionDirection direction, Player player, ItemInfo item, int quantity, double price) {
+    public ShopTransaction(Currency currency, TransactionDirection direction, Player player, ItemInfo item, int quantity, double price) {
+        this.currency = currency;
         this.direction = direction;
         this.player = player;
         this.item = item;
@@ -48,9 +51,9 @@ public class ShopTransaction {
 
     public Transaction makeEconomyTransaction() {
         if (direction == TransactionDirection.BUY) {
-            return new Transaction(Economable.wrap(player), Economable.PLUGIN, price, TransactionReason.PLUGIN_TAKE);
+            return new Transaction(this.currency, Economable.wrap(player), Economable.PLUGIN, price, TransactionReason.PLUGIN_TAKE);
         } else {
-            return new Transaction(Economable.PLUGIN, Economable.wrap(player), price, TransactionReason.PLUGIN_GIVE);
+            return new Transaction(this.currency, Economable.PLUGIN, Economable.wrap(player), price, TransactionReason.PLUGIN_GIVE);
         }
     }
 

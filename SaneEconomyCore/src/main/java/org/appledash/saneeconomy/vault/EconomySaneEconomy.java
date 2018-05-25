@@ -120,7 +120,7 @@ public class EconomySaneEconomy implements Economy {
         }
 
         return transact(new Transaction(
-                makeEconomable(target), Economable.PLUGIN, amount, TransactionReason.PLUGIN_TAKE
+                SaneEconomy.getInstance().getEconomyManager().getCurrency(), makeEconomable(target), Economable.PLUGIN, amount, TransactionReason.PLUGIN_TAKE
         ));
     }
 
@@ -135,7 +135,7 @@ public class EconomySaneEconomy implements Economy {
         }
 
         return transact(new Transaction(
-                Economable.wrap(offlinePlayer), Economable.PLUGIN, amount, TransactionReason.PLUGIN_TAKE
+                SaneEconomy.getInstance().getEconomyManager().getCurrency(), Economable.wrap(offlinePlayer), Economable.PLUGIN, amount, TransactionReason.PLUGIN_TAKE
         ));
     }
 
@@ -156,7 +156,7 @@ public class EconomySaneEconomy implements Economy {
         }
 
         return transact(new Transaction(
-                Economable.PLUGIN, makeEconomable(target), amount, TransactionReason.PLUGIN_GIVE
+                SaneEconomy.getInstance().getEconomyManager().getCurrency(), Economable.PLUGIN, makeEconomable(target), amount, TransactionReason.PLUGIN_GIVE
         ));
     }
 
@@ -167,7 +167,7 @@ public class EconomySaneEconomy implements Economy {
         }
 
         return transact(new Transaction(
-                Economable.PLUGIN, Economable.wrap(offlinePlayer), v, TransactionReason.PLUGIN_GIVE
+                SaneEconomy.getInstance().getEconomyManager().getCurrency(), Economable.PLUGIN, Economable.wrap(offlinePlayer), v, TransactionReason.PLUGIN_GIVE
         ));
     }
 

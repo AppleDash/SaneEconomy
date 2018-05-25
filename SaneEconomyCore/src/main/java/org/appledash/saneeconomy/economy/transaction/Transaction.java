@@ -1,7 +1,9 @@
 package org.appledash.saneeconomy.economy.transaction;
 
+import org.appledash.saneeconomy.economy.Currency;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.economy.transaction.TransactionReason.AffectedParties;
+import org.appledash.saneeconomy.utils.NumberUtils;
 
 /**
  * Created by appledash on 9/21/16.
@@ -13,14 +15,15 @@ public class Transaction {
     private final double amount;
     private final TransactionReason reason;
 
-    public Transaction(Economable sender, Economable receiver, double amount, TransactionReason reason) {
+    public Transaction(Currency currency, Economable sender, Economable receiver, double amount, TransactionReason reason) {
         if (amount <= 0.0) {
             throw new IllegalArgumentException("Cannot transact a zero or negative amount!");
         }
 
+
         this.sender = sender;
         this.receiver = receiver;
-        this.amount = amount;
+        this.amount = NumberUtils.filterAmount(currency, amount);
         this.reason = reason;
     }
 
