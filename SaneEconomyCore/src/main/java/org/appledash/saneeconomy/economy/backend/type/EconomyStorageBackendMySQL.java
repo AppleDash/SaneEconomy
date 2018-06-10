@@ -143,7 +143,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
 
 
     @Override
-    public void reloadEconomable(String uniqueIdentifier) {
+    public void reloadEconomable(String uniqueIdentifier, EconomableReloadReason reason) {
         dbConn.executeAsyncOperation("reload_economable_" + uniqueIdentifier, (conn) -> {
             try {
                 PreparedStatement ps = conn.prepareStatement(String.format("SELECT balance FROM `%s` WHERE `unique_identifier` = ?", dbConn.getTable("saneeconomy_balances")));

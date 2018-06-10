@@ -1,5 +1,6 @@
 package org.appledash.saneeconomysignshop.signshop;
 
+import org.appledash.saneeconomy.economy.Currency;
 import org.appledash.saneeconomysignshop.signshop.ShopTransaction.TransactionDirection;
 import org.appledash.saneeconomysignshop.util.ItemInfo;
 import org.appledash.saneeconomysignshop.util.SerializableLocation;
@@ -131,7 +132,7 @@ public class SignShop implements Serializable {
         return quantity;
     }
 
-    public ShopTransaction makeTransaction(Player player, TransactionDirection direction, int quantity) {
-        return new ShopTransaction(direction, player, item, quantity, (direction == TransactionDirection.BUY) ? getBuyPrice(quantity) : getSellPrice(quantity));
+    public ShopTransaction makeTransaction(Currency currency, Player player, TransactionDirection direction, int quantity) {
+        return new ShopTransaction(currency, direction, player, item, quantity, (direction == TransactionDirection.BUY) ? getBuyPrice(quantity) : getSellPrice(quantity));
     }
 }

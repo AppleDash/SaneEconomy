@@ -1,5 +1,6 @@
 package org.appledash.saneeconomy.vault;
 
+import com.google.common.base.Strings;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.appledash.saneeconomy.SaneEconomy;
@@ -31,6 +32,10 @@ public class VaultHook {
     public boolean hasPermission(OfflinePlayer offlinePlayer, String permNode) {
         RegisteredServiceProvider<Permission> rsp = this.plugin.getServer().getServicesManager().getRegistration(Permission.class);
 
-        return rsp != null && rsp.getProvider().playerHas(null, offlinePlayer, permNode);
+        if ((offlinePlayer == null) || (offlinePlayer.getUniqueId() == null) || Strings.isNullOrEmpty(offlinePlayer.getName())) {
+            return false;
+        }
+
+        return (rsp != null) && rsp.getProvider().playerHas(null, offlinePlayer, permNode);
     }
 }

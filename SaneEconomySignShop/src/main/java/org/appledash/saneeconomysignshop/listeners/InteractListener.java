@@ -84,7 +84,7 @@ public class InteractListener implements Listener {
         EconomyManager ecoMan = plugin.getSaneEconomy().getEconomyManager();
         int quantity = player.isSneaking() ? 1 : shop.getQuantity();
 
-        ShopTransaction shopTransaction = shop.makeTransaction(player, TransactionDirection.BUY, quantity);
+        ShopTransaction shopTransaction = shop.makeTransaction(ecoMan.getCurrency(), player, TransactionDirection.BUY, quantity);
 
         /* No buy limits for now!
         if (!plugin.getLimitManager().shouldAllowTransaction(shopTransaction)) {
@@ -121,7 +121,7 @@ public class InteractListener implements Listener {
             return;
         }
 
-        ShopTransaction shopTransaction = shop.makeTransaction(player, TransactionDirection.SELL, quantity);
+        ShopTransaction shopTransaction = shop.makeTransaction(ecoMan.getCurrency(), player, TransactionDirection.SELL, quantity);
 
         if (!plugin.getLimitManager().shouldAllowTransaction(shopTransaction)) {
             this.plugin.getMessenger().sendMessage(player, "You have reached your selling limit for the time being. Try back in an hour or so.");

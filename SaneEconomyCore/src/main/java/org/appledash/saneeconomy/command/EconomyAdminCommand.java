@@ -81,7 +81,7 @@ public class EconomyAdminCommand extends SaneCommand {
         }
 
         if (subCommand.equalsIgnoreCase("give")) {
-            Transaction transaction = new Transaction(Economable.wrap(sender), Economable.wrap(targetPlayer), amount, TransactionReason.ADMIN_GIVE);
+            Transaction transaction = new Transaction(ecoMan.getCurrency(), Economable.wrap(sender), Economable.wrap(targetPlayer), amount, TransactionReason.ADMIN_GIVE);
             TransactionResult result = ecoMan.transact(transaction);
 
             double newAmount = result.getToBalance();
@@ -95,7 +95,7 @@ public class EconomyAdminCommand extends SaneCommand {
         }
 
         if (subCommand.equalsIgnoreCase("take")) {
-            Transaction transaction = new Transaction(Economable.wrap(targetPlayer), Economable.wrap(sender), amount, TransactionReason.ADMIN_TAKE);
+            Transaction transaction = new Transaction(ecoMan.getCurrency(), Economable.wrap(targetPlayer), Economable.wrap(sender), amount, TransactionReason.ADMIN_TAKE);
             TransactionResult result = ecoMan.transact(transaction);
 
             double newAmount = result.getFromBalance();
@@ -117,12 +117,12 @@ public class EconomyAdminCommand extends SaneCommand {
                 // FIXME: This is a silly hack to get it to log.
                 if (oldBal > 0.0) {
                     logger.logTransaction(new Transaction(
-                            economable, Economable.CONSOLE, oldBal, TransactionReason.ADMIN_TAKE
+                            ecoMan.getCurrency(), economable, Economable.CONSOLE, oldBal, TransactionReason.ADMIN_TAKE
                     ));
                 }
 
                 logger.logTransaction(new Transaction(
-                        Economable.CONSOLE, economable, amount, TransactionReason.ADMIN_GIVE
+                        ecoMan.getCurrency(), Economable.CONSOLE, economable, amount, TransactionReason.ADMIN_GIVE
                 ));
             });
 

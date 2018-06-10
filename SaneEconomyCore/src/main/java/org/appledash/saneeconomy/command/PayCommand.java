@@ -75,7 +75,7 @@ public class PayCommand extends SaneCommand {
         }
 
         /* Perform the actual transfer. False == They didn't have enough money */
-        Transaction transaction = new Transaction(Economable.wrap(fromPlayer), Economable.wrap(toPlayer), amount, TransactionReason.PLAYER_PAY);
+        Transaction transaction = new Transaction(ecoMan.getCurrency(), Economable.wrap(fromPlayer), Economable.wrap(toPlayer), amount, TransactionReason.PLAYER_PAY);
         TransactionResult result = ecoMan.transact(transaction);
 
         if (result.getStatus() != TransactionResult.Status.SUCCESS) {

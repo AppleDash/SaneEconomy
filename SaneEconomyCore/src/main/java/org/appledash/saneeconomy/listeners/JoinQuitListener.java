@@ -1,6 +1,7 @@
 package org.appledash.saneeconomy.listeners;
 
 import org.appledash.saneeconomy.SaneEconomy;
+import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.economy.transaction.Transaction;
 import org.appledash.saneeconomy.economy.transaction.TransactionReason;
@@ -33,7 +34,7 @@ public class JoinQuitListener implements Listener {
         /* A starting balance is configured AND they haven't been given it yet. */
         if ((startBalance > 0) && !plugin.getEconomyManager().accountExists(economable)) {
             plugin.getEconomyManager().transact(new Transaction(
-                    Economable.CONSOLE, economable, startBalance, TransactionReason.STARTING_BALANCE
+                    plugin.getEconomyManager().getCurrency(), Economable.CONSOLE, economable, startBalance, TransactionReason.STARTING_BALANCE
             ));
             if (plugin.getConfig().getBoolean("economy.notify-start-balance", true)) {
                 this.plugin.getMessenger().sendMessage(player, "You've been issued a starting balance of {1}!", plugin.getEconomyManager().getCurrency().formatAmount(startBalance));
@@ -41,7 +42,7 @@ public class JoinQuitListener implements Listener {
         }
 
         /* Update notification */
-        if (plugin.getVersionChecker() != null && player.hasPermission("saneeconomy.update-notify") && plugin.getVersionChecker().isUpdateAvailable()) {
+        if ((plugin.getVersionChecker() != null) && player.hasPermission("saneeconomy.update-notify") && plugin.getVersionChecker().isUpdateAvailable()) {
             this.plugin.getMessenger().sendMessage(player, "An update is available! The currently-installed version is {1}, but the newest available is {2}. Please go to {3} to update!", plugin.getDescription().getVersion(), plugin.getVersionChecker().getNewestVersion(), GithubVersionChecker.DOWNLOAD_URL);
         }
     }
@@ -49,7 +50,7 @@ public class JoinQuitListener implements Listener {
     @EventHandler
     public void onPlayerLogin(AsyncPlayerPreLoginEvent evt) {
         Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-            plugin.getEconomyManager().getBackend().reloadEconomable(String.format("player:%s", evt.getUniqueId())); // TODO: If servers start to lag when lots of people join, this is why.
+            plugin.getEconomyManager().getBackend().reloadEconomable(String.format("player:%s", evt.getUniqueId()), EconomyStorageBackend.EconomableReloadReason.PLAYER_JOIN); // TODO: If servers start to lag when lots of people join, this is why.
         });
     }
 }
