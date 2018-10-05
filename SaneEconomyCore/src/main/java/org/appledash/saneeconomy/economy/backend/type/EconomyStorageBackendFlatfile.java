@@ -13,7 +13,7 @@ import java.util.UUID;
  * Blackjack is still best pony.
  */
 public class EconomyStorageBackendFlatfile extends EconomyStorageBackendCaching {
-    private static final int SCHEMA_VERSION = 2;
+    private static final int SCHEMA_VERSION = 3;
     private final File file;
 
     public EconomyStorageBackendFlatfile(File file) {
@@ -31,7 +31,7 @@ public class EconomyStorageBackendFlatfile extends EconomyStorageBackendCaching 
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
             int schemaVer = ois.readInt();
 
-            if (schemaVer == 1) {
+            if (schemaVer == 2) {
                 ois.close();
                 loadSchemaVersion1(file);
                 return;
@@ -44,6 +44,7 @@ public class EconomyStorageBackendFlatfile extends EconomyStorageBackendCaching 
             }
 
             balances = (Map<String, Double>) ois.readObject();
+            uuidToName = (Map<String, String>) ois.readObject();
 
             ois.close();
         } catch (IOException | ClassNotFoundException | ClassCastException e) {
@@ -52,8 +53,9 @@ public class EconomyStorageBackendFlatfile extends EconomyStorageBackendCaching 
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void loadSchemaVersion1(File file) {
-        SaneEconomy.logger().info("Upgrading flatfile database from version 1.");
+        SaneEconomy.logger().info("Upgrading flatfile database from version 2.");
         try {
             Files.copy(file, new File(file.getParentFile(), file.getName() + "-backup"));
             SaneEconomy.logger().info("Backed up old flatfile database.");
@@ -63,14 +65,8 @@ public class EconomyStorageBackendFlatfile extends EconomyStorageBackendCaching 
 
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
-            ois.readInt(); // We already know it's 1.
-
-
-            Map<UUID, Double> oldBalances = (Map<UUID, Double>) ois.readObject();
-            oldBalances.forEach((uuid, balance) -> balances.put("player:" + uuid, balance));
-
-            ois.close();
-
+            ois.readInt(); // We already know it's 2.
+            this.balances = (Map<String, Double>) ois.readObject();
 
             /* Yes, this is kind of bad, but we want to make sure we're loading AND saving the new version of the DB. */
             saveDatabase();
@@ -90,6 +86,7 @@ public class EconomyStorageBackendFlatfile extends EconomyStorageBackendCaching 
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
             oos.writeInt(SCHEMA_VERSION);
             oos.writeObject(balances);
+            oos.writeObject(uuidToName);
             oos.close();
         } catch (IOException e) {
             SaneEconomy.logger().severe("Failed to save flatfile database!");
@@ -97,8 +94,9 @@ public class EconomyStorageBackendFlatfile extends EconomyStorageBackendCaching 
     }
 
     @Override
-    public synchronized void setBalance(Economable player, double newBalance) {
-        balances.put(player.getUniqueIdentifier(), newBalance);
+    public synchronized void setBalance(Economable economable, double newBalance) {
+        this.balances.put(economable.getUniqueIdentifier(), newBalance);
+        this.uuidToName.put(economable.getUniqueIdentifier(), economable.getName());
         saveDatabase();
     }
 

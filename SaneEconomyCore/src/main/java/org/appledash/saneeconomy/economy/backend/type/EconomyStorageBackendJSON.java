@@ -3,6 +3,7 @@ package org.appledash.saneeconomy.economy.backend.type;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.SerializedName;
 import org.appledash.saneeconomy.economy.economable.Economable;
 
 import java.io.*;
@@ -35,9 +36,20 @@ public class EconomyStorageBackendJSON extends EconomyStorageBackendCaching {
         }
 
         try {
+            // try to load the old format and convert it
             balances = new ConcurrentHashMap<>((Map)gson.fromJson(new FileReader(file), new TypeToken<Map<String, Double>>(){}.getType()));
+            this.saveDatabase();
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Failed to load database!", e);
+        } catch (Exception e) {
+            // if that fails, load the new format
+            try {
+                DataHolder dataHolder = gson.fromJson(new FileReader(file), DataHolder.class);
+                this.balances = new ConcurrentHashMap<>(dataHolder.balances);
+                this.uuidToName = new ConcurrentHashMap<>(dataHolder.uuidToName);
+            } catch (FileNotFoundException e1) {
+                throw new RuntimeException("Failed to load database!", e1);
+            }
         }
     }
 
@@ -48,9 +60,22 @@ public class EconomyStorageBackendJSON extends EconomyStorageBackendCaching {
 
     private synchronized void saveDatabase() {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false))) {
-            bufferedWriter.write(gson.toJson(balances));
+            DataHolder dataHolder = new DataHolder(this.balances, this.uuidToName);
+            bufferedWriter.write(gson.toJson(dataHolder));
         } catch (IOException e) {
             throw new RuntimeException("Failed to save database", e);
+        }
+    }
+
+    private static class DataHolder {
+        @SerializedName("balances")
+        private Map<String, Double> balances;
+        @SerializedName("uuidToName")
+        private Map<String, String> uuidToName;
+
+        public DataHolder(Map<String, Double> balances, Map<String, String> uuidToName) {
+            this.balances = balances;
+            this.uuidToName = uuidToName;
         }
     }
 }

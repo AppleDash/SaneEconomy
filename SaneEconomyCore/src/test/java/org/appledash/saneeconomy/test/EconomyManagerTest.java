@@ -96,10 +96,10 @@ public class EconomyManagerTest {
         this.economyManager.getBackend().reloadTopPlayerBalances();
 
         List<Double> javaSortedBalances = economables.stream().map(this.economyManager::getBalance).sorted((left, right) -> -left.compareTo(right)).collect(Collectors.toList());
-        List<Double> ecoManTopBalances = ImmutableList.copyOf(this.economyManager.getTopPlayerBalances(10, 0).values());
+        List<Double> ecoManTopBalances = ImmutableList.copyOf(this.economyManager.getTopBalances(10, 0).values());
 
         Assert.assertTrue("List is not correctly sorted!", areListsEqual(javaSortedBalances, ecoManTopBalances));
-        Assert.assertEquals("Wrong number of top balances!", 5, this.economyManager.getTopPlayerBalances(5, 0).size());
+        Assert.assertEquals("Wrong number of top balances!", 5, this.economyManager.getTopBalances(5, 0).size());
     }
 
     private <T> boolean areListsEqual(List<T> first, List<T> second) {

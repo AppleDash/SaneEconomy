@@ -18,7 +18,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class EconomyStorageBackendCaching implements EconomyStorageBackend {
     protected Map<String, Double> balances = new ConcurrentHashMap<>();
-    private LinkedHashMap<UUID, Double> topPlayerBalances = new LinkedHashMap<>();
+    private LinkedHashMap<String, Double> topBalances = new LinkedHashMap<>();
+    protected Map<String, String> uuidToName = new HashMap<>();
 
     @Override
     public boolean accountExists(Economable economable) {
@@ -34,21 +35,19 @@ public abstract class EconomyStorageBackendCaching implements EconomyStorageBack
         return balances.get(economable.getUniqueIdentifier());
     }
 
-    public LinkedHashMap<UUID, Double> getTopPlayerBalances() {
-        return topPlayerBalances;
+    public LinkedHashMap<String, Double> getTopBalances() {
+        return topBalances;
     }
 
     @Override
     public void reloadTopPlayerBalances() {
-        Map<UUID, Double> playerBalances = new HashMap<>();
+        Map<String, Double> balances = new HashMap<>();
 
-        balances.forEach((identifier, balance) -> {
-            if (identifier.startsWith("player:")) { // FIXME: Come on now...
-                playerBalances.put(UUID.fromString(identifier.substring("player:".length())), balance);
-            }
+        this.balances.forEach((identifier, balance) -> {
+            balances.put(this.uuidToName.get(identifier), balance);
         });
 
-        topPlayerBalances = MapUtil.sortByValue(playerBalances);
+        topBalances = MapUtil.sortByValue(balances);
     }
 
     @Override

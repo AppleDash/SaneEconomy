@@ -11,6 +11,7 @@ public class MockEconomyStorageBackend extends EconomyStorageBackendCaching {
     @Override
     public void setBalance(Economable player, double newBalance) {
         balances.put(player.getUniqueIdentifier(), newBalance);
+        this.uuidToName.put(player.getUniqueIdentifier(), player.getName());
     }
 
     @Override

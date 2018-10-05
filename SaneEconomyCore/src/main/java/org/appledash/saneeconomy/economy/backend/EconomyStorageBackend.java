@@ -38,7 +38,7 @@ public interface EconomyStorageBackend {
      * Get the UUIDs of the players who have the most money, along with how much money they have.
      * @return Map of player UUIDs to amounts.
      */
-    LinkedHashMap<UUID, Double> getTopPlayerBalances();
+    LinkedHashMap<String, Double> getTopBalances();
 
     /**
      * Reload this backend's database from disk.
