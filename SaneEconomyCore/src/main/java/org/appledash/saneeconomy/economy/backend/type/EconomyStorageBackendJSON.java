@@ -49,7 +49,6 @@ public class EconomyStorageBackendJSON extends EconomyStorageBackendCaching {
     private synchronized void saveDatabase() {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false))) {
             bufferedWriter.write(gson.toJson(balances));
-            bufferedWriter.close();
         } catch (IOException e) {
             throw new RuntimeException("Failed to save database", e);
         }

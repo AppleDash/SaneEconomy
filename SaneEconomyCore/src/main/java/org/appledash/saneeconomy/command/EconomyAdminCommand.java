@@ -91,6 +91,15 @@ public class EconomyAdminCommand extends SaneCommand {
                     sTargetPlayer,
                     ecoMan.getCurrency().formatAmount(newAmount)
             );
+
+            if (this.saneEconomy.getConfig().getBoolean("economy.notify-admin-give") && targetPlayer.isOnline()) {
+                this.saneEconomy.getMessenger().sendMessage((Player) targetPlayer, "{1} has given you {2}. Your balance is now {3}.",
+                        sender.getName(),
+                        ecoMan.getCurrency().formatAmount(amount),
+                        ecoMan.getCurrency().formatAmount(newAmount)
+
+                );
+            }
             return;
         }
 
@@ -105,6 +114,15 @@ public class EconomyAdminCommand extends SaneCommand {
                     sTargetPlayer,
                     ecoMan.getCurrency().formatAmount(newAmount)
             );
+
+            if (this.saneEconomy.getConfig().getBoolean("economy.notify-admin-take") && targetPlayer.isOnline()) {
+                this.saneEconomy.getMessenger().sendMessage((Player) targetPlayer, "{1} has taken {2} from you. Your balance is now {3}.",
+                        sender.getName(),
+                        ecoMan.getCurrency().formatAmount(amount),
+                        ecoMan.getCurrency().formatAmount(newAmount)
+
+                );
+            }
             return;
         }
 
@@ -125,6 +143,14 @@ public class EconomyAdminCommand extends SaneCommand {
                         ecoMan.getCurrency(), Economable.CONSOLE, economable, amount, TransactionReason.ADMIN_GIVE
                 ));
             });
+
+            if (this.saneEconomy.getConfig().getBoolean("economy.notify-admin-set") && targetPlayer.isOnline()) {
+                this.saneEconomy.getMessenger().sendMessage((Player) targetPlayer, "{1} has set your balance to {2}.",
+                        sender.getName(),
+                        ecoMan.getCurrency().formatAmount(amount)
+
+                );
+            }
 
             return;
         }

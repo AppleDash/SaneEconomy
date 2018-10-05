@@ -5,7 +5,7 @@
 # To be clear: DO NOT change 'message'. Simply add a new, indented 'translation' line below it, with the changed message.
 # Colors can also be used, by means of prefixing color codes with an '&' symbol.
 # The order of placeholders can be changed. Anything after the :, like the '02d' in {1:02d} is a Java String.format specifier. If you don't know what that is, I recommend leaving it as-is.
-# IMPORTANT: If your translation has a colon ( : ) character inside of it, you must enclose the entire part after "message: " in single quotes ( ' ).
+# IMPORTANT: If your translation has a colon ( : ) character inside of it, you must enclose the entire part after "translation: " in single quotes ( ' ).
 # If this file doesn't work for some reason, check your console for errors with "SnakeYAML" included in them.
 messages:
   - message: "You don't have permission to check the balance of {1}."
@@ -20,6 +20,9 @@ messages:
   - message: "Added {1} to {2}. Their balance is now {3}."
   - message: "Took {1} from {2}. Their balance is now {3}."
   - message: "Balance for {1} set to {2}."
+  - message: "{1} has given you {2}. Your balance is now {3}."
+  - message: "{1} has taken {2} from you. Your balance is now {3}."
+  - message: "{1} has set your balance to {2}."
   - message: "You do not have enough money to transfer {1} to {2}."
   - message: "You have transferred {1} to {2}."
   - message: "You have received {1} from {2}."
@@ -37,3 +40,4 @@ messages:
   - message: "/<command> <page>"
   - message: "/<command> <give/take/set> [player] <amount>"
   - message: "/<command> reload-database"
+

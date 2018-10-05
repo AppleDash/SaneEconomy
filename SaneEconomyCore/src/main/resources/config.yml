@@ -18,6 +18,9 @@ economy:
   notify-start-balance: true
   server-account: '$SERVER$'
   baltop-update-interval: 300
+  notify-admin-give: false
+  notify-admin-take: false
+  notify-admin-set: false
 
 multi-server-sync: false
 update-check: true
