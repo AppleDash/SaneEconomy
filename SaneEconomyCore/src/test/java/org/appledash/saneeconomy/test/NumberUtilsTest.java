@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 /**
@@ -15,10 +16,22 @@ import java.util.Locale;
 public class NumberUtilsTest {
     @Test
     public void testParsePositive() {
-        // Valid input
-        Assert.assertEquals(69.0, NumberUtils.parsePositiveDouble("69.0"), 0.0);
-        // Valid but not positive
-        Assert.assertEquals(-1.0, NumberUtils.parsePositiveDouble("-10.0"), 0.0);
+        DecimalFormatSymbols testSymbols = new DecimalFormatSymbols();
+        char decimalSeparator=testSymbols.getDecimalSeparator();
+        
+        if(decimalSeparator == ',') { // French, Indonesian.
+            // Valid input
+            Assert.assertEquals(69.0, NumberUtils.parsePositiveDouble("69,0"), 0.0);
+            // Valid but not positive
+            Assert.assertEquals(-1.0, NumberUtils.parsePositiveDouble("-10,0"), 0.0);
+        } else {
+            // Valid input
+            Assert.assertEquals(69.0, NumberUtils.parsePositiveDouble("69.0"), 0.0);
+            
+            // Valid but not positive
+            Assert.assertEquals(-1.0, NumberUtils.parsePositiveDouble("-10.0"), 0.0);
+        }
+        
         // Invalid
         Assert.assertEquals(-1.0, NumberUtils.parsePositiveDouble("nan"), 0.0);
         Assert.assertEquals(-1.0, NumberUtils.parsePositiveDouble("ponies"), 0.0);
