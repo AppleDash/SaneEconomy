@@ -15,9 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -86,9 +84,11 @@ public class EconomyManagerTest {
     public void testTopBalances() {
         Random random = new Random();
         List<Economable> economables = new ArrayList<>(10);
+        Set<String> names = new HashSet<String>();
 
         for (int i = 0; i < 10; i++) {
             Economable economable = Economable.wrap(new MockOfflinePlayer("Dude" + i));
+            names.add("Dude" + i);
             economables.add(economable);
             this.economyManager.setBalance(economable, random.nextInt(1000));
         }
@@ -100,6 +100,8 @@ public class EconomyManagerTest {
 
         Assert.assertTrue("List is not correctly sorted!", areListsEqual(javaSortedBalances, ecoManTopBalances));
         Assert.assertEquals("Wrong number of top balances!", 5, this.economyManager.getTopBalances(5, 0).size());
+
+        this.economyManager.getTopBalances(10, 0).keySet().forEach(name -> Assert.assertTrue("Returned name in top balances not valid!", names.contains(name)));
     }
 
     private <T> boolean areListsEqual(List<T> first, List<T> second) {
