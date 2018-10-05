@@ -1,29 +1,32 @@
+# Settings pertaining to the backend. Check the wiki for valid values here.
 backend:
   type: json
 
+# Settings pertaining to the currency.
 currency:
-  name:
+  name: # Currency name as displayed to players.
     singular: dollar
     plural: dollars
-  balance-format: '{1} {2}'
+  balance-format: '{1} {2}' # The format for currency amounts when displayed to players. {1} = amount, {2} = currency name, properly pluralized
+  # I have no idea what any of these do but try tweaking them if weird things happen regarding currency amounts and you're not in Canada or the USA.
   format: '0.00'
   grouping: 3
   grouping-separator: ','
   decimal-separator: '.'
 
 chat:
-  prefix: '&b[&9Economy&b]&r '
+  prefix: '&b[&9Economy&b]&r ' # Prefix for chat messages sent by the plugin. Include a space at the end.
 
 economy:
-  start-balance: 0.0
-  notify-start-balance: true
-  server-account: '$SERVER$'
-  baltop-update-interval: 300
-  notify-admin-give: false
-  notify-admin-take: false
-  notify-admin-set: false
+  start-balance: 0.0 # If this is greater than zero, players will be given this amount on their first join.
+  notify-start-balance: true # Whether to send players a message when they receive their starting balance.
+  server-account: '$SERVER$' # Economy operations on an account with this name will appear to have an infinite balance.
+  baltop-update-interval: 300 # How often, in seconds, to reload the content of /baltop from the database.
+  notify-admin-give: false # Whether to notify players when /ecoadmin give is used on them.
+  notify-admin-take: false # Whether to notify players when /ecoadmin take is used on them.
+  notify-admin-set: false # Whether to notify players when /ecoadmin set is used on them.
 
-multi-server-sync: false
-update-check: true
-locale-override: false
-debug: false
+multi-server-sync: false # Experimental balance syncing without player rejoins, across BungeeCord networks.
+update-check: true # Whether to check for updates to the plugin and notify admins about them.
+locale-override: false # Whether to force the server's locale to be en_US.
+debug: false # Debug mode, leave this set to false.
