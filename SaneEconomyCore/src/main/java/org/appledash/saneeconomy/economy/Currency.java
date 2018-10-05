@@ -48,6 +48,12 @@ public class Currency {
                 symbols.setGroupingSeparator(groupingSeparator.charAt(0));
             }
 
+            String decimalSeparator = config.getString("decimal-separator", ".");
+
+            if (!Strings.isNullOrEmpty(decimalSeparator)) {
+                symbols.setDecimalSeparator(decimalSeparator.charAt(0));
+            }
+
             format.setDecimalFormatSymbols(symbols);
             format.setGroupingUsed(true);
             format.setGroupingSize(3);

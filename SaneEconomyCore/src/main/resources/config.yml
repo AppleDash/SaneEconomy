@@ -9,6 +9,7 @@ currency:
   format: '0.00'
   grouping: 3
   grouping-separator: ','
+  decimal-separator: '.'
 
 chat:
   prefix: '&b[&9Economy&b]&r '
