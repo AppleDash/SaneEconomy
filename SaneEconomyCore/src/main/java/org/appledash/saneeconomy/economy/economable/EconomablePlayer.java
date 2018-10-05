@@ -14,6 +14,11 @@ public class EconomablePlayer implements Economable {
     }
 
     @Override
+    public String getName() {
+        return handle.getName();
+    }
+
+    @Override
     public String getUniqueIdentifier() {
         return "player:" + handle.getUniqueId();
     }

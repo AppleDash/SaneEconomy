@@ -9,4 +9,10 @@ public class EconomablePlugin implements Economable {
     public String getUniqueIdentifier() {
         return "PLUGIN";
     }
+
+    @Override
+    public String getName() {
+        // FIXME
+        return "PLUGIN";
+    }
 }

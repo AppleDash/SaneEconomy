@@ -15,4 +15,10 @@ public class EconomableFaction implements Economable {
     public String getUniqueIdentifier() {
         return "faction:" + factionUuid;
     }
+
+    @Override
+    public String getName() {
+        // FIXME
+        return this.factionUuid;
+    }
 }

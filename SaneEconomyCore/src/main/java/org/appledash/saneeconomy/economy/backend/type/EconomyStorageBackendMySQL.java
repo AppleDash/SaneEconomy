@@ -46,11 +46,16 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
             if (schemaVersion == -1) {
                 conn.prepareStatement(String.format("CREATE TABLE IF NOT EXISTS `%s` (`key` VARCHAR(32) PRIMARY KEY, `val` TEXT)", dbConn.getTable("saneeconomy_schema"))).executeUpdate();
                 conn.prepareStatement(String.format("REPLACE INTO %s (`key`, `val`) VALUES ('schema_version', 2)", dbConn.getTable("saneeconomy_schema"))).executeUpdate();
-                conn.prepareStatement(String.format("CREATE TABLE `%s` (unique_identifier VARCHAR(128) PRIMARY KEY, balance DECIMAL(18, 2))", dbConn.getTable("saneeconomy_balances"))).executeUpdate();
-                schemaVersion = 2;
+                conn.prepareStatement(String.format("CREATE TABLE `%s` (unique_identifier VARCHAR(128) PRIMARY KEY, last_name VARCHAR(16), balance DECIMAL(18, 2))", dbConn.getTable("saneeconomy_balances"))).executeUpdate();
+                schemaVersion = 3;
             }
 
-            if (schemaVersion != 2) {
+            if (schemaVersion == 2) {
+                conn.prepareStatement("ALTER TABLE `%s` ADD `last_name` VARCHAR(16)").executeUpdate();
+                schemaVersion = 3;
+            }
+
+            if (schemaVersion != 3) {
                 throw new RuntimeException("Invalid database schema version!");
             }
         } catch (SQLException e) {
@@ -99,9 +104,10 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
             try {
                 ensureAccountExists(economable, conn);
                 conn.prepareStatement("LOCK TABLE " + dbConn.getTable("saneeconomy_balances") + " WRITE").execute();
-                PreparedStatement statement = dbConn.prepareStatement(conn, String.format("UPDATE `%s` SET balance = ? WHERE `unique_identifier` = ?", dbConn.getTable("saneeconomy_balances")));
+                PreparedStatement statement = dbConn.prepareStatement(conn, String.format("UPDATE `%s` SET balance = ?, last_name = ? WHERE `unique_identifier` = ?", dbConn.getTable("saneeconomy_balances")));
                 statement.setDouble(1, newBalance);
-                statement.setString(2, economable.getUniqueIdentifier());
+                statement.setString(2, economable.getName());
+                statement.setString(3, economable.getUniqueIdentifier());
                 statement.executeUpdate();
                 conn.prepareStatement("UNLOCK TABLES").execute();
             } catch (Exception e) {
@@ -113,8 +119,9 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
 
     private void ensureAccountExists(Economable economable, Connection conn) throws SQLException {
         if (!accountExists(economable, conn)) {
-            PreparedStatement statement = dbConn.prepareStatement(conn, String.format("INSERT INTO `%s` (unique_identifier, balance) VALUES (?, 0.0)", dbConn.getTable("saneeconomy_balances")));
+            PreparedStatement statement = dbConn.prepareStatement(conn, String.format("INSERT INTO `%s` (unique_identifier, last_name, balance) VALUES (?, ?, 0.0)", dbConn.getTable("saneeconomy_balances")));
             statement.setString(1, economable.getUniqueIdentifier());
+            statement.setString(2, economable.getName());
             statement.executeUpdate();
         }
     }

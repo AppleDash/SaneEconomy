@@ -15,4 +15,9 @@ public class EconomableGeneric implements Economable {
     public String getUniqueIdentifier() {
         return uniqueIdentifier;
     }
+
+    @Override
+    public String getName() {
+        return uniqueIdentifier.substring(16);
+    }
 }

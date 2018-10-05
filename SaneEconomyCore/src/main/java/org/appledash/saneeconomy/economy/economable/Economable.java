@@ -13,6 +13,7 @@ public interface Economable {
     Economable PLUGIN = new EconomablePlugin();
 
     String getUniqueIdentifier();
+    String getName();
     default OfflinePlayer tryCastToPlayer() {
         return null;
     }

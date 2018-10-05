@@ -6,6 +6,11 @@ package org.appledash.saneeconomy.economy.economable;
  */
 public class EconomableConsole implements Economable {
     @Override
+    public String getName() {
+        return "CONSOLE";
+    }
+
+    @Override
     public String getUniqueIdentifier() {
         return "CONSOLE";
     }
