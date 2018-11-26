@@ -76,7 +76,7 @@ public class BukkitBootstrap extends SanePlugin implements ISaneEconomy {
                 new File(jarsFolder, "HikariCP-3.2.0.jar"),
                 new File(jarsFolder, "HikariCP-3.2.0-relocated.jar"),
                 classLoader,
-                Collections.singletonList(new Relocation(parse("com{}zaxxer{}hikari"), parse(shadedPath + "{}hikari"))));
+                Collections.singletonList(new Relocation(parse("com{}zaxxer{}hikari"), parse(shadedPath + "{}com{}zaxxer{}hikari"))));
 
         try {
             Class.forName("org.sqlite.JDBC", false, classLoader);

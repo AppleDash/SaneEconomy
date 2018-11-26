@@ -43,17 +43,24 @@
                         <!-- dep-injected -->
                         <relocation>
                             <pattern>com.zaxxer.hikari</pattern>
-                            <shadedPattern>org.appledash.saneeconomy.shaded.hikari</shadedPattern>
+                            <shadedPattern>org.appledash.saneeconomy.shaded.com.zaxxer.hikari</shadedPattern>
                         </relocation>
 
                         <!-- regular relocations -->
+                        <relocation>
+                            <pattern>com.google</pattern>
+                            <shadedPattern>org.appledash.saneeconomy.shaded.com.google</shadedPattern>
+                            <excludes>
+                                <exclude>com.google.common.*</exclude>
+                            </excludes>
+                        </relocation>
                         <relocation>
                             <pattern>org.appledash.sanelib</pattern>
                             <shadedPattern>org.appledash.saneeconomy.shaded.sanelib</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>me.lucko</pattern>
-                            <shadedPattern>org.appledash.saneeconomy.shaded.lucko</shadedPattern>
+                            <shadedPattern>org.appledash.saneeconomy.shaded.me.lucko</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -75,22 +82,24 @@
                                         <!-- included or useless -->
                                         <exclude>LICENSE*</exclude>
                                         <exclude>com/google/common/**</exclude>
+                                        <exclude>com/mysql/**</exclude>
                                         <exclude>junit/**</exclude>
+                                        <exclude>net/md_5/**</exclude>
+                                        <exclude>org/apache/commons/lang/**</exclude>
+                                        <exclude>org/apache/commons/lang3/**</exclude>
+                                        <exclude>org/bukkit/**</exclude>
                                         <exclude>org/intellij/**</exclude>
                                         <exclude>org/junit/**</exclude>
+                                        <exclude>org/json/simple/**</exclude>
+                                        <exclude>org/postgresql/**</exclude>
+                                        <exclude>org/spigotmc/**</exclude>
+                                        <exclude>org/yaml/snakeyaml/**</exclude>
 
                                         <!-- dep-injected -->
                                         <exclude>com/zaxxer/hikari/**</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
-                            <artifactSet>
-                                <includes>
-                                    <include>org.appledash:sanelib</include>
-                                    <include>org.slf4j:slf4j-api</include>
-                                    <include>org.slf4j:slf4j-nop</include>
-                                </includes>
-                            </artifactSet>
                         </configuration>
                     </execution>
                 </executions>
