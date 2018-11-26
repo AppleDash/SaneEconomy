@@ -1,5 +1,6 @@
 package org.appledash.saneeconomymobkills;
 
+import org.appledash.saneeconomy.BukkitBootstrap;
 import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomymobkills.listeners.EntityDamageListener;
 import org.appledash.sanelib.SanePlugin;
@@ -21,7 +22,7 @@ public class SaneEconomyMobKills extends SanePlugin {
 
     @Override
     public void onEnable() {
-        saneEconomy = (SaneEconomy)getServer().getPluginManager().getPlugin("SaneEconomy");
+        saneEconomy = ((BukkitBootstrap) getServer().getPluginManager().getPlugin("SaneEconomy")).getConcrete();
         super.onEnable();
 
         YamlConfiguration amountsConfig;

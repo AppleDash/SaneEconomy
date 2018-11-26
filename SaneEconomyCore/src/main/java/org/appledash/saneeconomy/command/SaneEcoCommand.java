@@ -14,7 +14,7 @@ public class SaneEcoCommand extends SaneCommand {
     private final SaneEconomy saneEconomy;
 
     public SaneEcoCommand(SaneEconomy saneEconomy) {
-        super(saneEconomy);
+        super(saneEconomy.getPlugin());
         this.saneEconomy = saneEconomy;
     }
 
@@ -41,18 +41,18 @@ public class SaneEcoCommand extends SaneCommand {
         String subCommand = args[0];
 
         if (subCommand.equalsIgnoreCase("reload-database")) {
-            this.saneEconomy.getMessenger().sendMessage(sender, "Reloading database...");
+            this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "Reloading database...");
             saneEconomy.getEconomyManager().getBackend().reloadDatabase();
-            this.saneEconomy.getMessenger().sendMessage(sender, "Database reloaded.");
+            this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "Database reloaded.");
         } else if (subCommand.equalsIgnoreCase("reload-config")) {
-            this.saneEconomy.getMessenger().sendMessage(sender, "Reloading configuration...");
+            this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "Reloading configuration...");
             this.saneEconomy.loadConfig();
-            this.saneEconomy.getMessenger().sendMessage(sender, "Configuration reloaded.");
+            this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "Configuration reloaded.");
         } else if (subCommand.equalsIgnoreCase("reload")) {
-            this.saneEconomy.getMessenger().sendMessage(sender, "Reloading configuration and database...");
+            this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "Reloading configuration and database...");
             this.saneEconomy.loadConfig();
             this.saneEconomy.getEconomyManager().getBackend().reloadDatabase();
-            this.saneEconomy.getMessenger().sendMessage(sender, "Configuration and database reloaded.");
+            this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "Configuration and database reloaded.");
         } else {
             throw new InvalidUsageException();
         }

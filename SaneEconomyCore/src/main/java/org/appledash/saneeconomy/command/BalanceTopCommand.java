@@ -18,7 +18,7 @@ public class BalanceTopCommand extends SaneCommand {
     private final SaneEconomy saneEconomy;
 
     public BalanceTopCommand(SaneEconomy saneEconomy) {
-        super(saneEconomy);
+        super(saneEconomy.getPlugin());
         this.saneEconomy = saneEconomy;
     }
 
@@ -48,7 +48,7 @@ public class BalanceTopCommand extends SaneCommand {
             try {
                 page = Math.abs(Integer.parseInt(args[0]));
             } catch (NumberFormatException e) {
-                this.saneEconomy.getMessenger().sendMessage(sender, "{1} is not a valid number.");
+                this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "{1} is not a valid number.");
                 return;
             }
         }
@@ -58,13 +58,13 @@ public class BalanceTopCommand extends SaneCommand {
         Map<String, Double> topBalances = this.saneEconomy.getEconomyManager().getTopBalances(nPerPage, offset);
 
         if (topBalances.isEmpty()) {
-            this.saneEconomy.getMessenger().sendMessage(sender, "There aren't enough players to display that page.");
+            this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "There aren't enough players to display that page.");
             return;
         }
 
         AtomicInteger index = new AtomicInteger(offset + 1); /* I know it's stupid, but you can't do some_int++ from within the lambda. */
 
-        this.saneEconomy.getMessenger().sendMessage(sender, "Top {1} players on page {2}:", topBalances.size(), page);
-        topBalances.forEach((player, balance) -> this.saneEconomy.getMessenger().sendMessage(sender, "[{1:02d}] {2} - {3}", index.getAndIncrement(), player == null ? "<unknown>" : player, this.saneEconomy.getEconomyManager().getCurrency().formatAmount(balance)));
+        this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "Top {1} players on page {2}:", topBalances.size(), page);
+        topBalances.forEach((player, balance) -> this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "[{1:02d}] {2} - {3}", index.getAndIncrement(), player == null ? "<unknown>" : player, this.saneEconomy.getEconomyManager().getCurrency().formatAmount(balance)));
     }
 }

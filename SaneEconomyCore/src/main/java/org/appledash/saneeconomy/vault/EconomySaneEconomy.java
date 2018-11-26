@@ -20,7 +20,7 @@ import java.util.List;
 public class EconomySaneEconomy implements Economy {
     @Override
     public boolean isEnabled() {
-        return SaneEconomy.getInstance().isEnabled();
+        return SaneEconomy.getInstance().getPlugin().isEnabled();
     }
 
     @Override

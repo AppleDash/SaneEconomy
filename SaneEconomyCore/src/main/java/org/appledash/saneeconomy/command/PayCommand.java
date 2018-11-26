@@ -23,7 +23,7 @@ public class PayCommand extends SaneCommand {
     private final SaneEconomy saneEconomy;
 
     public PayCommand(SaneEconomy saneEconomy) {
-        super(saneEconomy);
+        super(saneEconomy.getPlugin());
         this.saneEconomy = saneEconomy;
     }
 
@@ -57,12 +57,12 @@ public class PayCommand extends SaneCommand {
         OfflinePlayer toPlayer = PlayerUtils.getOfflinePlayer(sToPlayer);
 
         if (toPlayer == null) {
-            this.saneEconomy.getMessenger().sendMessage(sender, "That player does not exist or has never played before.");
+            this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "That player does not exist or has never played before.");
             return;
         }
 
         if (toPlayer.getUniqueId().equals(fromPlayer.getUniqueId())) {
-            this.saneEconomy.getMessenger().sendMessage(sender, "You cannot pay yourself.");
+            this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "You cannot pay yourself.");
             return;
         }
 
@@ -70,7 +70,7 @@ public class PayCommand extends SaneCommand {
         double amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount);
 
         if (amount <= 0) {
-            this.saneEconomy.getMessenger().sendMessage(sender, "{1} is not a positive number.", ((amount == -1) ? sAmount : String.valueOf(amount)));
+            this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "{1} is not a positive number.", ((amount == -1) ? sAmount : String.valueOf(amount)));
             return;
         }
 
@@ -79,7 +79,7 @@ public class PayCommand extends SaneCommand {
         TransactionResult result = ecoMan.transact(transaction);
 
         if (result.getStatus() != TransactionResult.Status.SUCCESS) {
-            this.saneEconomy.getMessenger().sendMessage(sender, "You do not have enough money to transfer {1} to {2}.",
+            this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "You do not have enough money to transfer {1} to {2}.",
                     ecoMan.getCurrency().formatAmount(amount),
                     sToPlayer
             );
@@ -89,13 +89,13 @@ public class PayCommand extends SaneCommand {
 
         /* Inform the relevant parties. */
 
-        this.saneEconomy.getMessenger().sendMessage(sender, "You have transferred {1} to {2}.",
+        this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "You have transferred {1} to {2}.",
                 ecoMan.getCurrency().formatAmount(amount),
                 sToPlayer
         );
 
         if (toPlayer.isOnline()) {
-            this.saneEconomy.getMessenger().sendMessage(((CommandSender) toPlayer), "You have received {1} from {2}.",
+            this.saneEconomy.getPlugin().getMessenger().sendMessage(((CommandSender) toPlayer), "You have received {1} from {2}.",
                     ecoMan.getCurrency().formatAmount(amount),
                     fromPlayer.getDisplayName()
             );

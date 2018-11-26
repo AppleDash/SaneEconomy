@@ -25,7 +25,7 @@ public class EconomyAdminCommand extends SaneCommand {
     private final SaneEconomy saneEconomy;
 
     public EconomyAdminCommand(SaneEconomy saneEconomy) {
-        super(saneEconomy);
+        super(saneEconomy.getPlugin());
         this.saneEconomy = saneEconomy;
     }
 
@@ -66,7 +66,7 @@ public class EconomyAdminCommand extends SaneCommand {
         OfflinePlayer targetPlayer = PlayerUtils.getOfflinePlayer(sTargetPlayer);
 
         if (targetPlayer == null) {
-            this.saneEconomy.getMessenger().sendMessage(sender, "That player does not exist.");
+            this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "That player does not exist.");
             return;
         }
 
@@ -76,7 +76,7 @@ public class EconomyAdminCommand extends SaneCommand {
         double amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount);
 
         if (!(subCommand.equalsIgnoreCase("set") && amount == 0) && amount <= 0) { // If they're setting it to 0 it's fine, otherwise reject numbers under 1.
-            this.saneEconomy.getMessenger().sendMessage(sender, "{1} is not a positive number.", ((amount == -1) ? sAmount : String.valueOf(amount)));
+            this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "{1} is not a positive number.", ((amount == -1) ? sAmount : String.valueOf(amount)));
             return;
         }
 
@@ -86,14 +86,14 @@ public class EconomyAdminCommand extends SaneCommand {
 
             double newAmount = result.getToBalance();
 
-            this.saneEconomy.getMessenger().sendMessage(sender, "Added {1} to {2}. Their balance is now {3}.",
+            this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "Added {1} to {2}. Their balance is now {3}.",
                     ecoMan.getCurrency().formatAmount(amount),
                     sTargetPlayer,
                     ecoMan.getCurrency().formatAmount(newAmount)
             );
 
-            if (this.saneEconomy.getConfig().getBoolean("economy.notify-admin-give") && targetPlayer.isOnline()) {
-                this.saneEconomy.getMessenger().sendMessage((Player) targetPlayer, "{1} has given you {2}. Your balance is now {3}.",
+            if (this.saneEconomy.getPlugin().getConfig().getBoolean("economy.notify-admin-give") && targetPlayer.isOnline()) {
+                this.saneEconomy.getPlugin().getMessenger().sendMessage((Player) targetPlayer, "{1} has given you {2}. Your balance is now {3}.",
                         sender.getName(),
                         ecoMan.getCurrency().formatAmount(amount),
                         ecoMan.getCurrency().formatAmount(newAmount)
@@ -109,14 +109,14 @@ public class EconomyAdminCommand extends SaneCommand {
 
             double newAmount = result.getFromBalance();
 
-            this.saneEconomy.getMessenger().sendMessage(sender, "Took {1} from {2}. Their balance is now {3}.",
+            this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "Took {1} from {2}. Their balance is now {3}.",
                     ecoMan.getCurrency().formatAmount(amount),
                     sTargetPlayer,
                     ecoMan.getCurrency().formatAmount(newAmount)
             );
 
-            if (this.saneEconomy.getConfig().getBoolean("economy.notify-admin-take") && targetPlayer.isOnline()) {
-                this.saneEconomy.getMessenger().sendMessage((Player) targetPlayer, "{1} has taken {2} from you. Your balance is now {3}.",
+            if (this.saneEconomy.getPlugin().getConfig().getBoolean("economy.notify-admin-take") && targetPlayer.isOnline()) {
+                this.saneEconomy.getPlugin().getMessenger().sendMessage((Player) targetPlayer, "{1} has taken {2} from you. Your balance is now {3}.",
                         sender.getName(),
                         ecoMan.getCurrency().formatAmount(amount),
                         ecoMan.getCurrency().formatAmount(newAmount)
@@ -129,7 +129,7 @@ public class EconomyAdminCommand extends SaneCommand {
         if (subCommand.equalsIgnoreCase("set")) {
             double oldBal = ecoMan.getBalance(economable);
             ecoMan.setBalance(economable, amount);
-            this.saneEconomy.getMessenger().sendMessage(sender, "Balance for {1} set to {2}.", sTargetPlayer, ecoMan.getCurrency().formatAmount(amount));
+            this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "Balance for {1} set to {2}.", sTargetPlayer, ecoMan.getCurrency().formatAmount(amount));
 
             saneEconomy.getTransactionLogger().ifPresent((logger) -> {
                 // FIXME: This is a silly hack to get it to log.
@@ -144,8 +144,8 @@ public class EconomyAdminCommand extends SaneCommand {
                 ));
             });
 
-            if (this.saneEconomy.getConfig().getBoolean("economy.notify-admin-set") && targetPlayer.isOnline()) {
-                this.saneEconomy.getMessenger().sendMessage((Player) targetPlayer, "{1} has set your balance to {2}.",
+            if (this.saneEconomy.getPlugin().getConfig().getBoolean("economy.notify-admin-set") && targetPlayer.isOnline()) {
+                this.saneEconomy.getPlugin().getMessenger().sendMessage((Player) targetPlayer, "{1} has set your balance to {2}.",
                         sender.getName(),
                         ecoMan.getCurrency().formatAmount(amount)
 

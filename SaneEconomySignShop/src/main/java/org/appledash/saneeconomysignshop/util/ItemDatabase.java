@@ -81,7 +81,7 @@ public class ItemDatabase {
                 damage = parsedItem.get().getRight();
             }
 
-            return new ItemStack(parsedItem.get().getLeft(), 1, damage);
+            return new ItemStack(getMaterial(parsedItem.get().getLeft()), 1, damage);
         }
 
         return new ItemStack(materialOptional.get(), 1, damage);
@@ -91,7 +91,7 @@ public class ItemDatabase {
     private static Optional<Material> parseMaterialFromName(String materialName) {
         // Try to parse an integral item ID first, for legacy reasons.
         try {
-            return Optional.ofNullable(Material.getMaterial(Integer.valueOf(materialName)));
+            return Optional.ofNullable(getMaterial(Integer.valueOf(materialName)));
         } catch (NumberFormatException ignored) { }
 
         for (Material mat : Material.values()) {
@@ -111,5 +111,14 @@ public class ItemDatabase {
         public InvalidItemException(String message) {
             super(message);
         }
+    }
+
+    private static Material getMaterial(int id) {
+        for (Material m : Material.values()) {
+            if (m.getId() == id) {
+                return m;
+            }
+        }
+        return null;
     }
 }

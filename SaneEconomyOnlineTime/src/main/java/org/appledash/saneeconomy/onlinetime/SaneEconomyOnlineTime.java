@@ -1,5 +1,6 @@
 package org.appledash.saneeconomy.onlinetime;
 
+import org.appledash.saneeconomy.BukkitBootstrap;
 import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.economy.transaction.Transaction;
@@ -25,7 +26,7 @@ public class SaneEconomyOnlineTime extends SanePlugin implements Listener {
     @Override
     public void onEnable() {
         super.onEnable();
-        this.saneEconomy = (SaneEconomy) this.getServer().getPluginManager().getPlugin("SaneEconomy");
+        this.saneEconomy = ((BukkitBootstrap) this.getServer().getPluginManager().getPlugin("SaneEconomy")).getConcrete();
         this.saveDefaultConfig();
 
         this.getConfig().getMapList("payouts").forEach(map -> {
