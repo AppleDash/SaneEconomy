@@ -4,6 +4,9 @@ import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import java.io.File;
+import java.util.*;
+import java.util.logging.Level;
 import org.appledash.saneeconomy.command.*;
 import org.appledash.saneeconomy.economy.EconomyManager;
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
@@ -16,21 +19,18 @@ import org.appledash.saneeconomy.utils.SaneEconomyConfiguration;
 import org.appledash.saneeconomy.vault.VaultHook;
 import org.appledash.sanelib.SanePlugin;
 import org.appledash.sanelib.command.SaneCommand;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import java.io.File;
-import java.util.*;
-import java.util.logging.Logger;
-
 /**
  * Created by AppleDash on 6/13/2016.
  * Blackjack is still best pony.
  */
-public class SaneEconomy extends SanePlugin implements ISaneEconomy {
-    private static SaneEconomy instance;
+public class SaneEconomy implements ISaneEconomy {
     private EconomyManager economyManager;
     private VaultHook vaultHook;
     private TransactionLogger transactionLogger;
@@ -44,50 +44,55 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
         put("balancetop", new BalanceTopCommand(SaneEconomy.this));
     }};
 
-    public SaneEconomy() {
-        instance = this;
+    private final SanePlugin plugin;
+    private final boolean isBukkit;
+    private static SaneEconomy instance;
+
+    public SaneEconomy(SanePlugin plugin) {
+        isBukkit = Bukkit.getName().equals("Bukkit") || Bukkit.getName().equals("CraftBukkit");
+        this.plugin = plugin;
+        this.instance = this;
     }
 
-    @Override
-    public void onEnable() {
-        super.onEnable();
+    public void onLoad() {}
 
+    public void onEnable() {
         if (!loadConfig()) { /* Invalid backend type or connection error of some sort */
             shutdown();
             return;
         }
 
-        if (this.getConfig().getBoolean("locale-override", false)) {
+        if (plugin.getConfig().getBoolean("locale-override", false)) {
             Locale.setDefault(Locale.ENGLISH);
         }
 
         loadCommands();
         loadListeners();
 
-        if (getServer().getPluginManager().isPluginEnabled("Vault")) {
+        if (plugin.getServer().getPluginManager().isPluginEnabled("Vault")) {
             vaultHook = new VaultHook(this);
             vaultHook.hook();
-            getLogger().info("Hooked into Vault.");
+            log(Level.INFO, "Hooked into Vault.");
         } else {
-            getLogger().info("Not hooking into Vault because it isn't loaded.");
+            log(Level.INFO, "Not hooking into Vault because it isn't loaded.");
         }
 
-        if (this.getConfig().getBoolean("update-check", true)) {
-            versionChecker = new GithubVersionChecker("SaneEconomyCore", this.getDescription().getVersion().replace("-SNAPSHOT", ""));
-            this.getServer().getScheduler().runTaskAsynchronously(this, versionChecker::checkUpdateAvailable);
+        if (plugin.getConfig().getBoolean("update-check", true)) {
+            versionChecker = new GithubVersionChecker("SaneEconomyCore", plugin.getDescription().getVersion().replace("-SNAPSHOT", ""));
+            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, versionChecker::checkUpdateAvailable);
         }
 
-        getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
+        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> {
             economyManager.getBackend().reloadTopPlayerBalances();
-        }, 0L, (20L * this.getConfig().getLong("economy.baltop-update-interval", 300L)) /* Update baltop every 5 minutes by default */);
+        }, 0L, (20L * plugin.getConfig().getLong("economy.baltop-update-interval", 300L)) /* Update baltop every 5 minutes by default */);
 
-        if (this.getConfig().getBoolean("multi-server-sync", false)) {
-            this.getServer().getPluginManager().registerEvents(new Listener() {
+        if (plugin.getConfig().getBoolean("multi-server-sync", false)) {
+            plugin.getServer().getPluginManager().registerEvents(new Listener() {
                 @EventHandler
                 public void onTransaction(SaneEconomyTransactionEvent evt) { // Trust me, I'm a doctor.
                     OfflinePlayer[] playersToSync = { evt.getTransaction().getSender().tryCastToPlayer(), evt.getTransaction().getReceiver().tryCastToPlayer() };
 
-                    Player fakeSender = Iterables.getFirst(SaneEconomy.this.getServer().getOnlinePlayers(), null);
+                    Player fakeSender = Iterables.getFirst(plugin.getServer().getOnlinePlayers(), null);
 
                     if (fakeSender == null) {
                         return;
@@ -98,11 +103,11 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
                         bado.writeUTF("SaneEconomy");
                         bado.writeUTF("SyncPlayer");
                         bado.writeUTF(p.getUniqueId().toString());
-                        fakeSender.sendPluginMessage(SaneEconomy.this, "BungeeCord", bado.toByteArray());
+                        fakeSender.sendPluginMessage(plugin, "BungeeCord", bado.toByteArray());
                     });
                 }
-            }, this);
-            this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", (channel, player, bytes) -> {
+            }, plugin);
+            plugin.getServer().getMessenger().registerIncomingPluginChannel(plugin, "BungeeCord", (channel, player, bytes) -> {
                 if (!channel.equals("BungeeCord")) {
                     return;
                 }
@@ -117,18 +122,17 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
                         String playerUuid = badi.readUTF();
                         this.economyManager.getBackend().reloadEconomable(String.format("player:%s", playerUuid), EconomyStorageBackend.EconomableReloadReason.CROSS_SERVER_SYNC);
                     } else {
-                        this.getLogger().warning("Invalid OpCode received on SaneEconomy plugin message channel: " + opCode);
+                        log(Level.WARNING, "Invalid OpCode received on SaneEconomy plugin message channel: " + opCode);
                     }
                 }
             });
-            this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+            plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
         }
     }
 
-    @Override
     public void onDisable() {
         if (vaultHook != null) {
-            getLogger().info("Unhooking from Vault.");
+            log(Level.INFO, "Unhooking from Vault.");
             vaultHook.unhook();
         }
 
@@ -137,33 +141,33 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
 
     private void flushEconomyManager() {
         if (this.economyManager != null) {
-            this.getLogger().info("Flushing database...");
+            log(Level.INFO, "Flushing database...");
             this.economyManager.getBackend().waitUntilFlushed();
 
             if (this.economyManager.getBackend() instanceof EconomyStorageBackendMySQL) {
                 ((EconomyStorageBackendMySQL) economyManager.getBackend()).closeConnections();
                 if (!((EconomyStorageBackendMySQL) economyManager.getBackend()).getConnection().getConnection().isFinished()) {
-                    this.getLogger().warning("SaneDatabase didn't terminate all threads, something weird is going on?");
+                    log(Level.WARNING, "SaneDatabase didn't terminate all threads, something weird is going on?");
                 }
             }
         }
     }
 
     public boolean loadConfig() {
-        File configFile = new File(getDataFolder(), "config.yml");
+        File configFile = new File(plugin.getDataFolder(), "config.yml");
 
-        if (configFile.exists() && getConfig().getBoolean("debug", false)) {
-            getLogger().info("Resetting configuration to default since debug == true.");
+        if (configFile.exists() && plugin.getConfig().getBoolean("debug", false)) {
+            log(Level.INFO, "Resetting configuration to default since debug == true.");
             configFile.delete();
-            saveDefaultConfig();
-            reloadConfig();
-            getConfig().set("debug", true);
-            saveConfig();
+            plugin.saveDefaultConfig();
+            plugin.reloadConfig();
+            plugin.getConfig().set("debug", true);
+            plugin.saveConfig();
         } else {
             if (!configFile.exists()) {
-                this.saveDefaultConfig();
+                plugin.saveDefaultConfig();
             }
-            this.reloadConfig();
+            plugin.reloadConfig();
         }
 
         this.flushEconomyManager(); // If we're reloading the configuration, we flush the old economy manager first
@@ -173,68 +177,59 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
         economyManager = config.loadEconomyBackend();
         transactionLogger = config.loadLogger();
 
-        saveConfig();
+        plugin.saveConfig();
 
         return economyManager != null;
     }
 
     private void loadCommands() {
-        getLogger().info("Initializing commands...");
-        COMMANDS.forEach((name, command) -> getCommand(name).setExecutor(command));
-        getLogger().info("Initialized commands.");
+        log(Level.INFO, "Initializing commands...");
+        COMMANDS.forEach((name, command) -> plugin.getCommand(name).setExecutor(command));
+        log(Level.INFO, "Initialized commands.");
     }
 
     private void loadListeners() {
-        getLogger().info("Initializing listeners...");
-        getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
-        getLogger().info("Initialized listeners.");
+        log(Level.INFO, "Initializing listeners...");
+        plugin.getServer().getPluginManager().registerEvents(new JoinQuitListener(this), plugin);
+        log(Level.INFO, "Initialized listeners.");
     }
 
     private void shutdown(){
-        getServer().getPluginManager().disablePlugin(this);
+        plugin.getServer().getPluginManager().disablePlugin(plugin);
     }
 
-    public GithubVersionChecker getVersionChecker() {
-        return versionChecker;
-    }
+    public GithubVersionChecker getVersionChecker() { return versionChecker; }
 
     /**
      * Get the active EconomyManager
      * @return EconomyManager
      */
-    @Override
-    public EconomyManager getEconomyManager() {
-        return economyManager;
-    }
+    public EconomyManager getEconomyManager() { return economyManager; }
 
     /**
      * Get the active TransactionLogger
      * @return TransactionLogger, if there is one.
      */
-    @Override
-    public Optional<TransactionLogger> getTransactionLogger() {
-        return Optional.ofNullable(transactionLogger);
-    }
+    public Optional<TransactionLogger> getTransactionLogger() { return Optional.ofNullable(transactionLogger); }
 
     /**
      * Get the current plugin instance.
      * @return Instance
      */
     @Deprecated
-    public static SaneEconomy getInstance() {
-        return instance;
-    }
+    public static SaneEconomy getInstance() { return instance; }
 
     /**
      * Get the logger for the plugin.
      * @return Plugin logger.
      */
-    public static Logger logger(){
-        return instance.getLogger();
-    }
+    public static java.util.logging.Logger logger(){ return instance.getPlugin().getLogger(); }
 
-    @Override
-    public VaultHook getVaultHook() {
-        return vaultHook;
+    public SanePlugin getPlugin() { return plugin; }
+
+    public VaultHook getVaultHook() { return vaultHook; }
+
+    private void log(Level level, String message) {
+        plugin.getServer().getLogger().log(level, (isBukkit) ? ChatColor.stripColor(message) : message);
     }
 }

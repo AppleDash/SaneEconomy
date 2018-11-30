@@ -1,21 +1,21 @@
 package org.appledash.saneeconomy.test.mock;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
+import java.util.function.Consumer;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.bukkit.*;
 import org.bukkit.advancement.Advancement;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
-import org.bukkit.command.CommandException;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.command.PluginCommand;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.boss.*;
+import org.bukkit.command.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.help.HelpMap;
 import org.bukkit.inventory.*;
+import org.bukkit.loot.LootTable;
 import org.bukkit.map.MapView;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -194,6 +194,12 @@ public class MockServer implements Server {
         return null;
     }
 
+    @Nullable
+    @Override
+    public UUID getPlayerUniqueId(String playerName) {
+        return null;
+    }
+
     @Override
     public PluginManager getPluginManager() {
         return null;
@@ -246,6 +252,16 @@ public class MockServer implements Server {
 
     @Override
     public MapView createMap(World world) {
+        return null;
+    }
+
+    @Override
+    public ItemStack createExplorerMap(World world, Location location, StructureType structureType) {
+        return null;
+    }
+
+    @Override
+    public ItemStack createExplorerMap(World world, Location location, StructureType structureType, int radius, boolean findUnexplored) {
         return null;
     }
 
@@ -530,7 +546,37 @@ public class MockServer implements Server {
     }
 
     @Override
+    public KeyedBossBar createBossBar(NamespacedKey key, String title, BarColor color, BarStyle style, BarFlag... flags) {
+        return null;
+    }
+
+    @Override
+    public Iterator<KeyedBossBar> getBossBars() {
+        return null;
+    }
+
+    @Override
+    public KeyedBossBar getBossBar(NamespacedKey key) {
+        return null;
+    }
+
+    @Override
+    public boolean removeBossBar(NamespacedKey key) {
+        return false;
+    }
+
+    @Override
     public Entity getEntity(UUID uuid) {
+        return null;
+    }
+
+    @Override
+    public double[] getTPS() {
+        return new double[0];
+    }
+
+    @Override
+    public CommandMap getCommandMap() {
         return null;
     }
 
@@ -545,12 +591,77 @@ public class MockServer implements Server {
     }
 
     @Override
+    public BlockData createBlockData(Material material) {
+        return null;
+    }
+
+    @Override
+    public BlockData createBlockData(Material material, Consumer<BlockData> consumer) {
+        return null;
+    }
+
+    @Override
+    public BlockData createBlockData(String data) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
+    public BlockData createBlockData(Material material, String data) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
+    public <T extends Keyed> Tag<T> getTag(String registry, NamespacedKey tag, Class<T> clazz) {
+        return null;
+    }
+
+    @Override
+    public LootTable getLootTable(NamespacedKey key) {
+        return null;
+    }
+
+    @Override
     public UnsafeValues getUnsafe() {
         return null;
     }
 
     @Override
     public Spigot spigot() {
+        return null;
+    }
+
+    @Override
+    public void reloadPermissions() {
+
+    }
+
+    @Override
+    public boolean reloadCommandAliases() {
+        return false;
+    }
+
+    @Override
+    public boolean suggestPlayerNamesWhenNullTabCompletions() {
+        return false;
+    }
+
+    @Override
+    public String getPermissionMessage() {
+        return null;
+    }
+
+    @Override
+    public PlayerProfile createProfile(@Nonnull UUID uuid) {
+        return null;
+    }
+
+    @Override
+    public PlayerProfile createProfile(@Nonnull String name) {
+        return null;
+    }
+
+    @Override
+    public PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name) {
         return null;
     }
 

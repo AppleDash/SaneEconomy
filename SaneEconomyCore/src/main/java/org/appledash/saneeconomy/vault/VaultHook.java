@@ -22,7 +22,7 @@ public class VaultHook {
     }
 
     public void hook() {
-        Bukkit.getServicesManager().register(Economy.class, provider, plugin, ServicePriority.Normal);
+        Bukkit.getServicesManager().register(Economy.class, provider, plugin.getPlugin(), ServicePriority.Normal);
     }
 
     public void unhook() {
@@ -30,7 +30,7 @@ public class VaultHook {
     }
 
     public boolean hasPermission(OfflinePlayer offlinePlayer, String permNode) {
-        RegisteredServiceProvider<Permission> rsp = this.plugin.getServer().getServicesManager().getRegistration(Permission.class);
+        RegisteredServiceProvider<Permission> rsp = this.plugin.getPlugin().getServer().getServicesManager().getRegistration(Permission.class);
 
         if ((offlinePlayer == null) || (offlinePlayer.getUniqueId() == null) || Strings.isNullOrEmpty(offlinePlayer.getName())) {
             return false;

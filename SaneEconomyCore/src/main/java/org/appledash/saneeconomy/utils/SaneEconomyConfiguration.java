@@ -29,8 +29,8 @@ public class SaneEconomyConfiguration {
 
     public SaneEconomyConfiguration(SaneEconomy saneEconomy) {
         this.saneEconomy = saneEconomy;
-        this.rootConfig = saneEconomy.getConfig();
-        this.logger = saneEconomy.getLogger();
+        this.rootConfig = saneEconomy.getPlugin().getConfig();
+        this.logger = saneEconomy.getPlugin().getLogger();
     }
 
     public EconomyManager loadEconomyBackend() {
@@ -79,12 +79,12 @@ public class SaneEconomyConfiguration {
 
         if (backendType.equalsIgnoreCase("flatfile")) {
             String backendFileName = config.getString("file", "economy.db");
-            File backendFile = new File(saneEconomy.getDataFolder(), backendFileName);
+            File backendFile = new File(saneEconomy.getPlugin().getDataFolder(), backendFileName);
             backend = new EconomyStorageBackendFlatfile(backendFile);
             logger.info("Initialized flatfile backend with file " + backendFile.getAbsolutePath());
         } else if (backendType.equalsIgnoreCase("json")) {
             String backendFileName = config.getString("file", "economy.json");
-            File backendFile = new File(saneEconomy.getDataFolder(), backendFileName);
+            File backendFile = new File(saneEconomy.getPlugin().getDataFolder(), backendFileName);
             backend = new EconomyStorageBackendJSON(backendFile);
             logger.info("Initialized JSON backend with file " + backendFile.getAbsolutePath());
         } else if (backendType.equalsIgnoreCase("mysql")) {

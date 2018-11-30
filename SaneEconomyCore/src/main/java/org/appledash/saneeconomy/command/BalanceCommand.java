@@ -18,7 +18,7 @@ public class BalanceCommand extends SaneCommand {
     private final SaneEconomy saneEconomy;
 
     public BalanceCommand(SaneEconomy saneEconomy) {
-        super(saneEconomy);
+        super(saneEconomy.getPlugin());
         this.saneEconomy = saneEconomy;
     }
 
@@ -53,7 +53,7 @@ public class BalanceCommand extends SaneCommand {
             playerName = args[0];
 
             if (!sender.hasPermission("saneeconomy.balance.other")) {
-                this.saneEconomy.getMessenger().sendMessage(sender, "You don't have permission to check the balance of {1}.", playerIdentifier);
+                this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "You don't have permission to check the balance of {1}.", playerIdentifier);
                 return;
             }
         }
@@ -61,14 +61,14 @@ public class BalanceCommand extends SaneCommand {
         OfflinePlayer player = PlayerUtils.getOfflinePlayer(playerIdentifier);
 
         if (player == null) {
-            this.saneEconomy.getMessenger().sendMessage(sender, "That player does not exist.");
+            this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "That player does not exist.");
             return;
         }
 
         if (sender == player) {
-            this.saneEconomy.getMessenger().sendMessage(sender, "Your balance is {1}.", saneEconomy.getEconomyManager().getFormattedBalance(Economable.wrap(player)));
+            this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "Your balance is {1}.", saneEconomy.getEconomyManager().getFormattedBalance(Economable.wrap(player)));
         } else {
-            this.saneEconomy.getMessenger().sendMessage(sender, "Balance for {1} is {2}.", playerName, saneEconomy.getEconomyManager().getFormattedBalance(Economable.wrap(player)));
+            this.saneEconomy.getPlugin().getMessenger().sendMessage(sender, "Balance for {1} is {2}.", playerName, saneEconomy.getEconomyManager().getFormattedBalance(Economable.wrap(player)));
         }
     }
 }

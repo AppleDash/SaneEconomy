@@ -1,6 +1,6 @@
 name: SaneEconomy
 author: AppleDash
-main: org.appledash.saneeconomy.SaneEconomy
+main: org.appledash.saneeconomy.BukkitBootstrap
 version: ${project.version}
 load: STARTUP
 softdepend: [Vault]

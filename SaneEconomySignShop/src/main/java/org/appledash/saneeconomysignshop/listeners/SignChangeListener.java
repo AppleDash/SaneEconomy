@@ -1,11 +1,11 @@
 package org.appledash.saneeconomysignshop.listeners;
 
 import com.google.common.base.Strings;
-import net.md_5.bungee.api.ChatColor;
 import org.appledash.saneeconomysignshop.SaneEconomySignShop;
 import org.appledash.saneeconomysignshop.signshop.SignShop;
 import org.appledash.saneeconomysignshop.util.ItemDatabase;
 import org.appledash.saneeconomysignshop.util.ItemDatabase.InvalidItemException;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
