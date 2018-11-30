@@ -69,7 +69,7 @@ public class SaneEconomy implements ISaneEconomy {
         loadCommands();
         loadListeners();
 
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("Vault")) {
+        if (plugin.getServer().getPluginManager().isPluginEnabled("Vault")) {
             vaultHook = new VaultHook(this);
             vaultHook.hook();
             log(Level.INFO, "Hooked into Vault.");
@@ -79,20 +79,20 @@ public class SaneEconomy implements ISaneEconomy {
 
         if (plugin.getConfig().getBoolean("update-check", true)) {
             versionChecker = new GithubVersionChecker("SaneEconomyCore", plugin.getDescription().getVersion().replace("-SNAPSHOT", ""));
-            Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, versionChecker::checkUpdateAvailable);
+            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, versionChecker::checkUpdateAvailable);
         }
 
-        Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> {
             economyManager.getBackend().reloadTopPlayerBalances();
         }, 0L, (20L * plugin.getConfig().getLong("economy.baltop-update-interval", 300L)) /* Update baltop every 5 minutes by default */);
 
         if (plugin.getConfig().getBoolean("multi-server-sync", false)) {
-            Bukkit.getServer().getPluginManager().registerEvents(new Listener() {
+            plugin.getServer().getPluginManager().registerEvents(new Listener() {
                 @EventHandler
                 public void onTransaction(SaneEconomyTransactionEvent evt) { // Trust me, I'm a doctor.
                     OfflinePlayer[] playersToSync = { evt.getTransaction().getSender().tryCastToPlayer(), evt.getTransaction().getReceiver().tryCastToPlayer() };
 
-                    Player fakeSender = Iterables.getFirst(Bukkit.getServer().getOnlinePlayers(), null);
+                    Player fakeSender = Iterables.getFirst(plugin.getServer().getOnlinePlayers(), null);
 
                     if (fakeSender == null) {
                         return;
@@ -107,7 +107,7 @@ public class SaneEconomy implements ISaneEconomy {
                     });
                 }
             }, plugin);
-            Bukkit.getServer().getMessenger().registerIncomingPluginChannel(plugin, "BungeeCord", (channel, player, bytes) -> {
+            plugin.getServer().getMessenger().registerIncomingPluginChannel(plugin, "BungeeCord", (channel, player, bytes) -> {
                 if (!channel.equals("BungeeCord")) {
                     return;
                 }
@@ -126,7 +126,7 @@ public class SaneEconomy implements ISaneEconomy {
                     }
                 }
             });
-            Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
+            plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
         }
     }
 
@@ -190,12 +190,12 @@ public class SaneEconomy implements ISaneEconomy {
 
     private void loadListeners() {
         log(Level.INFO, "Initializing listeners...");
-        Bukkit.getServer().getPluginManager().registerEvents(new JoinQuitListener(this), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new JoinQuitListener(this), plugin);
         log(Level.INFO, "Initialized listeners.");
     }
 
     private void shutdown(){
-        Bukkit.getServer().getPluginManager().disablePlugin(plugin);
+        plugin.getServer().getPluginManager().disablePlugin(plugin);
     }
 
     public GithubVersionChecker getVersionChecker() { return versionChecker; }
