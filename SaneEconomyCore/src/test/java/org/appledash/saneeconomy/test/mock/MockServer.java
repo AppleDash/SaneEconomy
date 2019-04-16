@@ -28,7 +28,10 @@ import org.bukkit.util.CachedServerIcon;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.loot.LootTable;
 
 /**
  * Created by appledash on 7/15/17.
@@ -563,4 +566,44 @@ public class MockServer implements Server {
     public Set<String> getListeningPluginChannels() {
         return null;
     }
+
+	@Override
+	public ItemStack createExplorerMap(World arg0, Location arg1, StructureType arg2) {
+        return null;
+	}
+
+	@Override
+	public ItemStack createExplorerMap(World arg0, Location arg1, StructureType arg2, int arg3, boolean arg4) {
+        return null;
+	}
+
+	@Override
+	public BlockData createBlockData(Material arg0) {
+        return null;
+	}
+
+	@Override
+	public BlockData createBlockData(Material arg0, Consumer<BlockData> arg1) {
+        return null;
+	}
+
+	@Override
+	public BlockData createBlockData(String arg0) throws IllegalArgumentException {
+        return null;
+	}
+
+	@Override
+	public BlockData createBlockData(Material arg0, String arg1) throws IllegalArgumentException {
+        return null;
+	}
+
+	@Override
+	public <T extends Keyed> Tag<T> getTag(String arg0, NamespacedKey arg1, Class<T> arg2) {
+        return null;
+	}
+
+	@Override
+	public LootTable getLootTable(NamespacedKey arg0) {
+        return null;
+	}
 }
