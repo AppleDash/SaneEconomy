@@ -24,7 +24,7 @@
         </repository>
         <repository>
             <id>votuvo</id>
-            <url>https://nexus.votuvo.com/repository/maven-public/</url>
+            <url>https://nexus.sw4t.net/repository/maven-public/</url>
         </repository>
     </repositories>
 

@@ -108,7 +108,7 @@
                 </executions>
                 <configuration>
                     <serverId>votuvo</serverId>
-                    <nexusUrl>https://nexus.votuvo.com/</nexusUrl>
+                    <nexusUrl>https://nexus.sw4t.net/</nexusUrl>
                     <skipStaging>true</skipStaging>
                 </configuration>
             </plugin>
@@ -118,7 +118,7 @@
     <distributionManagement>
         <snapshotRepository>
             <id>votuvo</id>
-            <url>https://nexus.votuvo.com/repository/maven-snapshots/</url>
+            <url>https://nexus.sw4t.net/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 </project>
