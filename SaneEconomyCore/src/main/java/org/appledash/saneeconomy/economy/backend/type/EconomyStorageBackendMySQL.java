@@ -51,8 +51,9 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
             }
 
             if (schemaVersion == 2) {
-                conn.prepareStatement("ALTER TABLE `%s` ADD `last_name` VARCHAR(16)").executeUpdate();
                 schemaVersion = 3;
+                conn.prepareStatement("ALTER TABLE `%s` ADD `last_name` VARCHAR(16)").executeUpdate();
+                conn.prepareStatement(String.format("REPLACE INTO %s (`key`, `val`) VALUES ('schema_version', %d)", dbConn.getTable("saneeconomy_schema"), schemaVersion)).executeUpdate();
             }
 
             if (schemaVersion != 3) {
