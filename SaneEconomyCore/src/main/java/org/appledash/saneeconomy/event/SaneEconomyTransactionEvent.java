@@ -17,6 +17,7 @@ public class SaneEconomyTransactionEvent extends Event implements Cancellable {
     private boolean isCancelled;
 
     public SaneEconomyTransactionEvent(Transaction transaction) {
+        super(true);
         this.transaction = transaction;
     }
 

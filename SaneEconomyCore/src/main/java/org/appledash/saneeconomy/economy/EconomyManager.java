@@ -9,11 +9,9 @@ import org.appledash.saneeconomy.event.SaneEconomyTransactionEvent;
 import org.appledash.saneeconomy.utils.MapUtil;
 import org.appledash.saneeconomy.utils.NumberUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by AppleDash on 6/13/2016.
