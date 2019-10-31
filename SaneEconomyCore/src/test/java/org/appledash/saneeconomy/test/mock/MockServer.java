@@ -2,10 +2,8 @@ package org.appledash.saneeconomy.test.mock;
 
 import org.bukkit.*;
 import org.bukkit.advancement.Advancement;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.boss.*;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -16,6 +14,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.help.HelpMap;
 import org.bukkit.inventory.*;
+import org.bukkit.loot.LootTable;
 import org.bukkit.map.MapView;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -28,6 +27,7 @@ import org.bukkit.util.CachedServerIcon;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 /**
@@ -91,16 +91,6 @@ public class MockServer implements Server {
 
     @Override
     public String getIp() {
-        return null;
-    }
-
-    @Override
-    public String getServerName() {
-        return null;
-    }
-
-    @Override
-    public String getServerId() {
         return null;
     }
 
@@ -240,12 +230,23 @@ public class MockServer implements Server {
     }
 
     @Override
-    public MapView getMap(short i) {
+    public MapView getMap(int id) {
+        return null;
+    }
+
+
+    @Override
+    public MapView createMap(World world) {
         return null;
     }
 
     @Override
-    public MapView createMap(World world) {
+    public ItemStack createExplorerMap(World world, Location location, StructureType structureType) {
+        return null;
+    }
+
+    @Override
+    public ItemStack createExplorerMap(World world, Location location, StructureType structureType, int radius, boolean findUnexplored) {
         return null;
     }
 
@@ -530,6 +531,26 @@ public class MockServer implements Server {
     }
 
     @Override
+    public KeyedBossBar createBossBar(NamespacedKey key, String title, BarColor color, BarStyle style, BarFlag... flags) {
+        return null;
+    }
+
+    @Override
+    public Iterator<KeyedBossBar> getBossBars() {
+        return null;
+    }
+
+    @Override
+    public KeyedBossBar getBossBar(NamespacedKey key) {
+        return null;
+    }
+
+    @Override
+    public boolean removeBossBar(NamespacedKey key) {
+        return false;
+    }
+
+    @Override
     public Entity getEntity(UUID uuid) {
         return null;
     }
@@ -541,6 +562,46 @@ public class MockServer implements Server {
 
     @Override
     public Iterator<Advancement> advancementIterator() {
+        return null;
+    }
+
+    @Override
+    public BlockData createBlockData(Material material) {
+        return null;
+    }
+
+    @Override
+    public BlockData createBlockData(Material material, Consumer<BlockData> consumer) {
+        return null;
+    }
+
+    @Override
+    public BlockData createBlockData(String data) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
+    public BlockData createBlockData(Material material, String data) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
+    public <T extends Keyed> Tag<T> getTag(String registry, NamespacedKey tag, Class<T> clazz) {
+        return null;
+    }
+
+    @Override
+    public <T extends Keyed> Iterable<Tag<T>> getTags(String registry, Class<T> clazz) {
+        return null;
+    }
+
+    @Override
+    public LootTable getLootTable(NamespacedKey key) {
+        return null;
+    }
+
+    @Override
+    public List<Entity> selectEntities(CommandSender sender, String selector) throws IllegalArgumentException {
         return null;
     }
 

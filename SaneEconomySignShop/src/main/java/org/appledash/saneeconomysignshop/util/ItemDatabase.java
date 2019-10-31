@@ -41,11 +41,14 @@ public class ItemDatabase {
         }
     }
 
-    public static Optional<Pair<Integer, Short>> getIDAndDamageForName(String name) {
+    public static Optional<Pair<Material, Short>> getIDAndDamageForName(String name) {
         if (Material.getMaterial(name) != null) {
-            return Optional.of(Pair.of(Material.getMaterial(name).getId(), (short) 0));
+            return Optional.of(Pair.of(Material.getMaterial(name), (short) 0));
         }
-        return Optional.ofNullable(itemMap.get(name.toLowerCase()));
+
+        return Optional.empty();
+        // TODO
+        //return Optional.ofNullable(itemMap.get(name.toLowerCase()));
     }
 
     public static ItemStack parseGive(String rawItemName) throws InvalidItemException {
@@ -72,7 +75,7 @@ public class ItemDatabase {
         Optional<Material> materialOptional = parseMaterialFromName(itemName);
 
         if (!materialOptional.isPresent()) {
-            Optional<Pair<Integer, Short>> parsedItem = getIDAndDamageForName(normalizeItemName(itemName));
+            Optional<Pair<Material, Short>> parsedItem = getIDAndDamageForName(normalizeItemName(itemName));
             if (!parsedItem.isPresent()) {
                 throw new InvalidItemException("Item by that name does not exist.");
             }
@@ -89,11 +92,6 @@ public class ItemDatabase {
     }
 
     private static Optional<Material> parseMaterialFromName(String materialName) {
-        // Try to parse an integral item ID first, for legacy reasons.
-        try {
-            return Optional.ofNullable(Material.getMaterial(Integer.valueOf(materialName)));
-        } catch (NumberFormatException ignored) { }
-
         for (Material mat : Material.values()) {
             if (normalizeItemName(mat.name()).equals(normalizeItemName(materialName))) {
                 return Optional.of(mat);
