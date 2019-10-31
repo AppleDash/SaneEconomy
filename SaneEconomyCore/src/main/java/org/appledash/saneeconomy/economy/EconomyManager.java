@@ -1,6 +1,7 @@
 package org.appledash.saneeconomy.economy;
 
 import org.appledash.saneeconomy.ISaneEconomy;
+import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.economy.transaction.Transaction;
@@ -11,9 +12,12 @@ import org.appledash.saneeconomy.utils.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
+import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * Created by AppleDash on 6/13/2016.
@@ -138,10 +142,25 @@ public class EconomyManager {
 
         if (Bukkit.getServer().getPluginManager() != null) { // Bukkit.getServer().getPluginManager() == null from our JUnit tests.
             SaneEconomyTransactionEvent evt = new SaneEconomyTransactionEvent(transaction);
+
+            Future<SaneEconomyTransactionEvent> future = Bukkit.getServer().getScheduler().callSyncMethod(SaneEconomy.getInstance(), () -> {
+                Bukkit.getServer().getPluginManager().callEvent(evt);
+                return evt;
+            });
+
+            try {
+                if (future.get().isCancelled()) {
+                    return new TransactionResult(transaction, TransactionResult.Status.CANCELLED_BY_PLUGIN);
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+
+            /*
             Bukkit.getServer().getPluginManager().callEvent(evt);
             if (evt.isCancelled()) {
                 return new TransactionResult(transaction, TransactionResult.Status.CANCELLED_BY_PLUGIN);
-            }
+            }*/
         }
 
         if (transaction.isSenderAffected()) { // Sender should have balance taken from them
