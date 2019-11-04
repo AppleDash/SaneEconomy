@@ -76,14 +76,9 @@ public class Currency {
      * @return Formatted amount string.
      */
     public String formatAmount(BigDecimal amount) {
-        String formatted;
-        if (amount.equals(BigDecimal.ONE)) {
-            formatted = MessageUtils.indexedFormat(balanceFormat, format.format(amount), nameSingular);
-        } else {
-            formatted = MessageUtils.indexedFormat(balanceFormat, format.format(amount), namePlural);
-        }
-
-        return ChatColor.translateAlternateColorCodes('&', formatted);
+        return ChatColor.translateAlternateColorCodes('&',
+                MessageUtils.indexedFormat(this.balanceFormat, this.format.format(amount), amount.equals(BigDecimal.ONE) ? this.nameSingular : this.namePlural)
+        );
     }
 
     /**
@@ -92,7 +87,7 @@ public class Currency {
      * @return Singular name.
      */
     public String getSingularName() {
-        return nameSingular;
+        return this.nameSingular;
     }
 
     /**
@@ -101,7 +96,7 @@ public class Currency {
      * @return Plural name.
      */
     public String getPluralName() {
-        return namePlural;
+        return this.namePlural;
     }
 
     /**
@@ -109,6 +104,6 @@ public class Currency {
      * @return DecimalFormat instance
      */
     public DecimalFormat getFormat() {
-        return format;
+        return this.format;
     }
 }

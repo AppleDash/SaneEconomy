@@ -11,7 +11,7 @@ public class Payout {
     private final double amount;
     private final String message;
     private String permission;
-    private long reportInterval;
+    private final long reportInterval;
 
     public Payout(int secondsInterval, double amount, String message, long reportInterval) {
         this.secondsInterval = secondsInterval;
@@ -21,26 +21,26 @@ public class Payout {
     }
 
     public int getSecondsInterval() {
-        return secondsInterval;
+        return this.secondsInterval;
     }
 
     public double getAmount() {
-        return amount;
+        return this.amount;
     }
 
     public String getMessage() {
-        return message;
+        return this.message;
     }
 
     public static Payout fromConfigMap(Map<?, ?> values) {
-        return new Payout(Integer.valueOf(String.valueOf(values.get("seconds"))), Double.valueOf(String.valueOf(values.get("amount"))), String.valueOf(values.get("message")), Long.valueOf(String.valueOf(values.get("report_interval"))));
+        return new Payout(Integer.parseInt(String.valueOf(values.get("seconds"))), Double.parseDouble(String.valueOf(values.get("amount"))), String.valueOf(values.get("message")), Long.parseLong(String.valueOf(values.get("report_interval"))));
     }
 
     public String getPermission() {
-        return permission;
+        return this.permission;
     }
 
     public long getReportInterval() {
-        return reportInterval;
+        return this.reportInterval;
     }
 }

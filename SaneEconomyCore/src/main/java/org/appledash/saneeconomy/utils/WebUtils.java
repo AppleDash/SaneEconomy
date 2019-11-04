@@ -11,19 +11,25 @@ import java.net.URL;
  * Created by appledash on 7/11/16.
  * Blackjack is still best pony.
  */
-public class WebUtils {
+public final class WebUtils {
+    private WebUtils() {
+    }
+
     public static String getContents(String url) {
         try {
-            String out = "";
+            StringBuilder out = new StringBuilder();
             URL uri = new URL(url);
             BufferedReader br = new BufferedReader(new InputStreamReader(uri.openConnection().getInputStream()));
             String line;
 
+            //noinspection NestedAssignment
             while ((line = br.readLine()) != null) {
-                out += line + "\n";
+                out.append(line).append("\n");
             }
 
-            return out;
+            br.close();
+
+            return out.toString();
         } catch (IOException e) {
             SaneEconomy.logger().warning("Failed to get contents of URL " + url);
             throw new RuntimeException("Failed to get URL contents!", e);

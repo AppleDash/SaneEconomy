@@ -30,34 +30,34 @@ public class Transaction {
     }
 
     public Economable getSender() {
-        return sender;
+        return this.sender;
     }
 
     public Economable getReceiver() {
-        return receiver;
+        return this.receiver;
     }
 
     public BigDecimal getAmount() {
-        return amount;
+        return this.amount;
     }
 
     public TransactionReason getReason() {
-        return reason;
+        return this.reason;
     }
 
     public boolean isSenderAffected() {
-        if (sender == Economable.CONSOLE) {
+        if (this.sender == Economable.CONSOLE) {
             return false;
         }
 
-        return (reason.getAffectedParties() == AffectedParties.SENDER) || (reason.getAffectedParties() == AffectedParties.BOTH);
+        return (this.reason.getAffectedParties() == AffectedParties.SENDER) || (this.reason.getAffectedParties() == AffectedParties.BOTH);
     }
 
     public boolean isReceiverAffected() {
-        if (receiver == Economable.CONSOLE) {
+        if (this.receiver == Economable.CONSOLE) {
             return false;
         }
 
-        return (reason.getAffectedParties() == AffectedParties.RECEIVER) || (reason.getAffectedParties() == AffectedParties.BOTH);
+        return (this.reason.getAffectedParties() == AffectedParties.RECEIVER) || (this.reason.getAffectedParties() == AffectedParties.BOTH);
     }
 }

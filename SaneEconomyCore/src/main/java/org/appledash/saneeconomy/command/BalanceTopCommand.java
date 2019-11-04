@@ -4,7 +4,6 @@ import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.sanelib.command.SaneCommand;
 import org.appledash.sanelib.command.exception.CommandException;
 import org.appledash.sanelib.command.exception.type.usage.TooManyArgumentsException;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;

@@ -33,7 +33,7 @@ public class SignChangeListener implements Listener {
             return;
         }
 
-        ParsedSignShop pss = parseSignShop(evt);
+        ParsedSignShop pss = this.parseSignShop(evt);
 
         if (pss.error != null) {
             this.plugin.getMessenger().sendMessage(evt.getPlayer(), "Cannot create shop: {1}", pss.error);
@@ -45,20 +45,20 @@ public class SignChangeListener implements Listener {
         }
 
         SignShop signShop = pss.shop;
-        plugin.getSignShopManager().addSignShop(signShop);
-        evt.setLine(0, ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("admin-shop-title")));
+        this.plugin.getSignShopManager().addSignShop(signShop);
+        evt.setLine(0, ChatColor.translateAlternateColorCodes('&', this.plugin.getConfig().getString("admin-shop-title")));
         this.plugin.getMessenger().sendMessage(evt.getPlayer(), "Sign shop created!");
         this.plugin.getMessenger().sendMessage(evt.getPlayer(), "Item: {1} x {2}", signShop.getQuantity(), signShop.getItemStack());
 
         if (signShop.canBuy()) { // The player be buying from the shop, not the other way around.
             this.plugin.getMessenger().sendMessage(evt.getPlayer(), "Will sell to players for {1}.",
-                                                   plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(signShop.getBuyPrice())
+                    this.plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(signShop.getBuyPrice())
                                                   );
         }
 
         if (signShop.canSell()) { // The player be selling to the shop, not the other way around.
             this.plugin.getMessenger().sendMessage(evt.getPlayer(), "Will buy from players for {1}.",
-                                                   plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(signShop.getSellPrice())
+                    this.plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(signShop.getSellPrice())
                                                   );
         }
     }
@@ -68,7 +68,7 @@ public class SignChangeListener implements Listener {
         Player player = evt.getPlayer();
         Location location = evt.getBlock().getLocation();
 
-        if ((lines[0] == null) || !lines[0].equalsIgnoreCase(plugin.getConfig().getString("admin-shop-trigger"))) { // First line must contain the trigger
+        if ((lines[0] == null) || !lines[0].equalsIgnoreCase(this.plugin.getConfig().getString("admin-shop-trigger"))) { // First line must contain the trigger
             return new ParsedSignShop();
         }
 
@@ -101,8 +101,8 @@ public class SignChangeListener implements Listener {
             return new ParsedSignShop("Invalid buy/sell prices specified.");
         }
 
-        double buy = Strings.isNullOrEmpty(m.group("buy")) ? -1.0 : Double.valueOf(m.group("buy"));
-        double sell = Strings.isNullOrEmpty(m.group("sell")) ? -1.0 : Double.valueOf(m.group("sell"));
+        double buy = Strings.isNullOrEmpty(m.group("buy")) ? -1.0 : Double.parseDouble(m.group("buy"));
+        double sell = Strings.isNullOrEmpty(m.group("sell")) ? -1.0 : Double.parseDouble(m.group("sell"));
 
         if ((buy == -1) && (sell == -1)) {
             return new ParsedSignShop("Buy and sell amounts for this shop are both invalid.");
@@ -111,7 +111,7 @@ public class SignChangeListener implements Listener {
         int itemAmount;
 
         try {
-            itemAmount = Integer.valueOf(amountRaw);
+            itemAmount = Integer.parseInt(amountRaw);
 
             if (itemAmount <= 0) {
                 throw new NumberFormatException();
@@ -123,7 +123,7 @@ public class SignChangeListener implements Listener {
         return new ParsedSignShop(new SignShop(player.getUniqueId(), location, itemStack, itemAmount, buy, sell));
     }
 
-    private class ParsedSignShop {
+    private static final class ParsedSignShop {
         private SignShop shop;
         private String error;
 

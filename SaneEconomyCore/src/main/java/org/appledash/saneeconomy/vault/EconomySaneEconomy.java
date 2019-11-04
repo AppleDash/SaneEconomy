@@ -56,7 +56,7 @@ public class EconomySaneEconomy implements Economy {
 
     @Override
     public boolean hasAccount(String target) {
-        return SaneEconomy.getInstance().getEconomyManager().accountExists(makeEconomable(target));
+        return SaneEconomy.getInstance().getEconomyManager().accountExists(this.makeEconomable(target));
     }
 
     @Override
@@ -66,17 +66,17 @@ public class EconomySaneEconomy implements Economy {
 
     @Override
     public boolean hasAccount(String target, String worldName) {
-        return hasAccount(target);
+        return this.hasAccount(target);
     }
 
     @Override
     public boolean hasAccount(OfflinePlayer offlinePlayer, String worldName) {
-        return hasAccount(offlinePlayer);
+        return this.hasAccount(offlinePlayer);
     }
 
     @Override
     public double getBalance(String target) {
-        return SaneEconomy.getInstance().getEconomyManager().getBalance(makeEconomable(target)).doubleValue();
+        return SaneEconomy.getInstance().getEconomyManager().getBalance(this.makeEconomable(target)).doubleValue();
     }
 
     @Override
@@ -86,17 +86,17 @@ public class EconomySaneEconomy implements Economy {
 
     @Override
     public double getBalance(String target, String worldName) {
-        return getBalance(target);
+        return this.getBalance(target);
     }
 
     @Override
     public double getBalance(OfflinePlayer offlinePlayer, String worldName) {
-        return getBalance(offlinePlayer);
+        return this.getBalance(offlinePlayer);
     }
 
     @Override
     public boolean has(String target, double amount) {
-        return SaneEconomy.getInstance().getEconomyManager().hasBalance(makeEconomable(target), new BigDecimal(amount));
+        return SaneEconomy.getInstance().getEconomyManager().hasBalance(this.makeEconomable(target), new BigDecimal(amount));
     }
 
     @Override
@@ -106,80 +106,80 @@ public class EconomySaneEconomy implements Economy {
 
     @Override
     public boolean has(String target, String worldName, double amount) {
-        return has(target, amount);
+        return this.has(target, amount);
     }
 
     @Override
     public boolean has(OfflinePlayer offlinePlayer, String worldName, double amount) {
-        return has(offlinePlayer, amount);
+        return this.has(offlinePlayer, amount);
     }
 
     @Override
     public EconomyResponse withdrawPlayer(String target, double amount) {
         if (amount == 0) {
-            return new EconomyResponse(amount, getBalance(target), EconomyResponse.ResponseType.SUCCESS, "");
+            return new EconomyResponse(amount, this.getBalance(target), EconomyResponse.ResponseType.SUCCESS, "");
         }
 
-        return transact(new Transaction(
-                            SaneEconomy.getInstance().getEconomyManager().getCurrency(), makeEconomable(target), Economable.PLUGIN, new BigDecimal(amount), TransactionReason.PLUGIN_TAKE
+        return this.transact(new Transaction(
+                            SaneEconomy.getInstance().getEconomyManager().getCurrency(), this.makeEconomable(target), Economable.PLUGIN, new BigDecimal(amount), TransactionReason.PLUGIN_TAKE
                         ));
     }
 
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, double amount) {
         if (amount == 0) {
-            return new EconomyResponse(amount, getBalance(offlinePlayer), EconomyResponse.ResponseType.SUCCESS, "");
+            return new EconomyResponse(amount, this.getBalance(offlinePlayer), EconomyResponse.ResponseType.SUCCESS, "");
         }
 
-        if (!has(offlinePlayer, amount)) {
-            return new EconomyResponse(amount, getBalance(offlinePlayer), EconomyResponse.ResponseType.FAILURE, "Insufficient funds.");
+        if (!this.has(offlinePlayer, amount)) {
+            return new EconomyResponse(amount, this.getBalance(offlinePlayer), EconomyResponse.ResponseType.FAILURE, "Insufficient funds.");
         }
 
-        return transact(new Transaction(
+        return this.transact(new Transaction(
                             SaneEconomy.getInstance().getEconomyManager().getCurrency(), Economable.wrap(offlinePlayer), Economable.PLUGIN, new BigDecimal(amount), TransactionReason.PLUGIN_TAKE
                         ));
     }
 
     @Override
     public EconomyResponse withdrawPlayer(String playerName, String worldName, double v) {
-        return withdrawPlayer(playerName, v);
+        return this.withdrawPlayer(playerName, v);
     }
 
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, String s, double v) {
-        return withdrawPlayer(offlinePlayer, v);
+        return this.withdrawPlayer(offlinePlayer, v);
     }
 
     @Override
     public EconomyResponse depositPlayer(String target, double amount) {
         if (amount == 0) {
-            return new EconomyResponse(amount, getBalance(target), EconomyResponse.ResponseType.SUCCESS, "");
+            return new EconomyResponse(amount, this.getBalance(target), EconomyResponse.ResponseType.SUCCESS, "");
         }
 
-        return transact(new Transaction(
-                            SaneEconomy.getInstance().getEconomyManager().getCurrency(), Economable.PLUGIN, makeEconomable(target), new BigDecimal(amount), TransactionReason.PLUGIN_GIVE
+        return this.transact(new Transaction(
+                            SaneEconomy.getInstance().getEconomyManager().getCurrency(), Economable.PLUGIN, this.makeEconomable(target), new BigDecimal(amount), TransactionReason.PLUGIN_GIVE
                         ));
     }
 
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, double v) {
         if (v == 0) {
-            return new EconomyResponse(v, getBalance(offlinePlayer), EconomyResponse.ResponseType.SUCCESS, "");
+            return new EconomyResponse(v, this.getBalance(offlinePlayer), EconomyResponse.ResponseType.SUCCESS, "");
         }
 
-        return transact(new Transaction(
+        return this.transact(new Transaction(
                             SaneEconomy.getInstance().getEconomyManager().getCurrency(), Economable.PLUGIN, Economable.wrap(offlinePlayer), new BigDecimal(v), TransactionReason.PLUGIN_GIVE
                         ));
     }
 
     @Override
     public EconomyResponse depositPlayer(String playerName, String worldName, double v) {
-        return depositPlayer(playerName, v);
+        return this.depositPlayer(playerName, v);
     }
 
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, String worldName, double v) {
-        return depositPlayer(offlinePlayer, v);
+        return this.depositPlayer(offlinePlayer, v);
     }
 
     @Override
@@ -271,7 +271,7 @@ public class EconomySaneEconomy implements Economy {
             return Economable.CONSOLE;
         }
 
-        if (validatePlayer(input)) {
+        if (this.validatePlayer(input)) {
             return Economable.wrap(PlayerUtils.getOfflinePlayer(input));
         }
 

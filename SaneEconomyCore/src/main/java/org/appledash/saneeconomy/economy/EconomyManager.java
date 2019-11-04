@@ -10,13 +10,10 @@ import org.appledash.saneeconomy.event.SaneEconomyTransactionEvent;
 import org.appledash.saneeconomy.utils.MapUtil;
 import org.appledash.saneeconomy.utils.NumberUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 
-import java.awt.*;
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.*;
 
 /**
@@ -43,7 +40,7 @@ public class EconomyManager {
      * @return Currency
      */
     public Currency getCurrency() {
-        return currency;
+        return this.currency;
     }
 
     /**
@@ -52,7 +49,7 @@ public class EconomyManager {
      * @return Formatted balance
      */
     public String getFormattedBalance(Economable player) {
-        return currency.formatAmount(backend.getBalance(player));
+        return this.currency.formatAmount(this.backend.getBalance(player));
     }
 
     /**
@@ -61,7 +58,7 @@ public class EconomyManager {
      * @return True if they have used the economy system before, false otherwise
      */
     public boolean accountExists(Economable player) {
-        return backend.accountExists(player);
+        return this.backend.accountExists(player);
     }
 
     /**
@@ -74,7 +71,7 @@ public class EconomyManager {
             return new BigDecimal(Double.MAX_VALUE);
         }
 
-        return backend.getBalance(targetPlayer);
+        return this.backend.getBalance(targetPlayer);
     }
 
 
@@ -85,7 +82,7 @@ public class EconomyManager {
      * @return True if they have requiredBalance or more, false otherwise
      */
     public boolean hasBalance(Economable targetPlayer, BigDecimal requiredBalance) {
-        return (targetPlayer == Economable.CONSOLE) || (getBalance(targetPlayer).compareTo(requiredBalance) >= 0);
+        return (targetPlayer == Economable.CONSOLE) || (this.getBalance(targetPlayer).compareTo(requiredBalance) >= 0);
 
     }
 
@@ -97,7 +94,7 @@ public class EconomyManager {
      * @throws IllegalArgumentException If amount is negative
      */
     private void addBalance(Economable targetPlayer, BigDecimal amount) {
-        setBalance(targetPlayer, backend.getBalance(targetPlayer).add(amount));
+        this.setBalance(targetPlayer, this.backend.getBalance(targetPlayer).add(amount));
     }
 
     /**
@@ -111,7 +108,7 @@ public class EconomyManager {
      */
     private void subtractBalance(Economable targetPlayer, BigDecimal amount) {
         // Ensure we don't go negative.
-        setBalance(targetPlayer, backend.getBalance(targetPlayer).subtract(amount).max(BigDecimal.ZERO));
+        this.setBalance(targetPlayer, this.backend.getBalance(targetPlayer).subtract(amount).max(BigDecimal.ZERO));
     }
 
     /**
@@ -121,13 +118,13 @@ public class EconomyManager {
      * @throws IllegalArgumentException If amount is negative
      */
     public void setBalance(Economable targetPlayer, BigDecimal amount) {
-        amount = NumberUtils.filterAmount(currency, amount);
+        amount = NumberUtils.filterAmount(this.currency, amount);
 
         if (targetPlayer == Economable.CONSOLE) {
             return;
         }
 
-        backend.setBalance(targetPlayer, amount);
+        this.backend.setBalance(targetPlayer, amount);
     }
 
     /**
@@ -172,20 +169,20 @@ public class EconomyManager {
         }
 
         if (transaction.isSenderAffected()) { // Sender should have balance taken from them
-            if (!hasBalance(sender, amount)) {
+            if (!this.hasBalance(sender, amount)) {
                 return new TransactionResult(transaction, TransactionResult.Status.ERR_NOT_ENOUGH_FUNDS);
             }
 
-            subtractBalance(sender, amount);
+            this.subtractBalance(sender, amount);
         }
 
         if (transaction.isReceiverAffected()) { // Receiver should have balance added to them
-            addBalance(receiver, amount);
+            this.addBalance(receiver, amount);
         }
 
-        saneEconomy.getTransactionLogger().ifPresent((logger) -> logger.logTransaction(transaction));
+        this.saneEconomy.getTransactionLogger().ifPresent((logger) -> logger.logTransaction(transaction));
 
-        return new TransactionResult(transaction, getBalance(sender), getBalance(receiver));
+        return new TransactionResult(transaction, this.getBalance(sender), this.getBalance(receiver));
     }
 
     /**
@@ -194,7 +191,7 @@ public class EconomyManager {
      * @return Map of OfflinePlayer to Double
      */
     public Map<String, BigDecimal> getTopBalances(int amount, int offset) {
-        LinkedHashMap<String, BigDecimal> uuidBalances = backend.getTopBalances();
+        LinkedHashMap<String, BigDecimal> uuidBalances = this.backend.getTopBalances();
 
         /* TODO
         uuidBalances.forEach((uuid, balance) -> {
@@ -211,7 +208,7 @@ public class EconomyManager {
     }
 
     public EconomyStorageBackend getBackend() {
-        return backend;
+        return this.backend;
     }
 
     /**
@@ -219,6 +216,6 @@ public class EconomyManager {
      * @return Server economy account, or null if none.
      */
     public String getServerAccountName() {
-        return serverAccountName;
+        return this.serverAccountName;
     }
 }

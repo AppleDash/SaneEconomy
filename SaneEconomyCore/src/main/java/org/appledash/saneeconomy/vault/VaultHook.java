@@ -22,11 +22,11 @@ public class VaultHook {
     }
 
     public void hook() {
-        Bukkit.getServicesManager().register(Economy.class, provider, plugin, ServicePriority.Normal);
+        Bukkit.getServicesManager().register(Economy.class, this.provider, this.plugin, ServicePriority.Normal);
     }
 
     public void unhook() {
-        Bukkit.getServicesManager().unregister(Economy.class, provider);
+        Bukkit.getServicesManager().unregister(Economy.class, this.provider);
     }
 
     public boolean hasPermission(OfflinePlayer offlinePlayer, String permNode) {

@@ -12,8 +12,11 @@ import java.text.ParseException;
  * Created by AppleDash on 6/14/2016.
  * Blackjack is still best pony.
  */
-public class NumberUtils {
+public final class NumberUtils {
     private static final BigDecimal INVALID_DOUBLE = BigDecimal.ONE.negate();
+
+    private NumberUtils() {
+    }
 
     public static BigDecimal parsePositiveDouble(String sDouble) {
         if (Strings.isNullOrEmpty(sDouble)) {

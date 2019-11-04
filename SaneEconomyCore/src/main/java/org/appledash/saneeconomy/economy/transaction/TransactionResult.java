@@ -25,19 +25,19 @@ public class TransactionResult {
     }
 
     public Transaction getTransaction() {
-        return transaction;
+        return this.transaction;
     }
 
     public BigDecimal getFromBalance() {
-        return fromBalance;
+        return this.fromBalance;
     }
 
     public BigDecimal getToBalance() {
-        return toBalance;
+        return this.toBalance;
     }
 
     public Status getStatus() {
-        return status;
+        return this.status;
     }
 
     public enum Status {
@@ -52,7 +52,7 @@ public class TransactionResult {
         }
 
         public String getMessage() {
-            return message;
+            return this.message;
         }
     }
 }

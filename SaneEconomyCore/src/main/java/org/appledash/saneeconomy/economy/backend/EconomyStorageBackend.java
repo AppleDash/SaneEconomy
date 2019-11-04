@@ -5,7 +5,6 @@ import org.appledash.saneeconomy.economy.economable.Economable;
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by AppleDash on 6/13/2016.

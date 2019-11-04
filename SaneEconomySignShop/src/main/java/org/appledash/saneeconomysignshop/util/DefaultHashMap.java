@@ -24,7 +24,7 @@ public class DefaultHashMap<K, V> extends HashMap<K, V> {
         V value = super.get(key);
 
         if (value == null) {
-            value = defaultSupplier.get((K)key);
+            value = this.defaultSupplier.get((K)key);
             this.put((K) key, value);
         }
 

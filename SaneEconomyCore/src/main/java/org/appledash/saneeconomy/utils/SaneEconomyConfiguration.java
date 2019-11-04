@@ -33,38 +33,38 @@ public class SaneEconomyConfiguration {
     }
 
     public EconomyManager loadEconomyBackend() {
-        logger.info("Initializing currency...");
-        Currency currency = Currency.fromConfig(rootConfig.getConfigurationSection("currency"));
-        logger.info("Initialized currency: " + currency.getPluralName());
+        this.logger.info("Initializing currency...");
+        Currency currency = Currency.fromConfig(this.rootConfig.getConfigurationSection("currency"));
+        this.logger.info("Initialized currency: " + currency.getPluralName());
 
-        logger.info("Initializing economy storage backend...");
+        this.logger.info("Initializing economy storage backend...");
 
-        EconomyStorageBackend backend = loadBackend(rootConfig.getConfigurationSection("backend"));
+        EconomyStorageBackend backend = this.loadBackend(this.rootConfig.getConfigurationSection("backend"));
 
         if (backend == null) {
-            logger.severe("Failed to load backend!");
+            this.logger.severe("Failed to load backend!");
             return null;
         }
 
-        logger.info("Performing initial data load...");
+        this.logger.info("Performing initial data load...");
         backend.reloadDatabase();
-        logger.info("Data loaded!");
+        this.logger.info("Data loaded!");
 
-        if (!Strings.isNullOrEmpty(rootConfig.getString("old-backend.type", null))) {
-            logger.info("Old backend detected, converting... (This may take a minute or two.)");
-            EconomyStorageBackend oldBackend = loadBackend(rootConfig.getConfigurationSection("old-backend"));
+        if (!Strings.isNullOrEmpty(this.rootConfig.getString("old-backend.type", null))) {
+            this.logger.info("Old backend detected, converting... (This may take a minute or two.)");
+            EconomyStorageBackend oldBackend = this.loadBackend(this.rootConfig.getConfigurationSection("old-backend"));
             if (oldBackend == null) {
-                logger.severe("Failed to load old backend!");
+                this.logger.severe("Failed to load old backend!");
                 return null;
             }
 
             oldBackend.reloadDatabase();
-            convertBackends(oldBackend, backend);
-            logger.info("Data converted, removing old config section.");
-            rootConfig.set("old-backend", null);
+            this.convertBackends(oldBackend, backend);
+            this.logger.info("Data converted, removing old config section.");
+            this.rootConfig.set("old-backend", null);
         }
 
-        return new EconomyManager(saneEconomy, currency, backend, rootConfig.getString("economy.server-account", null));
+        return new EconomyManager(this.saneEconomy, currency, backend, this.rootConfig.getString("economy.server-account", null));
     }
 
     /**
@@ -78,24 +78,24 @@ public class SaneEconomyConfiguration {
 
         if (backendType.equalsIgnoreCase("json")) {
             String backendFileName = config.getString("file", "economy.json");
-            File backendFile = new File(saneEconomy.getDataFolder(), backendFileName);
+            File backendFile = new File(this.saneEconomy.getDataFolder(), backendFileName);
             backend = new EconomyStorageBackendJSON(backendFile);
-            logger.info("Initialized JSON backend with file " + backendFile.getAbsolutePath());
+            this.logger.info("Initialized JSON backend with file " + backendFile.getAbsolutePath());
         } else if (backendType.equalsIgnoreCase("mysql")) {
-            EconomyStorageBackendMySQL mySQLBackend = new EconomyStorageBackendMySQL(loadCredentials(config));
+            EconomyStorageBackendMySQL mySQLBackend = new EconomyStorageBackendMySQL(this.loadCredentials(config));
 
             backend = mySQLBackend;
 
-            logger.info("Initialized MySQL backend.");
-            logger.info("Testing connection...");
+            this.logger.info("Initialized MySQL backend.");
+            this.logger.info("Testing connection...");
             if (!mySQLBackend.getConnection().testConnection()) {
-                logger.severe("MySQL connection failed - cannot continue!");
+                this.logger.severe("MySQL connection failed - cannot continue!");
                 return null;
             }
 
-            logger.info("Connection successful!");
+            this.logger.info("Connection successful!");
         } else {
-            logger.severe("Unknown storage backend " + backendType + "!");
+            this.logger.severe("Unknown storage backend " + backendType + "!");
             return null;
         }
 
@@ -116,27 +116,27 @@ public class SaneEconomyConfiguration {
     }
 
     public TransactionLogger loadLogger() {
-        if (!rootConfig.getBoolean("log-transactions", false)) {
+        if (!this.rootConfig.getBoolean("log-transactions", false)) {
             return null;
         }
 
-        logger.info("Attempting to load transaction logger...");
+        this.logger.info("Attempting to load transaction logger...");
 
-        if (rootConfig.getConfigurationSection("logger-database") == null) {
-            logger.severe("No transaction logger database defined, cannot possibly connect!");
+        if (this.rootConfig.getConfigurationSection("logger-database") == null) {
+            this.logger.severe("No transaction logger database defined, cannot possibly connect!");
             return null;
         }
 
-        DatabaseCredentials credentials = loadCredentials(rootConfig.getConfigurationSection("logger-database"));
+        DatabaseCredentials credentials = this.loadCredentials(this.rootConfig.getConfigurationSection("logger-database"));
 
         TransactionLoggerMySQL transactionLogger = new TransactionLoggerMySQL(credentials);
 
         if (transactionLogger.testConnection()) {
-            logger.info("Initialized MySQL transaction logger.");
+            this.logger.info("Initialized MySQL transaction logger.");
             return transactionLogger;
         }
 
-        logger.severe("Failed to connect to MySQL database for transaction logger!");
+        this.logger.severe("Failed to connect to MySQL database for transaction logger!");
         return null;
     }
 

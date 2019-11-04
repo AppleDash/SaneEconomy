@@ -47,8 +47,8 @@ public class MockServer implements Server {
     }
 
 
-    private Logger logger = Logger.getLogger("MockServer");
-    private Map<UUID, OfflinePlayer> offlinePlayers = new HashMap<>();
+    private final Logger logger = Logger.getLogger("MockServer");
+    private final Map<UUID, OfflinePlayer> offlinePlayers = new HashMap<>();
 
     public void addOfflinePlayer(OfflinePlayer offlinePlayer) {
         this.offlinePlayers.put(offlinePlayer.getUniqueId(), offlinePlayer);
@@ -501,12 +501,12 @@ public class MockServer implements Server {
     }
 
     @Override
-    public CachedServerIcon loadServerIcon(File file) throws IllegalArgumentException, Exception {
+    public CachedServerIcon loadServerIcon(File file) throws Exception {
         return null;
     }
 
     @Override
-    public CachedServerIcon loadServerIcon(BufferedImage bufferedImage) throws IllegalArgumentException, Exception {
+    public CachedServerIcon loadServerIcon(BufferedImage bufferedImage) throws Exception {
         return null;
     }
 

@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public class MockEconomyStorageBackend extends EconomyStorageBackendCaching {
     @Override
     public void setBalance(Economable player, BigDecimal newBalance) {
-        balances.put(player.getUniqueIdentifier(), newBalance);
+        this.balances.put(player.getUniqueIdentifier(), newBalance);
         this.uuidToName.put(player.getUniqueIdentifier(), player.getName());
     }
 

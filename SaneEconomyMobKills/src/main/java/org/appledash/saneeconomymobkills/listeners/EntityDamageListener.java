@@ -21,8 +21,8 @@ import java.util.UUID;
  * Blackjack is still best pony.
  */
 public class EntityDamageListener implements Listener {
-    private SaneEconomyMobKills plugin;
-    private Map<Integer, Map<UUID, Double>> damageDealt = new HashMap<>();
+    private final SaneEconomyMobKills plugin;
+    private final Map<Integer, Map<UUID, Double>> damageDealt = new HashMap<>();
 
     public EntityDamageListener(SaneEconomyMobKills plugin) {
         this.plugin = plugin;
@@ -41,16 +41,16 @@ public class EntityDamageListener implements Listener {
             return;
         }
 
-        if (!plugin.getKillAmounts().containsKey(getEntityType(damagee))) {
+        if (!this.plugin.getKillAmounts().containsKey(this.getEntityType(damagee))) {
             return;
         }
 
         Map<UUID, Double> damageDoneToThisEntity = new HashMap<>();
 
-        if (damageDealt.containsKey(damagee.getEntityId())) {
-            damageDoneToThisEntity = damageDealt.get(damagee.getEntityId());
+        if (this.damageDealt.containsKey(damagee.getEntityId())) {
+            damageDoneToThisEntity = this.damageDealt.get(damagee.getEntityId());
         } else {
-            damageDealt.put(damagee.getEntityId(), damageDoneToThisEntity);
+            this.damageDealt.put(damagee.getEntityId(), damageDoneToThisEntity);
         }
 
         double totalDamageDealt = 0;
@@ -66,32 +66,32 @@ public class EntityDamageListener implements Listener {
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent evt) {
-        Entity entity = evt.getEntity();
+        LivingEntity entity = evt.getEntity();
 
-        if (!damageDealt.containsKey(entity.getEntityId())) {
+        if (!this.damageDealt.containsKey(entity.getEntityId())) {
             return;
         }
 
-        Map<UUID, Double> damageDoneToThisEntity = damageDealt.get(entity.getEntityId());
-        double totalDmg = ((LivingEntity) entity).getMaxHealth();//sumValues(damageDoneToThisEntity);
+        Map<UUID, Double> damageDoneToThisEntity = this.damageDealt.get(entity.getEntityId());
+        double totalDmg = entity.getMaxHealth();//sumValues(damageDoneToThisEntity);
 
         for (Map.Entry<UUID, Double> entry : damageDoneToThisEntity.entrySet()) {
             double thisDmg = entry.getValue();
             double thisPercent = (thisDmg / totalDmg) * 100.0D;
-            double thisAmount = plugin.getKillAmounts().get(getEntityType(entity)) * (thisPercent / 100);
+            double thisAmount = this.plugin.getKillAmounts().get(this.getEntityType(entity)) * (thisPercent / 100);
             OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(entry.getKey());
 
             if (offlinePlayer.isOnline()) {
                 Player player = Bukkit.getServer().getPlayer(offlinePlayer.getUniqueId());
-                this.plugin.getMessenger().sendMessage(player, "You have been awarded {1} for doing {2:.2f}% of the damage required to kill that {3}!", plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(thisAmount), thisPercent, entity.getName());
+                this.plugin.getMessenger().sendMessage(player, "You have been awarded {1} for doing {2:.2f}% of the damage required to kill that {3}!", this.plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(thisAmount), thisPercent, entity.getName());
             }
 
-            plugin.getSaneEconomy().getEconomyManager().transact(new Transaction(
+            this.plugin.getSaneEconomy().getEconomyManager().transact(new Transaction(
                         this.plugin.getSaneEconomy().getEconomyManager().getCurrency(), Economable.PLUGIN, Economable.wrap(offlinePlayer), thisAmount, TransactionReason.PLUGIN_GIVE
                     ));
         }
 
-        damageDealt.remove(evt.getEntity().getEntityId());
+        this.damageDealt.remove(evt.getEntity().getEntityId());
     }
 
     private String getEntityType(Entity entity) {

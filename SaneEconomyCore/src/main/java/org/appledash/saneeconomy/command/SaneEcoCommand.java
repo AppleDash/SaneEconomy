@@ -42,7 +42,7 @@ public class SaneEcoCommand extends SaneCommand {
 
         if (subCommand.equalsIgnoreCase("reload-database")) {
             this.saneEconomy.getMessenger().sendMessage(sender, "Reloading database...");
-            saneEconomy.getEconomyManager().getBackend().reloadDatabase();
+            this.saneEconomy.getEconomyManager().getBackend().reloadDatabase();
             this.saneEconomy.getMessenger().sendMessage(sender, "Database reloaded.");
         } else if (subCommand.equalsIgnoreCase("reload-config")) {
             this.saneEconomy.getMessenger().sendMessage(sender, "Reloading configuration...");

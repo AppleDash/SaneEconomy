@@ -72,7 +72,7 @@ public class EconomyAdminCommand extends SaneCommand {
             return;
         }
 
-        EconomyManager ecoMan = saneEconomy.getEconomyManager();
+        EconomyManager ecoMan = this.saneEconomy.getEconomyManager();
         Economable economable = Economable.wrap(targetPlayer);
 
         BigDecimal amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount);
@@ -95,7 +95,7 @@ public class EconomyAdminCommand extends SaneCommand {
                                                        );
 
             if (this.saneEconomy.getConfig().getBoolean("economy.notify-admin-give") && targetPlayer.isOnline()) {
-                this.saneEconomy.getMessenger().sendMessage((Player) targetPlayer, "{1} has given you {2}. Your balance is now {3}.",
+                this.saneEconomy.getMessenger().sendMessage((CommandSender) targetPlayer, "{1} has given you {2}. Your balance is now {3}.",
                         sender.getName(),
                         ecoMan.getCurrency().formatAmount(amount),
                         ecoMan.getCurrency().formatAmount(newAmount)
@@ -118,7 +118,7 @@ public class EconomyAdminCommand extends SaneCommand {
                                                        );
 
             if (this.saneEconomy.getConfig().getBoolean("economy.notify-admin-take") && targetPlayer.isOnline()) {
-                this.saneEconomy.getMessenger().sendMessage((Player) targetPlayer, "{1} has taken {2} from you. Your balance is now {3}.",
+                this.saneEconomy.getMessenger().sendMessage((CommandSender) targetPlayer, "{1} has taken {2} from you. Your balance is now {3}.",
                         sender.getName(),
                         ecoMan.getCurrency().formatAmount(amount),
                         ecoMan.getCurrency().formatAmount(newAmount)
@@ -133,7 +133,7 @@ public class EconomyAdminCommand extends SaneCommand {
             ecoMan.setBalance(economable, amount);
             this.saneEconomy.getMessenger().sendMessage(sender, "Balance for {1} set to {2}.", sTargetPlayer, ecoMan.getCurrency().formatAmount(amount));
 
-            saneEconomy.getTransactionLogger().ifPresent((logger) -> {
+            this.saneEconomy.getTransactionLogger().ifPresent((logger) -> {
                 // FIXME: This is a silly hack to get it to log.
                 if (oldBal.compareTo(BigDecimal.ZERO) > 0) {
                     logger.logTransaction(new Transaction(
@@ -147,7 +147,7 @@ public class EconomyAdminCommand extends SaneCommand {
             });
 
             if (this.saneEconomy.getConfig().getBoolean("economy.notify-admin-set") && targetPlayer.isOnline()) {
-                this.saneEconomy.getMessenger().sendMessage((Player) targetPlayer, "{1} has set your balance to {2}.",
+                this.saneEconomy.getMessenger().sendMessage((CommandSender) targetPlayer, "{1} has set your balance to {2}.",
                         sender.getName(),
                         ecoMan.getCurrency().formatAmount(amount)
 

@@ -34,13 +34,13 @@ public class MySQLConnection {
     public PreparedStatement prepareStatement(Connection conn, String sql) throws SQLException {
         PreparedStatement preparedStatement = conn.prepareStatement(sql);
 
-        preparedStatement.setQueryTimeout(dbCredentials.getQueryTimeout()); // 5 second timeout
+        preparedStatement.setQueryTimeout(this.dbCredentials.getQueryTimeout()); // 5 second timeout
 
         return preparedStatement;
     }
 
     public boolean testConnection() {
-        try (Connection ignored = openConnection()) {
+        try (Connection ignored = this.openConnection()) {
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -49,31 +49,31 @@ public class MySQLConnection {
     }
 
     public void executeAsyncOperation(String tag, Consumer<Connection> callback) {
-        this.saneDatabase.runDatabaseOperationAsync(tag, () -> doExecuteAsyncOperation(1, callback));
+        this.saneDatabase.runDatabaseOperationAsync(tag, () -> this.doExecuteAsyncOperation(1, callback));
     }
 
     // This is a bit weird because it has to account for recursion...
     private void doExecuteAsyncOperation(int levels, Consumer<Connection> callback) {
-        try (Connection conn = openConnection()) {
+        try (Connection conn = this.openConnection()) {
             callback.accept(conn);
         } catch (Exception e) {
-            if (levels > dbCredentials.getMaxRetries()) {
+            if (levels > this.dbCredentials.getMaxRetries()) {
                 throw new RuntimeException("This shouldn't happen (database error)", e);
             }
 
             LOGGER.severe("An internal SQL error has occured, trying up to " + (5 - levels) + " more times...");
             e.printStackTrace();
             levels++;
-            doExecuteAsyncOperation(levels, callback);
+            this.doExecuteAsyncOperation(levels, callback);
         }
     }
 
     public DatabaseCredentials getCredentials() {
-        return dbCredentials;
+        return this.dbCredentials;
     }
 
     public String getTable(String tableName) {
-        return dbCredentials.getTablePrefix() + tableName;
+        return this.dbCredentials.getTablePrefix() + tableName;
     }
 
     public void waitUntilFlushed() {

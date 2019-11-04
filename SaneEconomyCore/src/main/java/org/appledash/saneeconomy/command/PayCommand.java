@@ -52,7 +52,7 @@ public class PayCommand extends SaneCommand {
             throw new NeedPlayerException();
         }
 
-        EconomyManager ecoMan = saneEconomy.getEconomyManager();
+        EconomyManager ecoMan = this.saneEconomy.getEconomyManager();
         Player fromPlayer = (Player) sender;
 
         String sToPlayer = args[0];

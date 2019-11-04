@@ -21,7 +21,7 @@ public class LimitManager {
     // private final Map<ItemInfo, ItemLimits> buyItemLimits = new DefaultHashMap<ItemInfo, ItemLimits>(() -> ItemLimits.DEFAULT);
     private final Map<ItemInfo, ItemLimits> sellItemLimits = new DefaultHashMap<>(() -> ItemLimits.DEFAULT);
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private final Map<UUID, Map<ItemInfo, Integer>> sellPlayerLimits = new DefaultHashMap<>(() -> new DefaultHashMap<>((info) -> sellItemLimits.get(info).getLimit()));
+    private final Map<UUID, Map<ItemInfo, Integer>> sellPlayerLimits = new DefaultHashMap<>(() -> new DefaultHashMap<>((info) -> this.sellItemLimits.get(info).getLimit()));
     // private final Map<TransactionDirection, Map<ItemInfo, ItemLimits>> itemLimits = new DefaultHashMap<>(() -> new DefaultHashMap<>(() -> ItemLimits.DEFAULT));
     // This is a slightly complex data structure. It works like this:
     // It's a map of (limit types to (maps of players to (maps of materials to the remaining limit))).
@@ -31,7 +31,7 @@ public class LimitManager {
 
     public int getRemainingLimit(Player player, TransactionDirection type, ItemInfo stack) {
         if (type == TransactionDirection.SELL) {
-            return sellPlayerLimits.get(player.getUniqueId()).get(stack);
+            return this.sellPlayerLimits.get(player.getUniqueId()).get(stack);
         }
 
         throw new IllegalArgumentException("Don't know how to get limits for that TransactionDirection!");
@@ -39,14 +39,14 @@ public class LimitManager {
 
     public void setRemainingLimit(Player player, TransactionDirection type, ItemInfo stack, int limit) {
         if (type == TransactionDirection.SELL) {
-            if (sellPlayerLimits.get(player.getUniqueId()).get(stack) == -1) {
+            if (this.sellPlayerLimits.get(player.getUniqueId()).get(stack) == -1) {
                 return;
             }
 
-            limit = Math.min(limit, sellItemLimits.get(stack).getLimit());
+            limit = Math.min(limit, this.sellItemLimits.get(stack).getLimit());
             limit = Math.max(0, limit);
 
-            sellPlayerLimits.get(player.getUniqueId()).put(stack, limit);
+            this.sellPlayerLimits.get(player.getUniqueId()).put(stack, limit);
             return;
         }
 
@@ -55,7 +55,7 @@ public class LimitManager {
 
     public boolean shouldAllowTransaction(ShopTransaction transaction) {
         // System.out.printf("Limit: %d, quantity: %d\n", limit, transaction.getQuantity());
-        return getRemainingLimit(transaction.getPlayer(), transaction.getDirection(), transaction.getItem()) >= transaction.getQuantity();
+        return this.getRemainingLimit(transaction.getPlayer(), transaction.getDirection(), transaction.getItem()) >= transaction.getQuantity();
     }
 
     public void incrementLimitsHourly() {
@@ -64,11 +64,11 @@ public class LimitManager {
         // For every limit
         // Increment limit by the limit for the specific direction and item.
 
-        sellPlayerLimits.forEach((playerUuid, itemToLimit) -> {
+        this.sellPlayerLimits.forEach((playerUuid, itemToLimit) -> {
             Map<ItemInfo, Integer> newLimits = new HashMap<>();
 
             itemToLimit.forEach((itemInfo, currentLimit) ->
-                                newLimits.put(itemInfo, currentLimit + (sellItemLimits.get(itemInfo).getHourlyGain())));
+                                newLimits.put(itemInfo, currentLimit + (this.sellItemLimits.get(itemInfo).getHourlyGain())));
 
             itemToLimit.putAll(newLimits);
         });
@@ -77,8 +77,8 @@ public class LimitManager {
     public void loadLimits(ConfigurationSection config) {
         for (Map<?, ?> map : config.getMapList("sell")) {
             String itemName = String.valueOf(map.get("item"));
-            int sellLimit = Integer.valueOf(String.valueOf(map.get("limit")));
-            int hourlyGain = Integer.valueOf(String.valueOf(map.get("gain")));
+            int sellLimit = Integer.parseInt(String.valueOf(map.get("limit")));
+            int hourlyGain = Integer.parseInt(String.valueOf(map.get("gain")));
             ItemStack stack;
 
             try {
@@ -91,7 +91,7 @@ public class LimitManager {
 
             ItemInfo itemInfo = new ItemInfo(stack);
 
-            sellItemLimits.put(itemInfo, new ItemLimits(sellLimit, hourlyGain));
+            this.sellItemLimits.put(itemInfo, new ItemLimits(sellLimit, hourlyGain));
         }
     }
 

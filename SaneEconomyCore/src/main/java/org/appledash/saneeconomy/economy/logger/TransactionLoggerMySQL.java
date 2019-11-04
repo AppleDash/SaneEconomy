@@ -24,7 +24,7 @@ public class TransactionLoggerMySQL implements TransactionLogger {
     private void logGeneric(String from, String to, BigDecimal change, TransactionReason reason) {
         this.dbConn.executeAsyncOperation("log_transaction", (conn) -> {
             try {
-                PreparedStatement ps = conn.prepareStatement(String.format("INSERT INTO `%s` (`source`, `destination`, `amount`, `reason`) VALUES (?, ?, ?, ?)", dbConn.getTable("transaction_logs")));
+                PreparedStatement ps = conn.prepareStatement(String.format("INSERT INTO `%s` (`source`, `destination`, `amount`, `reason`) VALUES (?, ?, ?, ?)", this.dbConn.getTable("transaction_logs")));
                 ps.setString(1, from);
                 ps.setString(2, to);
                 ps.setString(3, change.toString());
@@ -37,8 +37,8 @@ public class TransactionLoggerMySQL implements TransactionLogger {
     }
 
     public boolean testConnection() {
-        if (dbConn.testConnection()) {
-            createTables();
+        if (this.dbConn.testConnection()) {
+            this.createTables();
             return true;
         }
 
@@ -46,8 +46,8 @@ public class TransactionLoggerMySQL implements TransactionLogger {
     }
 
     private void createTables() {
-        try (Connection conn = dbConn.openConnection()) {
-            PreparedStatement ps = conn.prepareStatement(String.format("CREATE TABLE IF NOT EXISTS `%s` (`source` VARCHAR(128), `destination` VARCHAR(128), `amount` DECIMAL(18, 2), `reason` VARCHAR(128), `logged` TIMESTAMP NOT NULL default CURRENT_TIMESTAMP)", dbConn.getTable("transaction_logs")));
+        try (Connection conn = this.dbConn.openConnection()) {
+            PreparedStatement ps = conn.prepareStatement(String.format("CREATE TABLE IF NOT EXISTS `%s` (`source` VARCHAR(128), `destination` VARCHAR(128), `amount` DECIMAL(18, 2), `reason` VARCHAR(128), `logged` TIMESTAMP NOT NULL default CURRENT_TIMESTAMP)", this.dbConn.getTable("transaction_logs")));
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Failed to create transaction logger tables", e);
@@ -56,6 +56,6 @@ public class TransactionLoggerMySQL implements TransactionLogger {
 
     @Override
     public void logTransaction(Transaction transaction) {
-        logGeneric(transaction.getSender().getUniqueIdentifier(), transaction.getReceiver().getUniqueIdentifier(), transaction.getAmount(), transaction.getReason());
+        this.logGeneric(transaction.getSender().getUniqueIdentifier(), transaction.getReceiver().getUniqueIdentifier(), transaction.getAmount(), transaction.getReason());
     }
 }

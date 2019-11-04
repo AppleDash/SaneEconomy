@@ -24,20 +24,20 @@ public abstract class EconomyStorageBackendCaching implements EconomyStorageBack
 
     @Override
     public boolean accountExists(Economable economable) {
-        return balances.containsKey(economable.getUniqueIdentifier());
+        return this.balances.containsKey(economable.getUniqueIdentifier());
     }
 
     @Override
     public BigDecimal getBalance(Economable economable) {
-        if (!accountExists(economable)) {
+        if (!this.accountExists(economable)) {
             return BigDecimal.ZERO;
         }
 
-        return balances.get(economable.getUniqueIdentifier());
+        return this.balances.get(economable.getUniqueIdentifier());
     }
 
     public LinkedHashMap<String, BigDecimal> getTopBalances() {
-        return topBalances;
+        return this.topBalances;
     }
 
     @Override
@@ -48,12 +48,12 @@ public abstract class EconomyStorageBackendCaching implements EconomyStorageBack
             balances.put(this.uuidToName.get(identifier), balance);
         });
 
-        topBalances = MapUtil.sortByValue(balances);
+        this.topBalances = MapUtil.sortByValue(balances);
     }
 
     @Override
     public Map<String, BigDecimal> getAllBalances() {
-        return ImmutableMap.copyOf(balances);
+        return ImmutableMap.copyOf(this.balances);
     }
 
     @Override

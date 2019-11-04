@@ -1,7 +1,5 @@
 package org.appledash.saneeconomy.economy.backend.type;
 
-import com.avaje.ebeaninternal.server.cluster.DataHolder;
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
@@ -18,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class EconomyStorageBackendJSON extends EconomyStorageBackendCaching {
     private final Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
-    private File file;
+    private final File file;
 
     public EconomyStorageBackendJSON(File file) {
         this.file = file;
@@ -26,21 +24,21 @@ public class EconomyStorageBackendJSON extends EconomyStorageBackendCaching {
 
     @Override
     public void setBalance(Economable economable, BigDecimal newBalance) {
-        balances.put(economable.getUniqueIdentifier(), newBalance);
-        saveDatabase();
+        this.balances.put(economable.getUniqueIdentifier(), newBalance);
+        this.saveDatabase();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void reloadDatabase() {
-        if (!file.exists()) {
+        if (!this.file.exists()) {
             return;
         }
 
         try {
             // try to load the old format and convert it
             // if that fails, load the new format
-            DataHolderOld dataHolder = gson.fromJson(new FileReader(file), DataHolderOld.class);
+            DataHolderOld dataHolder = this.gson.fromJson(new FileReader(this.file), DataHolderOld.class);
             this.balances = new ConcurrentHashMap<>();
             this.uuidToName = new ConcurrentHashMap<>(dataHolder.uuidToName);
 
@@ -53,7 +51,7 @@ public class EconomyStorageBackendJSON extends EconomyStorageBackendCaching {
             throw new RuntimeException("Failed to load database!", e);
         } catch (Exception e) {
             try {
-                DataHolder dataHolder = gson.fromJson(new FileReader(file), DataHolder.class);
+                DataHolder dataHolder = this.gson.fromJson(new FileReader(this.file), DataHolder.class);
                 this.balances = new ConcurrentHashMap<>(dataHolder.balances);
                 this.uuidToName = new ConcurrentHashMap<>(dataHolder.uuidToName);
             } catch (FileNotFoundException ex) {
@@ -68,33 +66,35 @@ public class EconomyStorageBackendJSON extends EconomyStorageBackendCaching {
     }
 
     private synchronized void saveDatabase() {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(this.file, false))) {
             DataHolder dataHolder = new DataHolder(this.balances, this.uuidToName);
-            bufferedWriter.write(gson.toJson(dataHolder));
+            bufferedWriter.write(this.gson.toJson(dataHolder));
         } catch (IOException e) {
             throw new RuntimeException("Failed to save database", e);
         }
     }
 
+    @SuppressWarnings("FieldMayBeFinal")
     private static class DataHolderOld {
         @SerializedName("balances")
         private Map<String, Double> balances;
         @SerializedName("uuidToName")
         private Map<String, String> uuidToName;
 
-        public DataHolderOld(Map<String, Double> balances, Map<String, String> uuidToName) {
+        DataHolderOld(Map<String, Double> balances, Map<String, String> uuidToName) {
             this.balances = balances;
             this.uuidToName = uuidToName;
         }
     }
 
+    @SuppressWarnings("FieldMayBeFinal")
     private static class DataHolder {
         @SerializedName("balances")
         private Map<String, BigDecimal> balances;
         @SerializedName("uuidToName")
         private Map<String, String> uuidToName;
 
-        public DataHolder(Map<String, BigDecimal> balances, Map<String, String> uuidToName) {
+        DataHolder(Map<String, BigDecimal> balances, Map<String, String> uuidToName) {
             this.balances = balances;
             this.uuidToName = uuidToName;
         }

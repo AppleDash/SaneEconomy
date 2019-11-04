@@ -29,36 +29,35 @@ public class SignShopStorageJSON implements SignShopStorage {
     @Override
     @SuppressWarnings("unchecked")
     public void loadSignShops() {
-        if (!storageFile.exists()) {
+        if (!this.storageFile.exists()) {
             return;
         }
 
         try {
-            List<SignShop> tempShops = gson.fromJson(new FileReader(storageFile), new TypeToken<List<SignShop>>() {} .getType());
-            tempShops.forEach((shop) -> cachedSignShops.put(shop.getLocation(), shop));
+            List<SignShop> tempShops = this.gson.fromJson(new FileReader(this.storageFile), new TypeToken<List<SignShop>>() {} .getType());
+            tempShops.forEach((shop) -> this.cachedSignShops.put(shop.getLocation(), shop));
         } catch (FileNotFoundException e) {
-            throw new IllegalStateException("This shouldn't happen - the file " + storageFile.getAbsolutePath() + " disappeared while we were trying to read it!", e);
+            throw new IllegalStateException("This shouldn't happen - the file " + this.storageFile.getAbsolutePath() + " disappeared while we were trying to read it!", e);
         }
 
-        saveSignShops();
+        this.saveSignShops();
     }
 
     @Override
     public void putSignShop(SignShop signShop) {
-        cachedSignShops.put(signShop.getLocation(), signShop);
-        saveSignShops();
+        this.cachedSignShops.put(signShop.getLocation(), signShop);
+        this.saveSignShops();
     }
 
     @Override
     public void removeSignShop(SignShop signShop) {
-        cachedSignShops.remove(signShop.getLocation());
-        saveSignShops();
+        this.cachedSignShops.remove(signShop.getLocation());
+        this.saveSignShops();
     }
 
     private synchronized void saveSignShops() {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(storageFile, false))) {
-            bufferedWriter.write(gson.toJson(ImmutableList.copyOf(cachedSignShops.values())));
-            bufferedWriter.close();
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(this.storageFile, false))) {
+            bufferedWriter.write(this.gson.toJson(ImmutableList.copyOf(this.cachedSignShops.values())));
         } catch (IOException e) {
             throw new RuntimeException("Failed to save sign shops!", e);
         }
@@ -66,6 +65,6 @@ public class SignShopStorageJSON implements SignShopStorage {
 
     @Override
     public Map<Location, SignShop> getSignShops() {
-        return ImmutableMap.copyOf(cachedSignShops);
+        return ImmutableMap.copyOf(this.cachedSignShops);
     }
 }

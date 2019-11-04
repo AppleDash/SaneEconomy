@@ -15,13 +15,17 @@ import java.util.Optional;
  * Created by appledash on 8/3/16.
  * Blackjack is still best pony.
  */
-public class ItemDatabase {
+public final class ItemDatabase {
     private static Map<String, Pair<Integer, Short>> itemMap = new HashMap<>();
+
+    private ItemDatabase() {
+    }
 
     public static void initItemDB() {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(ItemDatabase.class.getResourceAsStream("/items.csv")))) {
             String line;
 
+            //noinspection NestedAssignment
             while ((line = br.readLine()) != null) {
                 if (line.startsWith("#") || !line.contains(",")) {
                     continue;
@@ -29,15 +33,15 @@ public class ItemDatabase {
 
                 String[] split = line.split(",");
                 String name = split[0];
-                int id = Integer.valueOf(split[1]);
-                short damage = Short.valueOf(split[2]);
+                int id = Integer.parseInt(split[1]);
+                short damage = Short.parseShort(split[2]);
 
                 itemMap.put(name.toLowerCase(), Pair.of(id, damage));
             }
 
             itemMap = ImmutableMap.copyOf(itemMap);
         } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to initialize item database!", e);
         }
     }
 
@@ -62,7 +66,7 @@ public class ItemDatabase {
                 damage = 0;
             } else { // They typed 'tnt:something'
                 try {
-                    damage = Short.valueOf(splitItemName[1]);
+                    damage = Short.parseShort(splitItemName[1]);
                 } catch (NumberFormatException e) {
                     throw new InvalidItemException("Damage value must be a number.");
                 }

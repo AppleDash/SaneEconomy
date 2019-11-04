@@ -6,7 +6,10 @@ import java.util.*;
  * Created by appledash on 7/11/16.
  * Blackjack is still best pony.
  */
-public class MapUtil {
+public final class MapUtil {
+    private MapUtil() {
+    }
+
     /* Originally found on StackOverflow: http://stackoverflow.com/a/2581754/1849152 */
     public static <K, V extends Comparable<? super V>> LinkedHashMap<K, V> sortByValue(Map<K, V> map) {
         List<Map.Entry<K, V>> list =
@@ -27,6 +30,7 @@ public class MapUtil {
      * @param nSkip Number of items to skip
      * @return New LinkedHashMap, may be empty.
      */
+    @SuppressWarnings("CollectionDeclaredAsConcreteClass")
     public static <K, V> LinkedHashMap<K, V> skip(LinkedHashMap<K, V> map, int nSkip) {
         LinkedHashMap<K, V> newMap = new LinkedHashMap<>();
 

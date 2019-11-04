@@ -21,35 +21,35 @@ public class SaneEconomyMobKills extends SanePlugin {
 
     @Override
     public void onEnable() {
-        saneEconomy = (SaneEconomy)getServer().getPluginManager().getPlugin("SaneEconomy");
+        this.saneEconomy = (SaneEconomy) this.getServer().getPluginManager().getPlugin("SaneEconomy");
         super.onEnable();
 
         YamlConfiguration amountsConfig;
 
-        if (!(new File(getDataFolder(), "amounts.yml").exists())) {
-            amountsConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(getClass().getResourceAsStream("/amounts.yml")));
+        if (!(new File(this.getDataFolder(), "amounts.yml").exists())) {
+            amountsConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(this.getClass().getResourceAsStream("/amounts.yml")));
             try {
-                amountsConfig.save(new File(getDataFolder(), "amounts.yml"));
+                amountsConfig.save(new File(this.getDataFolder(), "amounts.yml"));
             } catch (IOException e) {
                 throw new RuntimeException("Failed to save amounts.yml to plugin data folder!");
             }
         } else {
-            amountsConfig = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "amounts.yml"));
+            amountsConfig = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "amounts.yml"));
         }
 
         for (String entityTypeName : amountsConfig.getKeys(false)) {
             double value = amountsConfig.getDouble(entityTypeName);
-            killAmounts.put(entityTypeName, value);
+            this.killAmounts.put(entityTypeName, value);
         }
 
-        getServer().getPluginManager().registerEvents(new EntityDamageListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new EntityDamageListener(this), this);
     }
 
     public SaneEconomy getSaneEconomy() {
-        return saneEconomy;
+        return this.saneEconomy;
     }
 
     public Map<String, Double> getKillAmounts() {
-        return killAmounts;
+        return this.killAmounts;
     }
 }

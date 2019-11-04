@@ -39,7 +39,7 @@ public class NumberUtilsTest {
         Locale old = Locale.getDefault();
         Locale.setDefault(Locale.FRANCE);
         try {
-            testFilter();
+            this.testFilter();
         } catch (Throwable e) {
             Locale.setDefault(old);
             throw e;

@@ -38,11 +38,11 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
 
     private final Map<String, SaneCommand> COMMANDS = new HashMap<String, SaneCommand>() {
         {
-            put("balance", new BalanceCommand(SaneEconomy.this));
-            put("ecoadmin", new EconomyAdminCommand(SaneEconomy.this));
-            put("pay", new PayCommand(SaneEconomy.this));
-            put("saneeconomy", new SaneEcoCommand(SaneEconomy.this));
-            put("balancetop", new BalanceTopCommand(SaneEconomy.this));
+            this.put("balance", new BalanceCommand(SaneEconomy.this));
+            this.put("ecoadmin", new EconomyAdminCommand(SaneEconomy.this));
+            this.put("pay", new PayCommand(SaneEconomy.this));
+            this.put("saneeconomy", new SaneEcoCommand(SaneEconomy.this));
+            this.put("balancetop", new BalanceTopCommand(SaneEconomy.this));
         }
     };
 
@@ -54,8 +54,8 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
     public void onEnable() {
         super.onEnable();
 
-        if (!loadConfig()) { /* Invalid backend type or connection error of some sort */
-            shutdown();
+        if (!this.loadConfig()) { /* Invalid backend type or connection error of some sort */
+            this.shutdown();
             return;
         }
 
@@ -63,24 +63,24 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
             Locale.setDefault(Locale.ENGLISH);
         }
 
-        loadCommands();
-        loadListeners();
+        this.loadCommands();
+        this.loadListeners();
 
-        if (getServer().getPluginManager().isPluginEnabled("Vault")) {
-            vaultHook = new VaultHook(this);
-            vaultHook.hook();
-            getLogger().info("Hooked into Vault.");
+        if (this.getServer().getPluginManager().isPluginEnabled("Vault")) {
+            this.vaultHook = new VaultHook(this);
+            this.vaultHook.hook();
+            this.getLogger().info("Hooked into Vault.");
         } else {
-            getLogger().info("Not hooking into Vault because it isn't loaded.");
+            this.getLogger().info("Not hooking into Vault because it isn't loaded.");
         }
 
         if (this.getConfig().getBoolean("update-check", true)) {
-            versionChecker = new GithubVersionChecker("SaneEconomyCore", this.getDescription().getVersion().replace("-SNAPSHOT", ""));
-            this.getServer().getScheduler().runTaskAsynchronously(this, versionChecker::checkUpdateAvailable);
+            this.versionChecker = new GithubVersionChecker("SaneEconomyCore", this.getDescription().getVersion().replace("-SNAPSHOT", ""));
+            this.getServer().getScheduler().runTaskAsynchronously(this, this.versionChecker::checkUpdateAvailable);
         }
 
-        getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
-            economyManager.getBackend().reloadTopPlayerBalances();
+        this.getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
+            this.economyManager.getBackend().reloadTopPlayerBalances();
         }, 0L, (20L * this.getConfig().getLong("economy.baltop-update-interval", 300L)) /* Update baltop every 5 minutes by default */);
 
         if (this.getConfig().getBoolean("multi-server-sync", false)) {
@@ -129,9 +129,9 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
 
     @Override
     public void onDisable() {
-        if (vaultHook != null) {
-            getLogger().info("Unhooking from Vault.");
-            vaultHook.unhook();
+        if (this.vaultHook != null) {
+            this.getLogger().info("Unhooking from Vault.");
+            this.vaultHook.unhook();
         }
 
         this.flushEconomyManager();
@@ -143,8 +143,8 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
             this.economyManager.getBackend().waitUntilFlushed();
 
             if (this.economyManager.getBackend() instanceof EconomyStorageBackendMySQL) {
-                ((EconomyStorageBackendMySQL) economyManager.getBackend()).closeConnections();
-                if (!((EconomyStorageBackendMySQL) economyManager.getBackend()).getConnection().getConnection().isFinished()) {
+                ((EconomyStorageBackendMySQL) this.economyManager.getBackend()).closeConnections();
+                if (!((EconomyStorageBackendMySQL) this.economyManager.getBackend()).getConnection().getConnection().isFinished()) {
                     this.getLogger().warning("SaneDatabase didn't terminate all threads, something weird is going on?");
                 }
             }
@@ -152,15 +152,15 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
     }
 
     public boolean loadConfig() {
-        File configFile = new File(getDataFolder(), "config.yml");
+        File configFile = new File(this.getDataFolder(), "config.yml");
 
-        if (configFile.exists() && getConfig().getBoolean("debug", false)) {
-            getLogger().info("Resetting configuration to default since debug == true.");
+        if (configFile.exists() && this.getConfig().getBoolean("debug", false)) {
+            this.getLogger().info("Resetting configuration to default since debug == true.");
             configFile.delete();
-            saveDefaultConfig();
-            reloadConfig();
-            getConfig().set("debug", true);
-            saveConfig();
+            this.saveDefaultConfig();
+            this.reloadConfig();
+            this.getConfig().set("debug", true);
+            this.saveConfig();
         } else {
             if (!configFile.exists()) {
                 this.saveDefaultConfig();
@@ -172,32 +172,32 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
 
         SaneEconomyConfiguration config = new SaneEconomyConfiguration(this);
 
-        economyManager = config.loadEconomyBackend();
-        transactionLogger = config.loadLogger();
+        this.economyManager = config.loadEconomyBackend();
+        this.transactionLogger = config.loadLogger();
 
-        saveConfig();
+        this.saveConfig();
 
-        return economyManager != null;
+        return this.economyManager != null;
     }
 
     private void loadCommands() {
-        getLogger().info("Initializing commands...");
-        COMMANDS.forEach((name, command) -> getCommand(name).setExecutor(command));
-        getLogger().info("Initialized commands.");
+        this.getLogger().info("Initializing commands...");
+        this.COMMANDS.forEach((name, command) -> this.getCommand(name).setExecutor(command));
+        this.getLogger().info("Initialized commands.");
     }
 
     private void loadListeners() {
-        getLogger().info("Initializing listeners...");
-        getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
-        getLogger().info("Initialized listeners.");
+        this.getLogger().info("Initializing listeners...");
+        this.getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
+        this.getLogger().info("Initialized listeners.");
     }
 
     private void shutdown() {
-        getServer().getPluginManager().disablePlugin(this);
+        this.getServer().getPluginManager().disablePlugin(this);
     }
 
     public GithubVersionChecker getVersionChecker() {
-        return versionChecker;
+        return this.versionChecker;
     }
 
     /**
@@ -206,7 +206,7 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
      */
     @Override
     public EconomyManager getEconomyManager() {
-        return economyManager;
+        return this.economyManager;
     }
 
     /**
@@ -215,7 +215,7 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
      */
     @Override
     public Optional<TransactionLogger> getTransactionLogger() {
-        return Optional.ofNullable(transactionLogger);
+        return Optional.ofNullable(this.transactionLogger);
     }
 
     /**
@@ -237,6 +237,6 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
 
     @Override
     public VaultHook getVaultHook() {
-        return vaultHook;
+        return this.vaultHook;
     }
 }

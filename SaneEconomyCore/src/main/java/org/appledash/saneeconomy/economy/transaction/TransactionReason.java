@@ -36,7 +36,7 @@ public enum TransactionReason {
     }
 
     public AffectedParties getAffectedParties() {
-        return affectedParties;
+        return this.affectedParties;
     }
 
     public enum AffectedParties {
