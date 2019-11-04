@@ -17,8 +17,7 @@ import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 /**
  * Created by AppleDash on 6/13/2016.
@@ -144,17 +143,25 @@ public class EconomyManager {
         if (Bukkit.getServer().getPluginManager() != null) { // Bukkit.getServer().getPluginManager() == null from our JUnit tests.
             SaneEconomyTransactionEvent evt = new SaneEconomyTransactionEvent(transaction);
 
-            Future<SaneEconomyTransactionEvent> future = Bukkit.getServer().getScheduler().callSyncMethod(SaneEconomy.getInstance(), () -> {
+            if (Bukkit.isPrimaryThread()) {
                 Bukkit.getServer().getPluginManager().callEvent(evt);
-                return evt;
-            });
 
-            try {
-                if (future.get().isCancelled()) {
+                if (evt.isCancelled()) {
                     return new TransactionResult(transaction, TransactionResult.Status.CANCELLED_BY_PLUGIN);
                 }
-            } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException(e);
+            } else {
+                Future<SaneEconomyTransactionEvent> future = Bukkit.getServer().getScheduler().callSyncMethod(SaneEconomy.getInstance(), () -> {
+                    Bukkit.getServer().getPluginManager().callEvent(evt);
+                    return evt;
+                });
+
+                try {
+                    if (future.get().isCancelled()) {
+                        return new TransactionResult(transaction, TransactionResult.Status.CANCELLED_BY_PLUGIN);
+                    }
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
             /*
