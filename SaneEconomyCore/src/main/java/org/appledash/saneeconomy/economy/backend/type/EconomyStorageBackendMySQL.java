@@ -63,7 +63,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
 
             if (schemaVersion == 3) {
                 conn.prepareStatement(String.format("ALTER TABLE `%s` ADD `balance_new` TEXT", dbConn.getTable(SANEECONOMY_BALANCES))).executeUpdate();
-                conn.prepareStatement(String.format("UPDATE `%s` SET `balance_new` = CONVERT(TEXT, `balance`)", dbConn.getTable(SANEECONOMY_BALANCES))).executeUpdate();
+                conn.prepareStatement(String.format("UPDATE `%s` SET balance_new = balance", dbConn.getTable(SANEECONOMY_BALANCES))).executeUpdate();
                 conn.prepareStatement(String.format("ALTER TABLE `%s` DROP COLUMN `balance`", dbConn.getTable(SANEECONOMY_BALANCES))).executeUpdate();
                 conn.prepareStatement(String.format("ALTER TABLE `%s` CHANGE COLUMN `balance_new` `balance` TEXT", dbConn.getTable(SANEECONOMY_BALANCES))).executeUpdate();
                 conn.prepareStatement(String.format("REPLACE INTO %s (`key`, `val`) VALUES ('schema_version', 4)", dbConn.getTable(SANEECONOMY_SCHEMA))).executeUpdate();
