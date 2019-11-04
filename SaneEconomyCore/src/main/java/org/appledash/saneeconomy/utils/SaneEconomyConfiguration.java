@@ -5,7 +5,6 @@ import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.economy.Currency;
 import org.appledash.saneeconomy.economy.EconomyManager;
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
-import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendFlatfile;
 import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendJSON;
 import org.appledash.saneeconomy.economy.backend.type.EconomyStorageBackendMySQL;
 import org.appledash.saneeconomy.economy.economable.EconomableGeneric;
@@ -77,12 +76,7 @@ public class SaneEconomyConfiguration {
         EconomyStorageBackend backend;
         String backendType = config.getString("type");
 
-        if (backendType.equalsIgnoreCase("flatfile")) {
-            String backendFileName = config.getString("file", "economy.db");
-            File backendFile = new File(saneEconomy.getDataFolder(), backendFileName);
-            backend = new EconomyStorageBackendFlatfile(backendFile);
-            logger.info("Initialized flatfile backend with file " + backendFile.getAbsolutePath());
-        } else if (backendType.equalsIgnoreCase("json")) {
+        if (backendType.equalsIgnoreCase("json")) {
             String backendFileName = config.getString("file", "economy.json");
             File backendFile = new File(saneEconomy.getDataFolder(), backendFileName);
             backend = new EconomyStorageBackendJSON(backendFile);
