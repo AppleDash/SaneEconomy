@@ -34,7 +34,7 @@ public class SignShopStorageJSON implements SignShopStorage {
         }
 
         try {
-            List<SignShop> tempShops = gson.fromJson(new FileReader(storageFile), new TypeToken<List<SignShop>>(){}.getType());
+            List<SignShop> tempShops = gson.fromJson(new FileReader(storageFile), new TypeToken<List<SignShop>>() {} .getType());
             tempShops.forEach((shop) -> cachedSignShops.put(shop.getLocation(), shop));
         } catch (FileNotFoundException e) {
             throw new IllegalStateException("This shouldn't happen - the file " + storageFile.getAbsolutePath() + " disappeared while we were trying to read it!", e);

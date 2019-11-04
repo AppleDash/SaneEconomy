@@ -30,8 +30,8 @@ public class BalanceCommand extends SaneCommand {
     @Override
     public String[] getUsage() {
         return new String[] {
-                "/<command> [player]"
-        };
+                   "/<command> [player]"
+               };
     }
 
     @Override

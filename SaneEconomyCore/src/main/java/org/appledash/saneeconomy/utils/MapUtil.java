@@ -10,7 +10,7 @@ public class MapUtil {
     /* Originally found on StackOverflow: http://stackoverflow.com/a/2581754/1849152 */
     public static <K, V extends Comparable<? super V>> LinkedHashMap<K, V> sortByValue(Map<K, V> map) {
         List<Map.Entry<K, V>> list =
-                new LinkedList<>(map.entrySet());
+            new LinkedList<>(map.entrySet());
 
         list.sort((o1, o2) -> -((o1.getValue()).compareTo(o2.getValue())));
 

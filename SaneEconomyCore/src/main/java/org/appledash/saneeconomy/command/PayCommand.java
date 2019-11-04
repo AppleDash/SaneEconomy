@@ -37,8 +37,8 @@ public class PayCommand extends SaneCommand {
     @Override
     public String[] getUsage() {
         return new String[] {
-                "/pay <player> <amount>"
-        };
+                   "/pay <player> <amount>"
+               };
     }
 
     @Override
@@ -84,7 +84,7 @@ public class PayCommand extends SaneCommand {
             this.saneEconomy.getMessenger().sendMessage(sender, "You do not have enough money to transfer {1} to {2}.",
                     ecoMan.getCurrency().formatAmount(amount),
                     sToPlayer
-            );
+                                                       );
 
             return;
         }
@@ -94,13 +94,13 @@ public class PayCommand extends SaneCommand {
         this.saneEconomy.getMessenger().sendMessage(sender, "You have transferred {1} to {2}.",
                 ecoMan.getCurrency().formatAmount(amount),
                 sToPlayer
-        );
+                                                   );
 
         if (toPlayer.isOnline()) {
             this.saneEconomy.getMessenger().sendMessage(((CommandSender) toPlayer), "You have received {1} from {2}.",
                     ecoMan.getCurrency().formatAmount(amount),
                     fromPlayer.getDisplayName()
-            );
+                                                       );
         }
     }
 }

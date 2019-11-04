@@ -29,8 +29,8 @@ public class EconomyManagerTest {
     @Before
     public void setupEconomyManager()  {
         economyManager = new EconomyManager(new MockSaneEconomy(),
-                new Currency("test dollar", "test dollars", new DecimalFormat("0.00")),
-                new MockEconomyStorageBackend(), null);
+                                            new Currency("test dollar", "test dollars", new DecimalFormat("0.00")),
+                                            new MockEconomyStorageBackend(), null);
     }
 
     @Test
@@ -63,16 +63,16 @@ public class EconomyManagerTest {
 
         // Ensure that balance addition and subtraction works...
         Assert.assertEquals(new BigDecimal("25.00"), economyManager.transact(
-                new Transaction(economyManager.getCurrency(), playerOne, Economable.CONSOLE, new BigDecimal("25.00"), TransactionReason.TEST_TAKE)
-        ).getFromBalance());
+                                new Transaction(economyManager.getCurrency(), playerOne, Economable.CONSOLE, new BigDecimal("25.00"), TransactionReason.TEST_TAKE)
+                            ).getFromBalance());
 
         Assert.assertEquals(new BigDecimal("50.00"), economyManager.transact(
-                new Transaction(economyManager.getCurrency(), Economable.CONSOLE, playerOne, new BigDecimal("25.00"), TransactionReason.TEST_GIVE)
-        ).getToBalance());
+                                new Transaction(economyManager.getCurrency(), Economable.CONSOLE, playerOne, new BigDecimal("25.00"), TransactionReason.TEST_GIVE)
+                            ).getToBalance());
 
         Assert.assertEquals(TransactionResult.Status.ERR_NOT_ENOUGH_FUNDS, economyManager.transact(
-                new Transaction(economyManager.getCurrency(), playerTwo, Economable.CONSOLE, new BigDecimal(Double.MAX_VALUE), TransactionReason.TEST_TAKE)
-        ).getStatus());
+                                new Transaction(economyManager.getCurrency(), playerTwo, Economable.CONSOLE, new BigDecimal(Double.MAX_VALUE), TransactionReason.TEST_TAKE)
+                            ).getStatus());
 
         // Ensure that hasBalance works
         Assert.assertTrue(economyManager.hasBalance(playerOne, new BigDecimal("50.00")));

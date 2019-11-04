@@ -60,15 +60,15 @@ public class LimitManager {
 
     public void incrementLimitsHourly() {
         // For every limit type
-            // For every player
-                // For every limit
-                // Increment limit by the limit for the specific direction and item.
+        // For every player
+        // For every limit
+        // Increment limit by the limit for the specific direction and item.
 
         sellPlayerLimits.forEach((playerUuid, itemToLimit) -> {
             Map<ItemInfo, Integer> newLimits = new HashMap<>();
 
             itemToLimit.forEach((itemInfo, currentLimit) ->
-                    newLimits.put(itemInfo, currentLimit + (sellItemLimits.get(itemInfo).getHourlyGain())));
+                                newLimits.put(itemInfo, currentLimit + (sellItemLimits.get(itemInfo).getHourlyGain())));
 
             itemToLimit.putAll(newLimits);
         });

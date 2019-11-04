@@ -36,13 +36,15 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
     private TransactionLogger transactionLogger;
     private GithubVersionChecker versionChecker;
 
-    private final Map<String, SaneCommand> COMMANDS = new HashMap<String, SaneCommand>() {{
-        put("balance", new BalanceCommand(SaneEconomy.this));
-        put("ecoadmin", new EconomyAdminCommand(SaneEconomy.this));
-        put("pay", new PayCommand(SaneEconomy.this));
-        put("saneeconomy", new SaneEcoCommand(SaneEconomy.this));
-        put("balancetop", new BalanceTopCommand(SaneEconomy.this));
-    }};
+    private final Map<String, SaneCommand> COMMANDS = new HashMap<String, SaneCommand>() {
+        {
+            put("balance", new BalanceCommand(SaneEconomy.this));
+            put("ecoadmin", new EconomyAdminCommand(SaneEconomy.this));
+            put("pay", new PayCommand(SaneEconomy.this));
+            put("saneeconomy", new SaneEcoCommand(SaneEconomy.this));
+            put("balancetop", new BalanceTopCommand(SaneEconomy.this));
+        }
+    };
 
     public SaneEconomy() {
         instance = this;
@@ -190,7 +192,7 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
         getLogger().info("Initialized listeners.");
     }
 
-    private void shutdown(){
+    private void shutdown() {
         getServer().getPluginManager().disablePlugin(this);
     }
 
@@ -229,7 +231,7 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
      * Get the logger for the plugin.
      * @return Plugin logger.
      */
-    public static Logger logger(){
+    public static Logger logger() {
         return instance.getLogger();
     }
 

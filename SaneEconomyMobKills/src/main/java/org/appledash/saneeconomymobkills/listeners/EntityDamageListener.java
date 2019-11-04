@@ -87,10 +87,10 @@ public class EntityDamageListener implements Listener {
             }
 
             plugin.getSaneEconomy().getEconomyManager().transact(new Transaction(
-                    this.plugin.getSaneEconomy().getEconomyManager().getCurrency(), Economable.PLUGIN, Economable.wrap(offlinePlayer), thisAmount, TransactionReason.PLUGIN_GIVE
-            ));
+                        this.plugin.getSaneEconomy().getEconomyManager().getCurrency(), Economable.PLUGIN, Economable.wrap(offlinePlayer), thisAmount, TransactionReason.PLUGIN_GIVE
+                    ));
         }
-        
+
         damageDealt.remove(evt.getEntity().getEntityId());
     }
 

@@ -52,14 +52,14 @@ public class SignChangeListener implements Listener {
 
         if (signShop.canBuy()) { // The player be buying from the shop, not the other way around.
             this.plugin.getMessenger().sendMessage(evt.getPlayer(), "Will sell to players for {1}.",
-                    plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(signShop.getBuyPrice())
-            );
+                                                   plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(signShop.getBuyPrice())
+                                                  );
         }
 
         if (signShop.canSell()) { // The player be selling to the shop, not the other way around.
             this.plugin.getMessenger().sendMessage(evt.getPlayer(), "Will buy from players for {1}.",
-                    plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(signShop.getSellPrice())
-            );
+                                                   plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(signShop.getSellPrice())
+                                                  );
         }
     }
 

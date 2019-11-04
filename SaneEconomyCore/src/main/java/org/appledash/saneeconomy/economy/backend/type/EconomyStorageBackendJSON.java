@@ -40,13 +40,13 @@ public class EconomyStorageBackendJSON extends EconomyStorageBackendCaching {
         try {
             // try to load the old format and convert it
             // if that fails, load the new format
-                DataHolderOld dataHolder = gson.fromJson(new FileReader(file), DataHolderOld.class);
-                this.balances = new ConcurrentHashMap<>();
-                this.uuidToName = new ConcurrentHashMap<>(dataHolder.uuidToName);
+            DataHolderOld dataHolder = gson.fromJson(new FileReader(file), DataHolderOld.class);
+            this.balances = new ConcurrentHashMap<>();
+            this.uuidToName = new ConcurrentHashMap<>(dataHolder.uuidToName);
 
-                dataHolder.balances.forEach((s, bal) -> {
-                    this.balances.put(s, new BigDecimal(bal));
-                });
+            dataHolder.balances.forEach((s, bal) -> {
+                this.balances.put(s, new BigDecimal(bal));
+            });
 
             this.saveDatabase();
         } catch (FileNotFoundException e) {

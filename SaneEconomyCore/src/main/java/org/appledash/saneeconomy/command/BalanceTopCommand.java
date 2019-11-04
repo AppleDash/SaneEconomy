@@ -31,9 +31,9 @@ public class BalanceTopCommand extends SaneCommand {
     @Override
     public String[] getUsage() {
         return new String[] {
-                "/<command>",
-                "/<command> <page>"
-        };
+                   "/<command>",
+                   "/<command> <page>"
+               };
     }
 
     @Override

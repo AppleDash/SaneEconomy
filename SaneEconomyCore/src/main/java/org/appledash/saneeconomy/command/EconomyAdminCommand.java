@@ -39,8 +39,8 @@ public class EconomyAdminCommand extends SaneCommand {
     @Override
     public String[] getUsage() {
         return new String[] {
-                "/<command> <give/take/set> [player] <amount>"
-        };
+                   "/<command> <give/take/set> [player] <amount>"
+               };
     }
 
     @Override
@@ -92,7 +92,7 @@ public class EconomyAdminCommand extends SaneCommand {
                     ecoMan.getCurrency().formatAmount(amount),
                     sTargetPlayer,
                     ecoMan.getCurrency().formatAmount(newAmount)
-            );
+                                                       );
 
             if (this.saneEconomy.getConfig().getBoolean("economy.notify-admin-give") && targetPlayer.isOnline()) {
                 this.saneEconomy.getMessenger().sendMessage((Player) targetPlayer, "{1} has given you {2}. Your balance is now {3}.",
@@ -100,7 +100,7 @@ public class EconomyAdminCommand extends SaneCommand {
                         ecoMan.getCurrency().formatAmount(amount),
                         ecoMan.getCurrency().formatAmount(newAmount)
 
-                );
+                                                           );
             }
             return;
         }
@@ -115,7 +115,7 @@ public class EconomyAdminCommand extends SaneCommand {
                     ecoMan.getCurrency().formatAmount(amount),
                     sTargetPlayer,
                     ecoMan.getCurrency().formatAmount(newAmount)
-            );
+                                                       );
 
             if (this.saneEconomy.getConfig().getBoolean("economy.notify-admin-take") && targetPlayer.isOnline()) {
                 this.saneEconomy.getMessenger().sendMessage((Player) targetPlayer, "{1} has taken {2} from you. Your balance is now {3}.",
@@ -123,7 +123,7 @@ public class EconomyAdminCommand extends SaneCommand {
                         ecoMan.getCurrency().formatAmount(amount),
                         ecoMan.getCurrency().formatAmount(newAmount)
 
-                );
+                                                           );
             }
             return;
         }
@@ -137,13 +137,13 @@ public class EconomyAdminCommand extends SaneCommand {
                 // FIXME: This is a silly hack to get it to log.
                 if (oldBal.compareTo(BigDecimal.ZERO) > 0) {
                     logger.logTransaction(new Transaction(
-                            ecoMan.getCurrency(), economable, Economable.CONSOLE, oldBal, TransactionReason.ADMIN_TAKE
-                    ));
+                                              ecoMan.getCurrency(), economable, Economable.CONSOLE, oldBal, TransactionReason.ADMIN_TAKE
+                                          ));
                 }
 
                 logger.logTransaction(new Transaction(
-                        ecoMan.getCurrency(), Economable.CONSOLE, economable, amount, TransactionReason.ADMIN_GIVE
-                ));
+                                          ecoMan.getCurrency(), Economable.CONSOLE, economable, amount, TransactionReason.ADMIN_GIVE
+                                      ));
             });
 
             if (this.saneEconomy.getConfig().getBoolean("economy.notify-admin-set") && targetPlayer.isOnline()) {
@@ -151,7 +151,7 @@ public class EconomyAdminCommand extends SaneCommand {
                         sender.getName(),
                         ecoMan.getCurrency().formatAmount(amount)
 
-                );
+                                                           );
             }
 
             return;

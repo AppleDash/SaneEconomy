@@ -156,7 +156,7 @@ public class SaneEconomyConfiguration {
         boolean useSsl = config.getBoolean("use_ssl", false);
 
         return new DatabaseCredentials(
-                databaseType, backendHost, backendPort, backendUser, backendPass, backendDb, tablePrefix, useSsl
-        );
+                   databaseType, backendHost, backendPort, backendUser, backendPass, backendDb, tablePrefix, useSsl
+               );
     }
 }

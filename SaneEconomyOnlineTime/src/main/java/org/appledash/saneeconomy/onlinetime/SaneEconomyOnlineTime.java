@@ -62,7 +62,7 @@ public class SaneEconomyOnlineTime extends SanePlugin implements Listener {
                 }
 
             }
-        },0, 20);
+        }, 0, 20);
 
         this.getServer().getPluginManager().registerEvents(this, this);
     }

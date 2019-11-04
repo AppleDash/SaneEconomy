@@ -63,11 +63,11 @@ public class Currency {
         }
 
         return new Currency(
-                config.getString("name.singular", "dollar"),
-                config.getString("name.plural", "dollars"),
-                format,
-                config.getString("balance-format", "{1} {2}")
-        );
+                   config.getString("name.singular", "dollar"),
+                   config.getString("name.plural", "dollars"),
+                   format,
+                   config.getString("balance-format", "{1} {2}")
+               );
     }
 
     /**

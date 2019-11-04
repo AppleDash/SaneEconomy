@@ -121,8 +121,8 @@ public class EconomySaneEconomy implements Economy {
         }
 
         return transact(new Transaction(
-                SaneEconomy.getInstance().getEconomyManager().getCurrency(), makeEconomable(target), Economable.PLUGIN, new BigDecimal(amount), TransactionReason.PLUGIN_TAKE
-        ));
+                            SaneEconomy.getInstance().getEconomyManager().getCurrency(), makeEconomable(target), Economable.PLUGIN, new BigDecimal(amount), TransactionReason.PLUGIN_TAKE
+                        ));
     }
 
     @Override
@@ -136,8 +136,8 @@ public class EconomySaneEconomy implements Economy {
         }
 
         return transact(new Transaction(
-                SaneEconomy.getInstance().getEconomyManager().getCurrency(), Economable.wrap(offlinePlayer), Economable.PLUGIN, new BigDecimal(amount), TransactionReason.PLUGIN_TAKE
-        ));
+                            SaneEconomy.getInstance().getEconomyManager().getCurrency(), Economable.wrap(offlinePlayer), Economable.PLUGIN, new BigDecimal(amount), TransactionReason.PLUGIN_TAKE
+                        ));
     }
 
     @Override
@@ -157,8 +157,8 @@ public class EconomySaneEconomy implements Economy {
         }
 
         return transact(new Transaction(
-                SaneEconomy.getInstance().getEconomyManager().getCurrency(), Economable.PLUGIN, makeEconomable(target), new BigDecimal(amount), TransactionReason.PLUGIN_GIVE
-        ));
+                            SaneEconomy.getInstance().getEconomyManager().getCurrency(), Economable.PLUGIN, makeEconomable(target), new BigDecimal(amount), TransactionReason.PLUGIN_GIVE
+                        ));
     }
 
     @Override
@@ -168,8 +168,8 @@ public class EconomySaneEconomy implements Economy {
         }
 
         return transact(new Transaction(
-                SaneEconomy.getInstance().getEconomyManager().getCurrency(), Economable.PLUGIN, Economable.wrap(offlinePlayer), new BigDecimal(v), TransactionReason.PLUGIN_GIVE
-        ));
+                            SaneEconomy.getInstance().getEconomyManager().getCurrency(), Economable.PLUGIN, Economable.wrap(offlinePlayer), new BigDecimal(v), TransactionReason.PLUGIN_GIVE
+                        ));
     }
 
     @Override

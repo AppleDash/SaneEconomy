@@ -26,10 +26,10 @@ public class SaneEcoCommand extends SaneCommand {
     @Override
     public String[] getUsage() {
         return new String[] {
-                "/<command> reload - Reload everything.",
-                "/<command> reload-database - Reload the database.",
-                "/<command> reload-config - Reload the configuration."
-        };
+                   "/<command> reload - Reload everything.",
+                   "/<command> reload-database - Reload the database.",
+                   "/<command> reload-config - Reload the configuration."
+               };
     }
 
     @Override
