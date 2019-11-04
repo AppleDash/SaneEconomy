@@ -5,6 +5,7 @@ import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.economy.economable.Economable;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.UUID;
 
@@ -43,7 +44,7 @@ public class EconomyStorageBackendFlatfile extends EconomyStorageBackendCaching 
                 return;
             }
 
-            balances = (Map<String, Double>) ois.readObject();
+            //FIXME balances = (Map<String, Double>) ois.readObject();
             uuidToName = (Map<String, String>) ois.readObject();
 
             ois.close();
@@ -66,7 +67,8 @@ public class EconomyStorageBackendFlatfile extends EconomyStorageBackendCaching 
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
             ois.readInt(); // We already know it's 2.
-            this.balances = (Map<String, Double>) ois.readObject();
+            //FIXME this.balances = (Map<String, Double>) ois.readObject();
+            if (Boolean.TRUE) throw new ClassNotFoundException();
 
             /* Yes, this is kind of bad, but we want to make sure we're loading AND saving the new version of the DB. */
             saveDatabase();
@@ -94,8 +96,8 @@ public class EconomyStorageBackendFlatfile extends EconomyStorageBackendCaching 
     }
 
     @Override
-    public synchronized void setBalance(Economable economable, double newBalance) {
-        this.balances.put(economable.getUniqueIdentifier(), newBalance);
+    public synchronized void setBalance(Economable economable, BigDecimal newBalance) {
+        //FIXME this.balances.put(economable.getUniqueIdentifier(), newBalance);
         this.uuidToName.put(economable.getUniqueIdentifier(), economable.getName());
         saveDatabase();
     }

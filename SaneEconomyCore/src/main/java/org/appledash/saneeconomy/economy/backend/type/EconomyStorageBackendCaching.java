@@ -6,6 +6,7 @@ import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.utils.MapUtil;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -17,8 +18,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Blackjack is still best pony.
  */
 public abstract class EconomyStorageBackendCaching implements EconomyStorageBackend {
-    protected Map<String, Double> balances = new ConcurrentHashMap<>();
-    private LinkedHashMap<String, Double> topBalances = new LinkedHashMap<>();
+    protected Map<String, BigDecimal> balances = new ConcurrentHashMap<>();
+    private LinkedHashMap<String, BigDecimal> topBalances = new LinkedHashMap<>();
     protected Map<String, String> uuidToName = new HashMap<>();
 
     @Override
@@ -27,21 +28,21 @@ public abstract class EconomyStorageBackendCaching implements EconomyStorageBack
     }
 
     @Override
-    public double getBalance(Economable economable) {
+    public BigDecimal getBalance(Economable economable) {
         if (!accountExists(economable)) {
-            return 0.0D;
+            return BigDecimal.ZERO;
         }
 
         return balances.get(economable.getUniqueIdentifier());
     }
 
-    public LinkedHashMap<String, Double> getTopBalances() {
+    public LinkedHashMap<String, BigDecimal> getTopBalances() {
         return topBalances;
     }
 
     @Override
     public void reloadTopPlayerBalances() {
-        Map<String, Double> balances = new HashMap<>();
+        Map<String, BigDecimal> balances = new HashMap<>();
 
         this.balances.forEach((identifier, balance) -> {
             balances.put(this.uuidToName.get(identifier), balance);
@@ -51,7 +52,7 @@ public abstract class EconomyStorageBackendCaching implements EconomyStorageBack
     }
 
     @Override
-    public Map<String, Double> getAllBalances() {
+    public Map<String, BigDecimal> getAllBalances() {
         return ImmutableMap.copyOf(balances);
     }
 

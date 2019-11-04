@@ -7,6 +7,7 @@ import org.appledash.sanelib.command.exception.type.usage.TooManyArgumentsExcept
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -55,7 +56,7 @@ public class BalanceTopCommand extends SaneCommand {
 
         int offset = (page - 1) * nPerPage;
 
-        Map<String, Double> topBalances = this.saneEconomy.getEconomyManager().getTopBalances(nPerPage, offset);
+        Map<String, BigDecimal> topBalances = this.saneEconomy.getEconomyManager().getTopBalances(nPerPage, offset);
 
         if (topBalances.isEmpty()) {
             this.saneEconomy.getMessenger().sendMessage(sender, "There aren't enough players to display that page.");

@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import org.appledash.saneeconomy.economy.economable.Economable;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,7 +24,7 @@ public class EconomyStorageBackendJSON extends EconomyStorageBackendCaching {
     }
 
     @Override
-    public void setBalance(Economable economable, double newBalance) {
+    public void setBalance(Economable economable, BigDecimal newBalance) {
         balances.put(economable.getUniqueIdentifier(), newBalance);
         saveDatabase();
     }
@@ -45,7 +46,7 @@ public class EconomyStorageBackendJSON extends EconomyStorageBackendCaching {
             // if that fails, load the new format
             try {
                 DataHolder dataHolder = gson.fromJson(new FileReader(file), DataHolder.class);
-                this.balances = new ConcurrentHashMap<>(dataHolder.balances);
+                //FIXME this.balances = new ConcurrentHashMap<>(dataHolder.balances);
                 this.uuidToName = new ConcurrentHashMap<>(dataHolder.uuidToName);
             } catch (FileNotFoundException e1) {
                 throw new RuntimeException("Failed to load database!", e1);
@@ -60,8 +61,8 @@ public class EconomyStorageBackendJSON extends EconomyStorageBackendCaching {
 
     private synchronized void saveDatabase() {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false))) {
-            DataHolder dataHolder = new DataHolder(this.balances, this.uuidToName);
-            bufferedWriter.write(gson.toJson(dataHolder));
+            //FIXME DataHolder dataHolder = new DataHolder(this.balances, this.uuidToName);
+            //FIXMEbufferedWriter.write(gson.toJson(dataHolder));
         } catch (IOException e) {
             throw new RuntimeException("Failed to save database", e);
         }

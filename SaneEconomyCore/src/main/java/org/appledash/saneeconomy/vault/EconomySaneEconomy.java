@@ -11,6 +11,7 @@ import org.appledash.saneeconomy.economy.transaction.TransactionResult;
 import org.appledash.saneeconomy.utils.PlayerUtils;
 import org.bukkit.OfflinePlayer;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -40,7 +41,7 @@ public class EconomySaneEconomy implements Economy {
 
     @Override
     public String format(double v) {
-        return SaneEconomy.getInstance().getEconomyManager().getCurrency().formatAmount(v);
+        return SaneEconomy.getInstance().getEconomyManager().getCurrency().formatAmount(new BigDecimal(v));
     }
 
     @Override
@@ -75,12 +76,12 @@ public class EconomySaneEconomy implements Economy {
 
     @Override
     public double getBalance(String target) {
-        return SaneEconomy.getInstance().getEconomyManager().getBalance(makeEconomable(target));
+        return SaneEconomy.getInstance().getEconomyManager().getBalance(makeEconomable(target)).doubleValue();
     }
 
     @Override
     public double getBalance(OfflinePlayer offlinePlayer) {
-        return SaneEconomy.getInstance().getEconomyManager().getBalance(Economable.wrap(offlinePlayer));
+        return SaneEconomy.getInstance().getEconomyManager().getBalance(Economable.wrap(offlinePlayer)).doubleValue();
     }
 
     @Override
@@ -95,12 +96,12 @@ public class EconomySaneEconomy implements Economy {
 
     @Override
     public boolean has(String target, double amount) {
-        return SaneEconomy.getInstance().getEconomyManager().hasBalance(makeEconomable(target), amount);
+        return SaneEconomy.getInstance().getEconomyManager().hasBalance(makeEconomable(target), new BigDecimal(amount));
     }
 
     @Override
     public boolean has(OfflinePlayer offlinePlayer, double amount) {
-        return SaneEconomy.getInstance().getEconomyManager().hasBalance(Economable.wrap(offlinePlayer), amount);
+        return SaneEconomy.getInstance().getEconomyManager().hasBalance(Economable.wrap(offlinePlayer), new BigDecimal(amount));
     }
 
     @Override
@@ -120,7 +121,7 @@ public class EconomySaneEconomy implements Economy {
         }
 
         return transact(new Transaction(
-                SaneEconomy.getInstance().getEconomyManager().getCurrency(), makeEconomable(target), Economable.PLUGIN, amount, TransactionReason.PLUGIN_TAKE
+                SaneEconomy.getInstance().getEconomyManager().getCurrency(), makeEconomable(target), Economable.PLUGIN, new BigDecimal(amount), TransactionReason.PLUGIN_TAKE
         ));
     }
 
@@ -135,7 +136,7 @@ public class EconomySaneEconomy implements Economy {
         }
 
         return transact(new Transaction(
-                SaneEconomy.getInstance().getEconomyManager().getCurrency(), Economable.wrap(offlinePlayer), Economable.PLUGIN, amount, TransactionReason.PLUGIN_TAKE
+                SaneEconomy.getInstance().getEconomyManager().getCurrency(), Economable.wrap(offlinePlayer), Economable.PLUGIN, new BigDecimal(amount), TransactionReason.PLUGIN_TAKE
         ));
     }
 
@@ -156,7 +157,7 @@ public class EconomySaneEconomy implements Economy {
         }
 
         return transact(new Transaction(
-                SaneEconomy.getInstance().getEconomyManager().getCurrency(), Economable.PLUGIN, makeEconomable(target), amount, TransactionReason.PLUGIN_GIVE
+                SaneEconomy.getInstance().getEconomyManager().getCurrency(), Economable.PLUGIN, makeEconomable(target), new BigDecimal(amount), TransactionReason.PLUGIN_GIVE
         ));
     }
 
@@ -167,7 +168,7 @@ public class EconomySaneEconomy implements Economy {
         }
 
         return transact(new Transaction(
-                SaneEconomy.getInstance().getEconomyManager().getCurrency(), Economable.PLUGIN, Economable.wrap(offlinePlayer), v, TransactionReason.PLUGIN_GIVE
+                SaneEconomy.getInstance().getEconomyManager().getCurrency(), Economable.PLUGIN, Economable.wrap(offlinePlayer), new BigDecimal(v), TransactionReason.PLUGIN_GIVE
         ));
     }
 
@@ -281,7 +282,7 @@ public class EconomySaneEconomy implements Economy {
         TransactionResult result = SaneEconomy.getInstance().getEconomyManager().transact(transaction);
 
         if (result.getStatus() == TransactionResult.Status.SUCCESS) {
-            return new EconomyResponse(transaction.getAmount(), result.getToBalance(), EconomyResponse.ResponseType.SUCCESS, null);
+            return new EconomyResponse(transaction.getAmount().doubleValue(), result.getToBalance().doubleValue(), EconomyResponse.ResponseType.SUCCESS, null);
         }
 
         return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, result.getStatus().toString());

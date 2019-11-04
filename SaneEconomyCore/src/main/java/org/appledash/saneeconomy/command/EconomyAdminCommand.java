@@ -17,6 +17,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.math.BigDecimal;
+
 /**
  * Created by AppleDash on 6/13/2016.
  * Blackjack is still best pony.
@@ -73,10 +75,10 @@ public class EconomyAdminCommand extends SaneCommand {
         EconomyManager ecoMan = saneEconomy.getEconomyManager();
         Economable economable = Economable.wrap(targetPlayer);
 
-        double amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount);
+        BigDecimal amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount);
 
-        if (!(subCommand.equalsIgnoreCase("set") && amount == 0) && amount <= 0) { // If they're setting it to 0 it's fine, otherwise reject numbers under 1.
-            this.saneEconomy.getMessenger().sendMessage(sender, "{1} is not a positive number.", ((amount == -1) ? sAmount : String.valueOf(amount)));
+        if (!(subCommand.equalsIgnoreCase("set") && amount.equals(BigDecimal.ZERO)) && amount.compareTo(BigDecimal.ZERO) <= 0) { // If they're setting it to 0 it's fine, otherwise reject numbers under 1.
+            this.saneEconomy.getMessenger().sendMessage(sender, "{1} is not a positive number.", ((amount.equals(BigDecimal.ONE.negate())) ? sAmount : String.valueOf(amount)));
             return;
         }
 
@@ -84,7 +86,7 @@ public class EconomyAdminCommand extends SaneCommand {
             Transaction transaction = new Transaction(ecoMan.getCurrency(), Economable.wrap(sender), Economable.wrap(targetPlayer), amount, TransactionReason.ADMIN_GIVE);
             TransactionResult result = ecoMan.transact(transaction);
 
-            double newAmount = result.getToBalance();
+            BigDecimal newAmount = result.getToBalance();
 
             this.saneEconomy.getMessenger().sendMessage(sender, "Added {1} to {2}. Their balance is now {3}.",
                     ecoMan.getCurrency().formatAmount(amount),
@@ -107,7 +109,7 @@ public class EconomyAdminCommand extends SaneCommand {
             Transaction transaction = new Transaction(ecoMan.getCurrency(), Economable.wrap(targetPlayer), Economable.wrap(sender), amount, TransactionReason.ADMIN_TAKE);
             TransactionResult result = ecoMan.transact(transaction);
 
-            double newAmount = result.getFromBalance();
+            BigDecimal newAmount = result.getFromBalance();
 
             this.saneEconomy.getMessenger().sendMessage(sender, "Took {1} from {2}. Their balance is now {3}.",
                     ecoMan.getCurrency().formatAmount(amount),
@@ -127,13 +129,13 @@ public class EconomyAdminCommand extends SaneCommand {
         }
 
         if (subCommand.equalsIgnoreCase("set")) {
-            double oldBal = ecoMan.getBalance(economable);
+            BigDecimal oldBal = ecoMan.getBalance(economable);
             ecoMan.setBalance(economable, amount);
             this.saneEconomy.getMessenger().sendMessage(sender, "Balance for {1} set to {2}.", sTargetPlayer, ecoMan.getCurrency().formatAmount(amount));
 
             saneEconomy.getTransactionLogger().ifPresent((logger) -> {
                 // FIXME: This is a silly hack to get it to log.
-                if (oldBal > 0.0) {
+                if (oldBal.compareTo(BigDecimal.ZERO) > 0) {
                     logger.logTransaction(new Transaction(
                             ecoMan.getCurrency(), economable, Economable.CONSOLE, oldBal, TransactionReason.ADMIN_TAKE
                     ));

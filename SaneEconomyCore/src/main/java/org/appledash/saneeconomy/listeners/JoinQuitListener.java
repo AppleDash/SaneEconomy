@@ -14,6 +14,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.math.BigDecimal;
+
 /**
  * Created by AppleDash on 6/13/2016.
  * Blackjack is still best pony.
@@ -29,10 +31,10 @@ public class JoinQuitListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent evt) {
         Player player = evt.getPlayer();
         Economable economable = Economable.wrap((OfflinePlayer) player);
-        double startBalance = plugin.getConfig().getDouble("economy.start-balance", 0.0D);
+        BigDecimal startBalance = new BigDecimal(plugin.getConfig().getDouble("economy.start-balance", 0.0D));
 
         /* A starting balance is configured AND they haven't been given it yet. */
-        if ((startBalance > 0) && !plugin.getEconomyManager().accountExists(economable)) {
+        if ((startBalance.compareTo(BigDecimal.ZERO) > 0) && !plugin.getEconomyManager().accountExists(economable)) {
             plugin.getEconomyManager().transact(new Transaction(
                     plugin.getEconomyManager().getCurrency(), Economable.CONSOLE, economable, startBalance, TransactionReason.STARTING_BALANCE
             ));

@@ -1,16 +1,18 @@
 package org.appledash.saneeconomy.economy.transaction;
 
+import java.math.BigDecimal;
+
 /**
  * Created by appledash on 9/21/16.
  * Blackjack is best pony.
  */
 public class TransactionResult {
     private final Transaction transaction;
-    private final double fromBalance;
-    private final double toBalance;
+    private final BigDecimal fromBalance;
+    private final BigDecimal toBalance;
     private Status status;
 
-    public TransactionResult(Transaction transaction, double fromBalance, double toBalance) {
+    public TransactionResult(Transaction transaction, BigDecimal fromBalance, BigDecimal toBalance) {
         this.transaction = transaction;
         this.fromBalance = fromBalance;
         this.toBalance = toBalance;
@@ -18,7 +20,7 @@ public class TransactionResult {
     }
 
     public TransactionResult(Transaction transaction, Status status) {
-        this(transaction, -1, -1);
+        this(transaction, BigDecimal.ONE.negate(), BigDecimal.ONE.negate());
         this.status = status;
     }
 
@@ -26,11 +28,11 @@ public class TransactionResult {
         return transaction;
     }
 
-    public double getFromBalance() {
+    public BigDecimal getFromBalance() {
         return fromBalance;
     }
 
-    public double getToBalance() {
+    public BigDecimal getToBalance() {
         return toBalance;
     }
 

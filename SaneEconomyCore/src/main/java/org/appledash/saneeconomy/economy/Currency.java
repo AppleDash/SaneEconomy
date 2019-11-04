@@ -5,6 +5,7 @@ import org.appledash.sanelib.messages.MessageUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
@@ -29,6 +30,8 @@ public class Currency {
         this.namePlural = namePlural;
         this.format = format;
         this.balanceFormat = balanceFormat;
+
+        this.format.setParseBigDecimal(true);
     }
 
     public static Currency fromConfig(ConfigurationSection config) {
@@ -72,9 +75,9 @@ public class Currency {
      * @param amount Money amount.
      * @return Formatted amount string.
      */
-    public String formatAmount(double amount) {
+    public String formatAmount(BigDecimal amount) {
         String formatted;
-        if (amount == 1) {
+        if (amount.equals(BigDecimal.ONE)) {
             formatted = MessageUtils.indexedFormat(balanceFormat, format.format(amount), nameSingular);
         } else {
             formatted = MessageUtils.indexedFormat(balanceFormat, format.format(amount), namePlural);

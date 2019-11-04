@@ -4,6 +4,7 @@ import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.utils.database.MySQLConnection;
 import org.appledash.sanelib.database.DatabaseCredentials;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -57,6 +58,8 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
                 schemaVersion = 3;
             }
 
+            // TODO: Schema upgrade from storing balances as decimals to storing them as Strings
+
             if (schemaVersion != 3) {
                 throw new RuntimeException("Invalid database schema version!");
             }
@@ -90,7 +93,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
             balances.clear();
 
             while (rs.next()) {
-                balances.put(rs.getString("unique_identifier"), rs.getDouble("balance"));
+                balances.put(rs.getString("unique_identifier"), new BigDecimal(rs.getString("balance")));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to reload data from SQL.", e);
@@ -98,8 +101,8 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
     }
 
     @Override
-    public void setBalance(final Economable economable, final double newBalance) {
-        final double oldBalance = getBalance(economable);
+    public void setBalance(final Economable economable, final BigDecimal newBalance) {
+        final BigDecimal oldBalance = getBalance(economable);
         balances.put(economable.getUniqueIdentifier(), newBalance);
 
         dbConn.executeAsyncOperation("set_balance_" + economable.getUniqueIdentifier(), (conn) -> {
@@ -107,7 +110,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
                 ensureAccountExists(economable, conn);
                 conn.prepareStatement("LOCK TABLE " + dbConn.getTable("saneeconomy_balances") + " WRITE").execute();
                 PreparedStatement statement = dbConn.prepareStatement(conn, String.format("UPDATE `%s` SET balance = ?, last_name = ? WHERE `unique_identifier` = ?", dbConn.getTable("saneeconomy_balances")));
-                statement.setDouble(1, newBalance);
+                statement.setString(1, newBalance.toString());
                 statement.setString(2, economable.getName());
                 statement.setString(3, economable.getUniqueIdentifier());
                 statement.executeUpdate();
@@ -160,7 +163,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
                 ResultSet rs = ps.executeQuery();
 
                 if (rs.next()) {
-                    this.balances.put(uniqueIdentifier, rs.getDouble("balance"));
+                    this.balances.put(uniqueIdentifier, new BigDecimal(rs.getString("balance")));
                 }
             } catch (SQLException e) {
                 throw new RuntimeException("SQL error has occured", e);

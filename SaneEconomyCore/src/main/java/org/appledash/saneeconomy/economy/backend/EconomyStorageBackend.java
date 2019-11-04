@@ -2,6 +2,7 @@ package org.appledash.saneeconomy.economy.backend;
 
 import org.appledash.saneeconomy.economy.economable.Economable;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -25,20 +26,20 @@ public interface EconomyStorageBackend {
      * @param economable Economable
      * @return Player's current balance
      */
-    double getBalance(Economable economable);
+    BigDecimal getBalance(Economable economable);
 
     /**
      * Set the balance of an Economable, overwriting the old balance.
      * @param economable Economable
      * @param newBalance Player's new balance
      */
-    void setBalance(Economable economable, double newBalance);
+    void setBalance(Economable economable, BigDecimal newBalance);
 
     /**
      * Get the UUIDs of the players who have the most money, along with how much money they have.
      * @return Map of player UUIDs to amounts.
      */
-    LinkedHashMap<String, Double> getTopBalances();
+    LinkedHashMap<String, BigDecimal> getTopBalances();
 
     /**
      * Reload this backend's database from disk.
@@ -60,7 +61,7 @@ public interface EconomyStorageBackend {
      * Get the balances of all entities in this database.
      * @return Map of unique identifiers to balances.
      */
-    Map<String, Double> getAllBalances();
+    Map<String, BigDecimal> getAllBalances();
 
     /**
      * Wait until all of the data in memory has been written out to disk.

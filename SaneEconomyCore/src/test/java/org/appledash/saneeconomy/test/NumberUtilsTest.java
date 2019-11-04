@@ -5,6 +5,7 @@ import org.appledash.saneeconomy.utils.NumberUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Locale;
 
@@ -16,21 +17,21 @@ public class NumberUtilsTest {
     @Test
     public void testParsePositive() {
         // Valid input
-        Assert.assertEquals(69.0, NumberUtils.parsePositiveDouble("69.0"), 0.0);
+        Assert.assertEquals(new BigDecimal("69.0"), NumberUtils.parsePositiveDouble("69.0"));
         // Valid but not positive
-        Assert.assertEquals(-1.0, NumberUtils.parsePositiveDouble("-10.0"), 0.0);
+        Assert.assertEquals(BigDecimal.ONE.negate(), NumberUtils.parsePositiveDouble("-10.0"));
         // Invalid
-        Assert.assertEquals(-1.0, NumberUtils.parsePositiveDouble("nan"), 0.0);
-        Assert.assertEquals(-1.0, NumberUtils.parsePositiveDouble("ponies"), 0.0);
+        Assert.assertEquals(BigDecimal.ONE.negate(), NumberUtils.parsePositiveDouble("nan"));
+        Assert.assertEquals(BigDecimal.ONE.negate(), NumberUtils.parsePositiveDouble("ponies"));
         // Infinite
-        Assert.assertEquals(-1.0, NumberUtils.parsePositiveDouble("1E1000000000"), 0.0);
+        // TODO: Not needed with BigDecimal? Assert.assertEquals(BigDecimal.ONE.negate(), NumberUtils.parsePositiveDouble("1E1000000000"));
     }
 
     @Test
     public void testFilter() {
         Currency currency = new Currency(null, null, new DecimalFormat("0.00"));
 
-        Assert.assertEquals(NumberUtils.filterAmount(currency, 1337.420D), 1337.42, 0.0);
+        Assert.assertEquals(new BigDecimal("1337.42"), NumberUtils.filterAmount(currency, new BigDecimal("1337.420")));
     }
 
     @Test

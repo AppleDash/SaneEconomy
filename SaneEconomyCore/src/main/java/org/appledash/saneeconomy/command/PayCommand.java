@@ -15,6 +15,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.math.BigDecimal;
+
 /**
  * Created by AppleDash on 6/14/2016.
  * Blackjack is still best pony.
@@ -67,10 +69,10 @@ public class PayCommand extends SaneCommand {
         }
 
         String sAmount = args[1];
-        double amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount);
+        BigDecimal amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount);
 
-        if (amount <= 0) {
-            this.saneEconomy.getMessenger().sendMessage(sender, "{1} is not a positive number.", ((amount == -1) ? sAmount : String.valueOf(amount)));
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            this.saneEconomy.getMessenger().sendMessage(sender, "{1} is not a positive number.", ((amount.equals(BigDecimal.ONE.negate())) ? sAmount : String.valueOf(amount)));
             return;
         }
 

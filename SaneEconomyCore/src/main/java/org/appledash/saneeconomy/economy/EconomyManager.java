@@ -13,6 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import java.awt.*;
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -69,9 +70,9 @@ public class EconomyManager {
      * @param targetPlayer Player to get balance of
      * @return Player's balance
      */
-    public double getBalance(Economable targetPlayer) {
+    public BigDecimal getBalance(Economable targetPlayer) {
         if (targetPlayer == Economable.CONSOLE) {
-            return Double.MAX_VALUE;
+            return new BigDecimal(Double.MAX_VALUE);
         }
 
         return backend.getBalance(targetPlayer);
@@ -84,8 +85,8 @@ public class EconomyManager {
      * @param requiredBalance How much money we're checking for
      * @return True if they have requiredBalance or more, false otherwise
      */
-    public boolean hasBalance(Economable targetPlayer, double requiredBalance) {
-        return (targetPlayer == Economable.CONSOLE) || (getBalance(targetPlayer) >= requiredBalance);
+    public boolean hasBalance(Economable targetPlayer, BigDecimal requiredBalance) {
+        return (targetPlayer == Economable.CONSOLE) || (getBalance(targetPlayer).compareTo(requiredBalance) >= 0);
 
     }
 
@@ -96,8 +97,8 @@ public class EconomyManager {
      * @param amount Amount to add
      * @throws IllegalArgumentException If amount is negative
      */
-    private void addBalance(Economable targetPlayer, double amount) {
-        setBalance(targetPlayer, backend.getBalance(targetPlayer) + amount);
+    private void addBalance(Economable targetPlayer, BigDecimal amount) {
+        setBalance(targetPlayer, backend.getBalance(targetPlayer).add(amount));
     }
 
     /**
@@ -109,9 +110,9 @@ public class EconomyManager {
      * @param amount Amount to subtract
      * @throws IllegalArgumentException If amount is negative
      */
-    private void subtractBalance(Economable targetPlayer, double amount) {
+    private void subtractBalance(Economable targetPlayer, BigDecimal amount) {
         // Ensure we don't go negative.
-        setBalance(targetPlayer, Math.max(0.0, backend.getBalance(targetPlayer) - amount));
+        setBalance(targetPlayer, backend.getBalance(targetPlayer).subtract(amount).max(BigDecimal.ZERO));
     }
 
     /**
@@ -120,7 +121,7 @@ public class EconomyManager {
      * @param amount Amount to set balance to
      * @throws IllegalArgumentException If amount is negative
      */
-    public void setBalance(Economable targetPlayer, double amount) {
+    public void setBalance(Economable targetPlayer, BigDecimal amount) {
         amount = NumberUtils.filterAmount(currency, amount);
 
         if (targetPlayer == Economable.CONSOLE) {
@@ -138,7 +139,7 @@ public class EconomyManager {
     public TransactionResult transact(Transaction transaction) {
         Economable sender = transaction.getSender();
         Economable receiver = transaction.getReceiver();
-        double amount = transaction.getAmount(); // This amount is validated and filtered upon creation of Transaction
+        BigDecimal amount = transaction.getAmount(); // This amount is validated and filtered upon creation of Transaction
 
         if (Bukkit.getServer().getPluginManager() != null) { // Bukkit.getServer().getPluginManager() == null from our JUnit tests.
             SaneEconomyTransactionEvent evt = new SaneEconomyTransactionEvent(transaction);
@@ -185,8 +186,8 @@ public class EconomyManager {
      * @param amount Maximum number of players to show.
      * @return Map of OfflinePlayer to Double
      */
-    public Map<String, Double> getTopBalances(int amount, int offset) {
-        LinkedHashMap<String, Double> uuidBalances = backend.getTopBalances();
+    public Map<String, BigDecimal> getTopBalances(int amount, int offset) {
+        LinkedHashMap<String, BigDecimal> uuidBalances = backend.getTopBalances();
 
         /* TODO
         uuidBalances.forEach((uuid, balance) -> {

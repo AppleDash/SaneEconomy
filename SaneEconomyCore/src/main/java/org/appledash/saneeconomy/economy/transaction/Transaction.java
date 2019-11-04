@@ -5,6 +5,8 @@ import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.economy.transaction.TransactionReason.AffectedParties;
 import org.appledash.saneeconomy.utils.NumberUtils;
 
+import java.math.BigDecimal;
+
 /**
  * Created by appledash on 9/21/16.
  * Blackjack is best pony.
@@ -12,11 +14,11 @@ import org.appledash.saneeconomy.utils.NumberUtils;
 public class Transaction {
     private final Economable sender;
     private final Economable receiver;
-    private final double amount;
+    private final BigDecimal amount;
     private final TransactionReason reason;
 
-    public Transaction(Currency currency, Economable sender, Economable receiver, double amount, TransactionReason reason) {
-        if (amount <= 0.0) {
+    public Transaction(Currency currency, Economable sender, Economable receiver, BigDecimal amount, TransactionReason reason) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Cannot transact a zero or negative amount!");
         }
 
@@ -35,7 +37,7 @@ public class Transaction {
         return receiver;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
