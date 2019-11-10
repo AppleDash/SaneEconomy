@@ -97,6 +97,8 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
 
                     Arrays.stream(playersToSync).filter(p -> (p != null) && !p.isOnline()).forEach(p -> {
                         ByteArrayDataOutput bado = ByteStreams.newDataOutput();
+                        bado.writeUTF("Forward");
+                        bado.writeUTF("ALL");
                         bado.writeUTF("SaneEconomy");
                         bado.writeUTF("SyncPlayer");
                         bado.writeUTF(p.getUniqueId().toString());
