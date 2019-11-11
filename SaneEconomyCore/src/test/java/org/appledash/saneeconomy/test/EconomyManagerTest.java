@@ -10,6 +10,7 @@ import org.appledash.saneeconomy.economy.transaction.TransactionResult;
 import org.appledash.saneeconomy.test.mock.MockEconomyStorageBackend;
 import org.appledash.saneeconomy.test.mock.MockOfflinePlayer;
 import org.appledash.saneeconomy.test.mock.MockSaneEconomy;
+import org.appledash.saneeconomy.test.util.SaneEcoAssert;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,8 +42,8 @@ public class EconomyManagerTest {
         // Accounts should not exist
         Assert.assertFalse(this.economyManager.accountExists(playerOne));
         Assert.assertFalse(this.economyManager.accountExists(playerTwo));
-        Assert.assertEquals(BigDecimal.ZERO, this.economyManager.getBalance(playerOne));
-        Assert.assertEquals(BigDecimal.ZERO, this.economyManager.getBalance(playerTwo));
+        SaneEcoAssert.assertEquals(BigDecimal.ZERO, this.economyManager.getBalance(playerOne));
+        SaneEcoAssert.assertEquals(BigDecimal.ZERO, this.economyManager.getBalance(playerTwo));
 
         this.economyManager.setBalance(playerOne, new BigDecimal(100.0));
 
@@ -51,22 +52,22 @@ public class EconomyManagerTest {
         Assert.assertFalse(this.economyManager.accountExists(playerTwo));
 
         // One should have balance, two should not
-        Assert.assertEquals(new BigDecimal("100.00"), this.economyManager.getBalance(playerOne));
-        Assert.assertEquals(BigDecimal.ZERO, this.economyManager.getBalance(playerTwo));
+        SaneEcoAssert.assertEquals(new BigDecimal("100.00"), this.economyManager.getBalance(playerOne));
+        SaneEcoAssert.assertEquals(BigDecimal.ZERO, this.economyManager.getBalance(playerTwo));
 
         // One should be able to transfer to two
         Assert.assertSame(this.economyManager.transact(new Transaction(this.economyManager.getCurrency(), playerOne, playerTwo, new BigDecimal(50.0), TransactionReason.PLAYER_PAY)).getStatus(), TransactionResult.Status.SUCCESS);
 
         // One should now have only 50 left, two should have 50 now
-        Assert.assertEquals("Player one should have 50 dollars", new BigDecimal("50.00"), this.economyManager.getBalance(playerOne));
-        Assert.assertEquals("Player two should have 50 dollars", new BigDecimal("50.00"), this.economyManager.getBalance(playerTwo));
+        SaneEcoAssert.assertEquals("Player one should have 50 dollars", new BigDecimal("50.00"), this.economyManager.getBalance(playerOne));
+        SaneEcoAssert.assertEquals("Player two should have 50 dollars", new BigDecimal("50.00"), this.economyManager.getBalance(playerTwo));
 
         // Ensure that balance addition and subtraction works...
-        Assert.assertEquals(new BigDecimal("25.00"), this.economyManager.transact(
+        SaneEcoAssert.assertEquals(new BigDecimal("25.00"), this.economyManager.transact(
                                 new Transaction(this.economyManager.getCurrency(), playerOne, Economable.CONSOLE, new BigDecimal("25.00"), TransactionReason.TEST_TAKE)
                             ).getFromBalance());
 
-        Assert.assertEquals(new BigDecimal("50.00"), this.economyManager.transact(
+        SaneEcoAssert.assertEquals(new BigDecimal("50.00"), this.economyManager.transact(
                                 new Transaction(this.economyManager.getCurrency(), Economable.CONSOLE, playerOne, new BigDecimal("25.00"), TransactionReason.TEST_GIVE)
                             ).getToBalance());
 

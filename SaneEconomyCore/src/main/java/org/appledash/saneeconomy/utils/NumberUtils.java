@@ -60,6 +60,18 @@ public final class NumberUtils {
         return filterAmount(currency, parsePositiveDouble(sDouble));
     }
 
+    public static boolean equals(BigDecimal left, BigDecimal right) {
+        if (left == null) {
+            throw new NullPointerException("left == null");
+        }
+
+        if (right == null) {
+            throw new NullPointerException("right == null");
+        }
+
+        return left.compareTo(right) == 0;
+    }
+
     private static DecimalFormat constructDecimalFormat() {
         DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
 

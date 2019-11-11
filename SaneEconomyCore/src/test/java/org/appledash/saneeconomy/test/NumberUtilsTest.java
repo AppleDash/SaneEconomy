@@ -1,6 +1,7 @@
 package org.appledash.saneeconomy.test;
 
 import org.appledash.saneeconomy.economy.Currency;
+import org.appledash.saneeconomy.test.util.SaneEcoAssert;
 import org.appledash.saneeconomy.utils.NumberUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -17,12 +18,12 @@ public class NumberUtilsTest {
     @Test
     public void testParsePositive() {
         // Valid input
-        Assert.assertEquals(new BigDecimal("69.0"), NumberUtils.parsePositiveDouble("69.0"));
+        SaneEcoAssert.assertEquals(new BigDecimal("69.0"), NumberUtils.parsePositiveDouble("69.0"));
         // Valid but not positive
-        Assert.assertEquals(BigDecimal.ONE.negate(), NumberUtils.parsePositiveDouble("-10.0"));
+        SaneEcoAssert.assertEquals(BigDecimal.ONE.negate(), NumberUtils.parsePositiveDouble("-10.0"));
         // Invalid
-        Assert.assertEquals(BigDecimal.ONE.negate(), NumberUtils.parsePositiveDouble("nan"));
-        Assert.assertEquals(BigDecimal.ONE.negate(), NumberUtils.parsePositiveDouble("ponies"));
+        SaneEcoAssert.assertEquals(BigDecimal.ONE.negate(), NumberUtils.parsePositiveDouble("nan"));
+        SaneEcoAssert.assertEquals(BigDecimal.ONE.negate(), NumberUtils.parsePositiveDouble("ponies"));
         // Infinite
         // TODO: Not needed with BigDecimal? Assert.assertEquals(BigDecimal.ONE.negate(), NumberUtils.parsePositiveDouble("1E1000000000"));
     }
@@ -31,7 +32,7 @@ public class NumberUtilsTest {
     public void testFilter() {
         Currency currency = new Currency(null, null, new DecimalFormat("0.00"));
 
-        Assert.assertEquals(new BigDecimal("1337.42"), NumberUtils.filterAmount(currency, new BigDecimal("1337.420")));
+        SaneEcoAssert.assertEquals(new BigDecimal("1337.42"), NumberUtils.filterAmount(currency, new BigDecimal("1337.420")));
     }
 
     @Test
@@ -46,5 +47,15 @@ public class NumberUtilsTest {
         } finally {
             Locale.setDefault(old);
         }
+    }
+
+    @Test
+    public void testBigDecimalEquals() {
+        BigDecimal one = new BigDecimal("100.0");
+        BigDecimal two = new BigDecimal("100.00");
+        BigDecimal three = new BigDecimal("100.1");
+
+        Assert.assertTrue("100.0 should equal 100.00", NumberUtils.equals(one, two));
+        Assert.assertFalse("100.0 should not equal 100.1", NumberUtils.equals(one, three));
     }
 }
