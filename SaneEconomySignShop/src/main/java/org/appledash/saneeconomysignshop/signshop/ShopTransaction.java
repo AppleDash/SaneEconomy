@@ -30,30 +30,30 @@ public class ShopTransaction {
     }
 
     public TransactionDirection getDirection() {
-        return direction;
+        return this.direction;
     }
 
     public Player getPlayer() {
-        return player;
+        return this.player;
     }
 
     public ItemInfo getItem() {
-        return item;
+        return this.item;
     }
 
     public int getQuantity() {
-        return quantity;
+        return this.quantity;
     }
 
     public double getPrice() {
-        return price;
+        return this.price;
     }
 
     public Transaction makeEconomyTransaction() {
-        if (direction == TransactionDirection.BUY) {
-            return new Transaction(this.currency, Economable.wrap(player), Economable.PLUGIN, price, TransactionReason.PLUGIN_TAKE);
+        if (this.direction == TransactionDirection.BUY) {
+            return new Transaction(this.currency, Economable.wrap(this.player), Economable.PLUGIN, this.price, TransactionReason.PLUGIN_TAKE);
         } else {
-            return new Transaction(this.currency, Economable.PLUGIN, Economable.wrap(player), price, TransactionReason.PLUGIN_GIVE);
+            return new Transaction(this.currency, Economable.PLUGIN, Economable.wrap(this.player), this.price, TransactionReason.PLUGIN_GIVE);
         }
     }
 

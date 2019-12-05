@@ -49,7 +49,7 @@ public class InteractListener implements Listener {
             return;
         }
 
-        Optional<SignShop> shopOptional = plugin.getSignShopManager().getSignShop(evt.getClickedBlock().getLocation());
+        Optional<SignShop> shopOptional = this.plugin.getSignShopManager().getSignShop(evt.getClickedBlock().getLocation());
 
         if (!shopOptional.isPresent()) {
             return;
@@ -65,7 +65,7 @@ public class InteractListener implements Listener {
                 return;
             }
 
-            doBuy(shop, evt.getPlayer());
+            this.doBuy(shop, evt.getPlayer());
         }
 
         // Sell
@@ -76,12 +76,12 @@ public class InteractListener implements Listener {
                 return;
             }
 
-            doSell(shop, evt.getPlayer());
+            this.doSell(shop, evt.getPlayer());
         }
     }
 
     private void doBuy(SignShop shop, Player player) {
-        EconomyManager ecoMan = plugin.getSaneEconomy().getEconomyManager();
+        EconomyManager ecoMan = this.plugin.getSaneEconomy().getEconomyManager();
         int quantity = player.isSneaking() ? 1 : shop.getQuantity();
 
         ShopTransaction shopTransaction = shop.makeTransaction(ecoMan.getCurrency(), player, TransactionDirection.BUY, quantity);
@@ -103,7 +103,7 @@ public class InteractListener implements Listener {
             return;
         }
 
-        ItemStack stack = shop.getItemStack().clone();
+        ItemStack stack = new ItemStack(shop.getItemStack()); /* Clone it so we don't modify the stack size in the shop */
         stack.setAmount(quantity);
         player.getInventory().addItem(stack);
 
@@ -112,7 +112,7 @@ public class InteractListener implements Listener {
     }
 
     private void doSell(SignShop shop, Player player) { // TODO: Selling enchanted items
-        EconomyManager ecoMan = plugin.getSaneEconomy().getEconomyManager();
+        EconomyManager ecoMan = this.plugin.getSaneEconomy().getEconomyManager();
         int quantity = player.isSneaking() ? 1 : shop.getQuantity();
         double price = shop.getSellPrice(quantity);
 
@@ -123,15 +123,15 @@ public class InteractListener implements Listener {
 
         ShopTransaction shopTransaction = shop.makeTransaction(ecoMan.getCurrency(), player, TransactionDirection.SELL, quantity);
 
-        if (!plugin.getLimitManager().shouldAllowTransaction(shopTransaction)) {
+        if (!this.plugin.getLimitManager().shouldAllowTransaction(shopTransaction)) {
             this.plugin.getMessenger().sendMessage(player, "You have reached your selling limit for the time being. Try back in an hour or so.");
             return;
         }
 
-        plugin.getLimitManager().setRemainingLimit(player, TransactionDirection.SELL, shop.getItem(), plugin.getLimitManager().getRemainingLimit(player, TransactionDirection.SELL, shop.getItem()) - quantity);
+        this.plugin.getLimitManager().setRemainingLimit(player, TransactionDirection.SELL, shop.getItem(), this.plugin.getLimitManager().getRemainingLimit(player, TransactionDirection.SELL, shop.getItem()) - quantity);
 
 
-        ItemStack stack = shop.getItemStack().clone();
+        ItemStack stack = new ItemStack(shop.getItemStack()); /* Clone it so we don't modify the stack size in the shop */
         stack.setAmount(quantity);
         player.getInventory().removeItem(stack); // FIXME: This does not remove items with damage values that were detected by contains()
 

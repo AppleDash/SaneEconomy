@@ -17,9 +17,9 @@ import java.util.*;
  * Blackjack is best pony.
  */
 public class SaneEconomyOnlineTime extends SanePlugin implements Listener {
-    private Map<UUID, Long> onlineSeconds = new HashMap<>();
-    private Map<UUID, Double> reportingAmounts = new HashMap<>();
-    private List<Payout> payouts = new ArrayList<>();
+    private final Map<UUID, Long> onlineSeconds = new HashMap<>();
+    private final Map<UUID, Double> reportingAmounts = new HashMap<>();
+    private final List<Payout> payouts = new ArrayList<>();
     private SaneEconomy saneEconomy;
 
     @Override
@@ -40,7 +40,7 @@ public class SaneEconomyOnlineTime extends SanePlugin implements Listener {
 
                 this.onlineSeconds.put(player.getUniqueId(), onlineSeconds);
 
-                for (Payout payout : payouts) {
+                for (Payout payout : this.payouts) {
                     if (payout.getPermission() != null && !player.hasPermission(payout.getPermission())) {
                         continue;
                     }
@@ -56,25 +56,20 @@ public class SaneEconomyOnlineTime extends SanePlugin implements Listener {
                     }
 
                     if ((onlineSeconds % payout.getReportInterval()) == 0) {
-                        this.getMessenger().sendMessage(player, payout.getMessage(), this.saneEconomy.getEconomyManager().getCurrency().formatAmount(this.reportingAmounts.getOrDefault(player.getUniqueId(), 0D)), payout.getReportInterval());
-                        this.reportingAmounts.put(player.getUniqueId(), 0D);
+                        this.getMessenger().sendMessage(player, payout.getMessage(), this.saneEconomy.getEconomyManager().getCurrency().formatAmount(this.reportingAmounts.getOrDefault(player.getUniqueId(), 0.0D)), payout.getReportInterval());
+                        this.reportingAmounts.put(player.getUniqueId(), 0.0D);
                     }
                 }
 
             }
-        },0, 20);
+        }, 0, 20);
 
         this.getServer().getPluginManager().registerEvents(this, this);
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent evt) {
-        if (this.onlineSeconds.containsKey(evt.getPlayer().getUniqueId())) {
-            this.onlineSeconds.remove(evt.getPlayer().getUniqueId());
-        }
-
-        if (this.reportingAmounts.containsKey(evt.getPlayer().getUniqueId())) {
-            this.reportingAmounts.remove(evt.getPlayer().getUniqueId());
-        }
+        this.onlineSeconds.remove(evt.getPlayer().getUniqueId());
+        this.reportingAmounts.remove(evt.getPlayer().getUniqueId());
     }
 }

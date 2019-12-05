@@ -13,7 +13,7 @@ import org.bukkit.event.HandlerList;
  * This event is called whenever a Transaction occurs in the plugin. If you cancel this event, the transaction will be cancelled as well.
  */
 public class SaneEconomyTransactionEvent extends Event implements Cancellable {
-    private static HandlerList handlerList = new HandlerList();
+    private static final HandlerList handlerList = new HandlerList();
     private final Transaction transaction;
     private boolean isCancelled;
 
@@ -38,7 +38,7 @@ public class SaneEconomyTransactionEvent extends Event implements Cancellable {
     }
 
     public Transaction getTransaction() {
-        return transaction;
+        return this.transaction;
     }
 
     public static HandlerList getHandlerList() {

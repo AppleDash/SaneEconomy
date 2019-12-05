@@ -26,7 +26,7 @@ public class ItemInfo implements Serializable {
     }
 
     public ItemStack toItemStack() {
-        return new ItemStack(material, amount, damage);
+        return new ItemStack(this.material, this.amount, this.damage);
     }
 
     @Override
@@ -42,6 +42,6 @@ public class ItemInfo implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(material, damage);
+        return Objects.hash(this.material, this.damage);
     }
 }

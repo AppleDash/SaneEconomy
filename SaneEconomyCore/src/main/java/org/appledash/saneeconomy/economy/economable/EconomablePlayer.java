@@ -15,12 +15,12 @@ public class EconomablePlayer implements Economable {
 
     @Override
     public String getName() {
-        return handle.getName();
+        return this.handle.getName();
     }
 
     @Override
     public String getUniqueIdentifier() {
-        return "player:" + handle.getUniqueId();
+        return "player:" + this.handle.getUniqueId();
     }
 
     @Override

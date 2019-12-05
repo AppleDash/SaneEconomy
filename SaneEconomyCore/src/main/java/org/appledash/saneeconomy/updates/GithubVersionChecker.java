@@ -44,7 +44,7 @@ public class GithubVersionChecker {
 
                 String releaseName = releaseObj.get("name").getAsString().split(" ")[0];
 
-                if (!releaseName.equalsIgnoreCase(pluginName)) { // Not for this plugin.
+                if (!releaseName.equalsIgnoreCase(this.pluginName)) { // Not for this plugin.
                     continue;
                 }
 
@@ -57,12 +57,12 @@ public class GithubVersionChecker {
             }
         }
 
-        updateChecked = true;
-        updateAvailable = VersionComparer.isSemVerGreaterThan(currentVersion, newestFound);
+        this.updateChecked = true;
+        this.updateAvailable = VersionComparer.isSemVerGreaterThan(currentVersion, newestFound);
     }
 
     public boolean isUpdateAvailable() {
-        return updateChecked && updateAvailable;
+        return this.updateChecked && this.updateAvailable;
     }
 
     public String getNewestVersion() {

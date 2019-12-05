@@ -13,7 +13,7 @@ public class EconomableFaction implements Economable {
 
     @Override
     public String getUniqueIdentifier() {
-        return "faction:" + factionUuid;
+        return "faction:" + this.factionUuid;
     }
 
     @Override

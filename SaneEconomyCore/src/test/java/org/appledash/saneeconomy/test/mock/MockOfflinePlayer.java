@@ -34,12 +34,12 @@ public class MockOfflinePlayer implements OfflinePlayer {
 
     @Override
     public String getName() {
-        return name;
+        return this.name;
     }
 
     @Override
     public UUID getUniqueId() {
-        return uuid;
+        return this.uuid;
     }
 
     @Override

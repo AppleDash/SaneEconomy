@@ -15,13 +15,17 @@ import java.util.Optional;
  * Created by appledash on 8/3/16.
  * Blackjack is still best pony.
  */
-public class ItemDatabase {
+public final class ItemDatabase {
     private static Map<String, Pair<Integer, Short>> itemMap = new HashMap<>();
+
+    private ItemDatabase() {
+    }
 
     public static void initItemDB() {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(ItemDatabase.class.getResourceAsStream("/items.csv")))) {
             String line;
 
+            //noinspection NestedAssignment
             while ((line = br.readLine()) != null) {
                 if (line.startsWith("#") || !line.contains(",")) {
                     continue;
@@ -29,23 +33,26 @@ public class ItemDatabase {
 
                 String[] split = line.split(",");
                 String name = split[0];
-                int id = Integer.valueOf(split[1]);
-                short damage = Short.valueOf(split[2]);
+                int id = Integer.parseInt(split[1]);
+                short damage = Short.parseShort(split[2]);
 
                 itemMap.put(name.toLowerCase(), Pair.of(id, damage));
             }
 
             itemMap = ImmutableMap.copyOf(itemMap);
         } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to initialize item database!", e);
         }
     }
 
-    public static Optional<Pair<Integer, Short>> getIDAndDamageForName(String name) {
+    public static Optional<Pair<Material, Short>> getIDAndDamageForName(String name) {
         if (Material.getMaterial(name) != null) {
-            return Optional.of(Pair.of(Material.getMaterial(name).getId(), (short) 0));
+            return Optional.of(Pair.of(Material.getMaterial(name), (short) 0));
         }
-        return Optional.ofNullable(itemMap.get(name.toLowerCase()));
+
+        return Optional.empty();
+        // TODO
+        //return Optional.ofNullable(itemMap.get(name.toLowerCase()));
     }
 
     public static ItemStack parseGive(String rawItemName) throws InvalidItemException {
@@ -59,7 +66,7 @@ public class ItemDatabase {
                 damage = 0;
             } else { // They typed 'tnt:something'
                 try {
-                    damage = Short.valueOf(splitItemName[1]);
+                    damage = Short.parseShort(splitItemName[1]);
                 } catch (NumberFormatException e) {
                     throw new InvalidItemException("Damage value must be a number.");
                 }
@@ -72,7 +79,7 @@ public class ItemDatabase {
         Optional<Material> materialOptional = parseMaterialFromName(itemName);
 
         if (!materialOptional.isPresent()) {
-            Optional<Pair<Integer, Short>> parsedItem = getIDAndDamageForName(normalizeItemName(itemName));
+            Optional<Pair<Material, Short>> parsedItem = getIDAndDamageForName(normalizeItemName(itemName));
             if (!parsedItem.isPresent()) {
                 throw new InvalidItemException("Item by that name does not exist.");
             }
@@ -89,11 +96,6 @@ public class ItemDatabase {
     }
 
     private static Optional<Material> parseMaterialFromName(String materialName) {
-        // Try to parse an integral item ID first, for legacy reasons.
-        try {
-            return Optional.ofNullable(Material.getMaterial(Integer.valueOf(materialName)));
-        } catch (NumberFormatException ignored) { }
-
         for (Material mat : Material.values()) {
             if (normalizeItemName(mat.name()).equals(normalizeItemName(materialName))) {
                 return Optional.of(mat);

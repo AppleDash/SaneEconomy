@@ -15,6 +15,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.math.BigDecimal;
+
 /**
  * Created by AppleDash on 6/14/2016.
  * Blackjack is still best pony.
@@ -35,8 +37,8 @@ public class PayCommand extends SaneCommand {
     @Override
     public String[] getUsage() {
         return new String[] {
-                "/pay <player> <amount>"
-        };
+                   "/pay <player> <amount>"
+               };
     }
 
     @Override
@@ -50,7 +52,7 @@ public class PayCommand extends SaneCommand {
             throw new NeedPlayerException();
         }
 
-        EconomyManager ecoMan = saneEconomy.getEconomyManager();
+        EconomyManager ecoMan = this.saneEconomy.getEconomyManager();
         Player fromPlayer = (Player) sender;
 
         String sToPlayer = args[0];
@@ -67,10 +69,10 @@ public class PayCommand extends SaneCommand {
         }
 
         String sAmount = args[1];
-        double amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount);
+        BigDecimal amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount);
 
-        if (amount <= 0) {
-            this.saneEconomy.getMessenger().sendMessage(sender, "{1} is not a positive number.", ((amount == -1) ? sAmount : String.valueOf(amount)));
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            this.saneEconomy.getMessenger().sendMessage(sender, "{1} is not a positive number.", ((amount.equals(BigDecimal.ONE.negate())) ? sAmount : String.valueOf(amount)));
             return;
         }
 
@@ -82,7 +84,7 @@ public class PayCommand extends SaneCommand {
             this.saneEconomy.getMessenger().sendMessage(sender, "You do not have enough money to transfer {1} to {2}.",
                     ecoMan.getCurrency().formatAmount(amount),
                     sToPlayer
-            );
+                                                       );
 
             return;
         }
@@ -92,13 +94,13 @@ public class PayCommand extends SaneCommand {
         this.saneEconomy.getMessenger().sendMessage(sender, "You have transferred {1} to {2}.",
                 ecoMan.getCurrency().formatAmount(amount),
                 sToPlayer
-        );
+                                                   );
 
         if (toPlayer.isOnline()) {
             this.saneEconomy.getMessenger().sendMessage(((CommandSender) toPlayer), "You have received {1} from {2}.",
                     ecoMan.getCurrency().formatAmount(amount),
                     fromPlayer.getDisplayName()
-            );
+                                                       );
         }
     }
 }

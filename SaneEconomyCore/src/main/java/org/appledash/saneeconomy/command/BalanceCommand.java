@@ -30,8 +30,8 @@ public class BalanceCommand extends SaneCommand {
     @Override
     public String[] getUsage() {
         return new String[] {
-                "/<command> [player]"
-        };
+                   "/<command> [player]"
+               };
     }
 
     @Override
@@ -66,9 +66,9 @@ public class BalanceCommand extends SaneCommand {
         }
 
         if (sender == player) {
-            this.saneEconomy.getMessenger().sendMessage(sender, "Your balance is {1}.", saneEconomy.getEconomyManager().getFormattedBalance(Economable.wrap(player)));
+            this.saneEconomy.getMessenger().sendMessage(sender, "Your balance is {1}.", this.saneEconomy.getEconomyManager().getFormattedBalance(Economable.wrap(player)));
         } else {
-            this.saneEconomy.getMessenger().sendMessage(sender, "Balance for {1} is {2}.", playerName, saneEconomy.getEconomyManager().getFormattedBalance(Economable.wrap(player)));
+            this.saneEconomy.getMessenger().sendMessage(sender, "Balance for {1} is {2}.", playerName, this.saneEconomy.getEconomyManager().getFormattedBalance(Economable.wrap(player)));
         }
     }
 }

@@ -5,6 +5,7 @@ import org.appledash.sanelib.messages.MessageUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
@@ -29,6 +30,8 @@ public class Currency {
         this.namePlural = namePlural;
         this.format = format;
         this.balanceFormat = balanceFormat;
+
+        this.format.setParseBigDecimal(true);
     }
 
     public static Currency fromConfig(ConfigurationSection config) {
@@ -60,11 +63,11 @@ public class Currency {
         }
 
         return new Currency(
-                config.getString("name.singular", "dollar"),
-                config.getString("name.plural", "dollars"),
-                format,
-                config.getString("balance-format", "{1} {2}")
-        );
+                   config.getString("name.singular", "dollar"),
+                   config.getString("name.plural", "dollars"),
+                   format,
+                   config.getString("balance-format", "{1} {2}")
+               );
     }
 
     /**
@@ -72,15 +75,10 @@ public class Currency {
      * @param amount Money amount.
      * @return Formatted amount string.
      */
-    public String formatAmount(double amount) {
-        String formatted;
-        if (amount == 1) {
-            formatted = MessageUtils.indexedFormat(balanceFormat, format.format(amount), nameSingular);
-        } else {
-            formatted = MessageUtils.indexedFormat(balanceFormat, format.format(amount), namePlural);
-        }
-
-        return ChatColor.translateAlternateColorCodes('&', formatted);
+    public String formatAmount(BigDecimal amount) {
+        return ChatColor.translateAlternateColorCodes('&',
+                MessageUtils.indexedFormat(this.balanceFormat, this.format.format(amount), amount.equals(BigDecimal.ONE) ? this.nameSingular : this.namePlural)
+        );
     }
 
     /**
@@ -89,7 +87,7 @@ public class Currency {
      * @return Singular name.
      */
     public String getSingularName() {
-        return nameSingular;
+        return this.nameSingular;
     }
 
     /**
@@ -98,7 +96,7 @@ public class Currency {
      * @return Plural name.
      */
     public String getPluralName() {
-        return namePlural;
+        return this.namePlural;
     }
 
     /**
@@ -106,6 +104,6 @@ public class Currency {
      * @return DecimalFormat instance
      */
     public DecimalFormat getFormat() {
-        return format;
+        return this.format;
     }
 }

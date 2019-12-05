@@ -2,6 +2,7 @@ name: SaneEconomy
 author: AppleDash
 main: org.appledash.saneeconomy.SaneEconomy
 version: ${project.version}
+api-version: '1.14'
 load: STARTUP
 softdepend: [Vault]
 commands:

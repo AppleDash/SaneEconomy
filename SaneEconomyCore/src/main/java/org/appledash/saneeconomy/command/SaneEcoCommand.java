@@ -26,10 +26,10 @@ public class SaneEcoCommand extends SaneCommand {
     @Override
     public String[] getUsage() {
         return new String[] {
-                "/<command> reload - Reload everything.",
-                "/<command> reload-database - Reload the database.",
-                "/<command> reload-config - Reload the configuration."
-        };
+                   "/<command> reload - Reload everything.",
+                   "/<command> reload-database - Reload the database.",
+                   "/<command> reload-config - Reload the configuration."
+               };
     }
 
     @Override
@@ -42,7 +42,7 @@ public class SaneEcoCommand extends SaneCommand {
 
         if (subCommand.equalsIgnoreCase("reload-database")) {
             this.saneEconomy.getMessenger().sendMessage(sender, "Reloading database...");
-            saneEconomy.getEconomyManager().getBackend().reloadDatabase();
+            this.saneEconomy.getEconomyManager().getBackend().reloadDatabase();
             this.saneEconomy.getMessenger().sendMessage(sender, "Database reloaded.");
         } else if (subCommand.equalsIgnoreCase("reload-config")) {
             this.saneEconomy.getMessenger().sendMessage(sender, "Reloading configuration...");

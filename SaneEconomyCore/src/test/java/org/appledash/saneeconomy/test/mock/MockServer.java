@@ -2,10 +2,7 @@ package org.appledash.saneeconomy.test.mock;
 
 import org.bukkit.*;
 import org.bukkit.advancement.Advancement;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
+import org.bukkit.boss.*;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -50,8 +47,8 @@ public class MockServer implements Server {
     }
 
 
-    private Logger logger = Logger.getLogger("MockServer");
-    private Map<UUID, OfflinePlayer> offlinePlayers = new HashMap<>();
+    private final Logger logger = Logger.getLogger("MockServer");
+    private final Map<UUID, OfflinePlayer> offlinePlayers = new HashMap<>();
 
     public void addOfflinePlayer(OfflinePlayer offlinePlayer) {
         this.offlinePlayers.put(offlinePlayer.getUniqueId(), offlinePlayer);
@@ -94,16 +91,6 @@ public class MockServer implements Server {
 
     @Override
     public String getIp() {
-        return null;
-    }
-
-    @Override
-    public String getServerName() {
-        return null;
-    }
-
-    @Override
-    public String getServerId() {
         return null;
     }
 
@@ -243,12 +230,23 @@ public class MockServer implements Server {
     }
 
     @Override
-    public MapView getMap(short i) {
+    public MapView getMap(int id) {
+        return null;
+    }
+
+
+    @Override
+    public MapView createMap(World world) {
         return null;
     }
 
     @Override
-    public MapView createMap(World world) {
+    public ItemStack createExplorerMap(World world, Location location, StructureType structureType) {
+        return null;
+    }
+
+    @Override
+    public ItemStack createExplorerMap(World world, Location location, StructureType structureType, int radius, boolean findUnexplored) {
         return null;
     }
 
@@ -503,12 +501,12 @@ public class MockServer implements Server {
     }
 
     @Override
-    public CachedServerIcon loadServerIcon(File file) throws IllegalArgumentException, Exception {
+    public CachedServerIcon loadServerIcon(File file) throws Exception {
         return null;
     }
 
     @Override
-    public CachedServerIcon loadServerIcon(BufferedImage bufferedImage) throws IllegalArgumentException, Exception {
+    public CachedServerIcon loadServerIcon(BufferedImage bufferedImage) throws Exception {
         return null;
     }
 
@@ -533,6 +531,26 @@ public class MockServer implements Server {
     }
 
     @Override
+    public KeyedBossBar createBossBar(NamespacedKey key, String title, BarColor color, BarStyle style, BarFlag... flags) {
+        return null;
+    }
+
+    @Override
+    public Iterator<KeyedBossBar> getBossBars() {
+        return null;
+    }
+
+    @Override
+    public KeyedBossBar getBossBar(NamespacedKey key) {
+        return null;
+    }
+
+    @Override
+    public boolean removeBossBar(NamespacedKey key) {
+        return false;
+    }
+
+    @Override
     public Entity getEntity(UUID uuid) {
         return null;
     }
@@ -544,6 +562,46 @@ public class MockServer implements Server {
 
     @Override
     public Iterator<Advancement> advancementIterator() {
+        return null;
+    }
+
+    @Override
+    public BlockData createBlockData(Material material) {
+        return null;
+    }
+
+    @Override
+    public BlockData createBlockData(Material material, Consumer<BlockData> consumer) {
+        return null;
+    }
+
+    @Override
+    public BlockData createBlockData(String data) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
+    public BlockData createBlockData(Material material, String data) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
+    public <T extends Keyed> Tag<T> getTag(String registry, NamespacedKey tag, Class<T> clazz) {
+        return null;
+    }
+
+    @Override
+    public <T extends Keyed> Iterable<Tag<T>> getTags(String registry, Class<T> clazz) {
+        return null;
+    }
+
+    @Override
+    public LootTable getLootTable(NamespacedKey key) {
+        return null;
+    }
+
+    @Override
+    public List<Entity> selectEntities(CommandSender sender, String selector) throws IllegalArgumentException {
         return null;
     }
 
@@ -566,7 +624,7 @@ public class MockServer implements Server {
     public Set<String> getListeningPluginChannels() {
         return null;
     }
-
+/*
 	@Override
 	public ItemStack createExplorerMap(World arg0, Location arg1, StructureType arg2) {
         return null;
@@ -606,4 +664,5 @@ public class MockServer implements Server {
 	public LootTable getLootTable(NamespacedKey arg0) {
         return null;
 	}
+    */
 }

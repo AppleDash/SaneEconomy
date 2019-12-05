@@ -45,7 +45,7 @@ public class SignShop implements Serializable {
      * @return Location
      */
     public Location getLocation() {
-        return location.getBukkitLocation();
+        return this.location.getBukkitLocation();
     }
 
     /**
@@ -53,7 +53,7 @@ public class SignShop implements Serializable {
      * @return Material representing item/block type
      */
     public ItemStack getItemStack() {
-        return item.toItemStack();
+        return this.item.toItemStack();
     }
 
     /**
@@ -61,7 +61,7 @@ public class SignShop implements Serializable {
      * @return ItemInfo representing the type and quantity of item
      */
     public ItemInfo getItem() {
-        return item;
+        return this.item;
     }
 
     /**
@@ -69,7 +69,7 @@ public class SignShop implements Serializable {
      * @return Buy price for this.getQuantity() items
      */
     public double getBuyPrice() {
-        return buyPrice;
+        return this.buyPrice;
     }
 
     /**
@@ -77,7 +77,7 @@ public class SignShop implements Serializable {
      * @return Buy price for this.getQuantity() items
      */
     public double getSellPrice() {
-        return sellPrice;
+        return this.sellPrice;
     }
 
     /**
@@ -105,7 +105,7 @@ public class SignShop implements Serializable {
      * @return True if they can, false if they can't
      */
     public boolean canBuy() {
-        return buyPrice >= 0;
+        return this.buyPrice >= 0;
     }
 
     /**
@@ -113,7 +113,7 @@ public class SignShop implements Serializable {
      * @return True if they can, false if they can't
      */
     public boolean canSell() {
-        return sellPrice >= 0;
+        return this.sellPrice >= 0;
     }
 
     /**
@@ -121,7 +121,7 @@ public class SignShop implements Serializable {
      * @return UUID
      */
     public UUID getOwnerUuid() {
-        return ownerUuid;
+        return this.ownerUuid;
     }
 
     /**
@@ -129,10 +129,10 @@ public class SignShop implements Serializable {
      * @return Number of items
      */
     public int getQuantity() {
-        return quantity;
+        return this.quantity;
     }
 
     public ShopTransaction makeTransaction(Currency currency, Player player, TransactionDirection direction, int quantity) {
-        return new ShopTransaction(currency, direction, player, item, quantity, (direction == TransactionDirection.BUY) ? getBuyPrice(quantity) : getSellPrice(quantity));
+        return new ShopTransaction(currency, direction, player, this.item, quantity, (direction == TransactionDirection.BUY) ? this.getBuyPrice(quantity) : this.getSellPrice(quantity));
     }
 }

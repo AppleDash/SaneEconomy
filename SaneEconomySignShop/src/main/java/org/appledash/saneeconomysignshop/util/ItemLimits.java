@@ -17,10 +17,10 @@ public class ItemLimits {
     }
 
     public int getHourlyGain() {
-        return hourlyGain;
+        return this.hourlyGain;
     }
 
     public int getLimit() {
-        return limit;
+        return this.limit;
     }
 }

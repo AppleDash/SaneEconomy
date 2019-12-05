@@ -9,7 +9,10 @@ import java.util.UUID;
  * Created by appledash on 7/19/16.
  * Blackjack is still best pony.
  */
-public class PlayerUtils {
+public final class PlayerUtils {
+    private PlayerUtils() {
+    }
+
     /**
      * Get an online or offline player from Bukkit.
      * This is guaranteed to be a player who has played before, but is not guaranteed to be currently online.

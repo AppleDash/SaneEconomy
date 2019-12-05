@@ -21,14 +21,14 @@ import java.io.InputStreamReader;
  */
 public class SaneEconomySignShop extends SanePlugin {
     private ISaneEconomy saneEconomy;
-    private final SignShopManager signShopManager = new SignShopManager(new SignShopStorageJSON(new File(getDataFolder(), "shops.json")));
+    private final SignShopManager signShopManager = new SignShopManager(new SignShopStorageJSON(new File(this.getDataFolder(), "shops.json")));
     private final LimitManager limitManager = new LimitManager();
 
     @Override
     public void onEnable() {
-        if (!getServer().getPluginManager().isPluginEnabled("SaneEconomy")) {
-            getLogger().severe("SaneEconomy is not enabled on this server - something is wrong here!");
-            getServer().getPluginManager().disablePlugin(this);
+        if (!this.getServer().getPluginManager().isPluginEnabled("SaneEconomy")) {
+            this.getLogger().severe("SaneEconomy is not enabled on this server - something is wrong here!");
+            this.getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
@@ -36,32 +36,32 @@ public class SaneEconomySignShop extends SanePlugin {
 
         ItemDatabase.initItemDB();
 
-        saneEconomy = (ISaneEconomy)getServer().getPluginManager().getPlugin("SaneEconomy");
+        this.saneEconomy = (ISaneEconomy) this.getServer().getPluginManager().getPlugin("SaneEconomy");
 
         // If it's stupid but it works... it's probably still stupid.
-        getLogger().info(String.format("Hooked into SaneEconomy version %s.", ((Plugin)saneEconomy).getDescription().getVersion()));
+        this.getLogger().info(String.format("Hooked into SaneEconomy version %s.", ((Plugin) this.saneEconomy).getDescription().getVersion()));
 
-        saveDefaultConfig();
+        this.saveDefaultConfig();
 
-        limitManager.loadLimits(YamlConfiguration.loadConfiguration(new InputStreamReader(getClass().getResourceAsStream("/limits.yml")))); // Always load from JAR
-        signShopManager.loadSignShops();
+        this.limitManager.loadLimits(YamlConfiguration.loadConfiguration(new InputStreamReader(this.getClass().getResourceAsStream("/limits.yml")))); // Always load from JAR
+        this.signShopManager.loadSignShops();
 
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, limitManager::incrementLimitsHourly, 0, 20 * 60 * 60);
+        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, this.limitManager::incrementLimitsHourly, 0, 20 * 60 * 60);
 
-        getServer().getPluginManager().registerEvents(new SignChangeListener(this), this);
-        getServer().getPluginManager().registerEvents(new InteractListener(this), this);
-        getServer().getPluginManager().registerEvents(new BreakListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new SignChangeListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new InteractListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new BreakListener(this), this);
     }
 
     public SignShopManager getSignShopManager() {
-        return signShopManager;
+        return this.signShopManager;
     }
 
     public ISaneEconomy getSaneEconomy() {
-        return saneEconomy;
+        return this.saneEconomy;
     }
 
     public LimitManager getLimitManager() {
-        return limitManager;
+        return this.limitManager;
     }
 }

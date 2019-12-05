@@ -6,6 +6,7 @@ import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.utils.MapUtil;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -17,42 +18,42 @@ import java.util.concurrent.ConcurrentHashMap;
  * Blackjack is still best pony.
  */
 public abstract class EconomyStorageBackendCaching implements EconomyStorageBackend {
-    protected Map<String, Double> balances = new ConcurrentHashMap<>();
-    private LinkedHashMap<String, Double> topBalances = new LinkedHashMap<>();
+    protected Map<String, BigDecimal> balances = new ConcurrentHashMap<>();
+    private LinkedHashMap<String, BigDecimal> topBalances = new LinkedHashMap<>();
     protected Map<String, String> uuidToName = new HashMap<>();
 
     @Override
     public boolean accountExists(Economable economable) {
-        return balances.containsKey(economable.getUniqueIdentifier());
+        return this.balances.containsKey(economable.getUniqueIdentifier());
     }
 
     @Override
-    public double getBalance(Economable economable) {
-        if (!accountExists(economable)) {
-            return 0.0D;
+    public BigDecimal getBalance(Economable economable) {
+        if (!this.accountExists(economable)) {
+            return BigDecimal.ZERO;
         }
 
-        return balances.get(economable.getUniqueIdentifier());
+        return this.balances.get(economable.getUniqueIdentifier());
     }
 
-    public LinkedHashMap<String, Double> getTopBalances() {
-        return topBalances;
+    public LinkedHashMap<String, BigDecimal> getTopBalances() {
+        return this.topBalances;
     }
 
     @Override
     public void reloadTopPlayerBalances() {
-        Map<String, Double> balances = new HashMap<>();
+        Map<String, BigDecimal> balances = new HashMap<>();
 
         this.balances.forEach((identifier, balance) -> {
             balances.put(this.uuidToName.get(identifier), balance);
         });
 
-        topBalances = MapUtil.sortByValue(balances);
+        this.topBalances = MapUtil.sortByValue(balances);
     }
 
     @Override
-    public Map<String, Double> getAllBalances() {
-        return ImmutableMap.copyOf(balances);
+    public Map<String, BigDecimal> getAllBalances() {
+        return ImmutableMap.copyOf(this.balances);
     }
 
     @Override

@@ -18,14 +18,14 @@ public class BreakListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent evt) {
-        plugin.getSignShopManager().getSignShop(evt.getBlock().getLocation()).ifPresent((shop) -> {
+        this.plugin.getSignShopManager().getSignShop(evt.getBlock().getLocation()).ifPresent((shop) -> {
             if (!evt.getPlayer().hasPermission("saneeconomy.signshop.destroy.admin")) {
                 this.plugin.getMessenger().sendMessage(evt.getPlayer(), "You may not destroy that!");
                 evt.setCancelled(true);
                 return;
             }
 
-            plugin.getSignShopManager().removeSignShop(shop);
+            this.plugin.getSignShopManager().removeSignShop(shop);
             this.plugin.getMessenger().sendMessage(evt.getPlayer(), "Sign shop destroyed!");
         });
     }

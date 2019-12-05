@@ -14,11 +14,11 @@ public class Pair<K, V> {
     }
 
     public K getLeft() {
-        return left;
+        return this.left;
     }
 
     public V getRight() {
-        return right;
+        return this.right;
     }
 
     public static <K, V> Pair<K, V> of(K k, V v) {

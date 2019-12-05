@@ -28,6 +28,6 @@ public class SerializableLocation implements Serializable {
     }
 
     public Location getBukkitLocation() {
-        return new Location(Bukkit.getServer().getWorld(worldUuid), x, y, z, yaw, pitch);
+        return new Location(Bukkit.getServer().getWorld(this.worldUuid), this.x, this.y, this.z, this.yaw, this.pitch);
     }
 }

@@ -17,18 +17,18 @@ public class SignShopManager {
     }
 
     public void loadSignShops() {
-        storage.loadSignShops();
+        this.storage.loadSignShops();
     }
 
     public void addSignShop(SignShop signShop) {
-        storage.putSignShop(signShop);
+        this.storage.putSignShop(signShop);
     }
 
     public void removeSignShop(SignShop signShop) {
-        storage.removeSignShop(signShop);
+        this.storage.removeSignShop(signShop);
     }
 
     public Optional<SignShop> getSignShop(Location location) {
-        return Optional.ofNullable(storage.getSignShops().get(location));
+        return Optional.ofNullable(this.storage.getSignShops().get(location));
     }
 }

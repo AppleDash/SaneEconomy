@@ -4,6 +4,7 @@ import org.appledash.saneeconomy.economy.Currency;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 /**
@@ -14,7 +15,7 @@ public class CurrencyTest {
     @Test
     public void testCurrencyFormat() {
         Currency currency = new Currency("test dollar", "test dollars", new DecimalFormat("0.00"));
-        Assert.assertEquals(currency.formatAmount(1.0D), "1.00 test dollar");
-        Assert.assertEquals(currency.formatAmount(1337.0D), "1337.00 test dollars");
+        Assert.assertEquals(currency.formatAmount(new BigDecimal(1.0D)), "1.00 test dollar");
+        Assert.assertEquals(currency.formatAmount(new BigDecimal(1337.0D)), "1337.00 test dollars");
     }
 }
