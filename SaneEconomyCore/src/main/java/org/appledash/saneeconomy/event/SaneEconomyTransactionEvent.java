@@ -1,7 +1,6 @@
 package org.appledash.saneeconomy.event;
 
 import org.appledash.saneeconomy.economy.transaction.Transaction;
-import org.bukkit.Bukkit;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -18,7 +17,7 @@ public class SaneEconomyTransactionEvent extends Event implements Cancellable {
     private boolean isCancelled;
 
     public SaneEconomyTransactionEvent(Transaction transaction) {
-        super(!Bukkit.getServer().isPrimaryThread());
+        //super(!Bukkit.getServer().isPrimaryThread());
         this.transaction = transaction;
     }
 
