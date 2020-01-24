@@ -2,6 +2,7 @@ package org.appledash.saneeconomy.economy.transaction;
 
 import org.appledash.saneeconomy.economy.Currency;
 import org.appledash.saneeconomy.economy.economable.Economable;
+import org.appledash.saneeconomy.economy.economable.EconomableConsole;
 import org.appledash.saneeconomy.economy.transaction.TransactionReason.AffectedParties;
 import org.appledash.saneeconomy.utils.NumberUtils;
 
@@ -46,7 +47,7 @@ public class Transaction {
     }
 
     public boolean isSenderAffected() {
-        if (this.sender == Economable.CONSOLE) {
+        if (EconomableConsole.isConsole(this.sender)) {
             return false;
         }
 
@@ -54,7 +55,7 @@ public class Transaction {
     }
 
     public boolean isReceiverAffected() {
-        if (this.receiver == Economable.CONSOLE) {
+        if (EconomableConsole.isConsole(this.receiver)) {
             return false;
         }
 
