@@ -67,6 +67,14 @@ public interface EconomyStorageBackend {
      */
     void waitUntilFlushed();
 
+    /**
+     * Get the last name associated with a unique ID.
+     *
+     * @param uuid Unique ID.
+     * @return Last name, or null if none.
+     */
+    String getLastName(String uuid);
+
     enum EconomableReloadReason {
         CROSS_SERVER_SYNC, PLAYER_JOIN
     }

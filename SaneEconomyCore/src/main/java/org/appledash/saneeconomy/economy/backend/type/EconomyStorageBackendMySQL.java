@@ -105,6 +105,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
 
             while (rs.next()) {
                 this.balances.put(rs.getString("unique_identifier"), new BigDecimal(rs.getString("balance")));
+                this.uuidToName.put(rs.getString("unique_identifier"), rs.getString("last_name"));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to reload data from SQL.", e);
@@ -115,6 +116,7 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
     public void setBalance(Economable economable, BigDecimal newBalance) {
         BigDecimal oldBalance = this.getBalance(economable);
         this.balances.put(economable.getUniqueIdentifier(), newBalance);
+        this.uuidToName.put(economable.getUniqueIdentifier(), economable.getName());
 
         this.dbConn.executeAsyncOperation("set_balance_" + economable.getUniqueIdentifier(), (conn) -> {
             try {

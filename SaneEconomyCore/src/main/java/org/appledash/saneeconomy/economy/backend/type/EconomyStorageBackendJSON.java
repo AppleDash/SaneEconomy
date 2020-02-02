@@ -25,6 +25,7 @@ public class EconomyStorageBackendJSON extends EconomyStorageBackendCaching {
     @Override
     public void setBalance(Economable economable, BigDecimal newBalance) {
         this.balances.put(economable.getUniqueIdentifier(), newBalance);
+        this.uuidToName.put(economable.getUniqueIdentifier(), economable.getName());
         this.saveDatabase();
     }
 

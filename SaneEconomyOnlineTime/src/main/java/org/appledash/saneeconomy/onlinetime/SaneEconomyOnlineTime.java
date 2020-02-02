@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -18,7 +19,7 @@ import java.util.*;
  */
 public class SaneEconomyOnlineTime extends SanePlugin implements Listener {
     private final Map<UUID, Long> onlineSeconds = new HashMap<>();
-    private final Map<UUID, Double> reportingAmounts = new HashMap<>();
+    private final Map<UUID, BigDecimal> reportingAmounts = new HashMap<>();
     private final List<Payout> payouts = new ArrayList<>();
     private SaneEconomy saneEconomy;
 
@@ -47,7 +48,7 @@ public class SaneEconomyOnlineTime extends SanePlugin implements Listener {
 
                     if ((onlineSeconds % payout.getSecondsInterval()) == 0) {
                         if (this.reportingAmounts.containsKey(player.getUniqueId())) {
-                            this.reportingAmounts.put(player.getUniqueId(), this.reportingAmounts.get(player.getUniqueId()) + payout.getAmount());
+                            this.reportingAmounts.put(player.getUniqueId(), this.reportingAmounts.get(player.getUniqueId()).add(payout.getAmount()));
                         } else {
                             this.reportingAmounts.put(player.getUniqueId(), payout.getAmount());
                         }
@@ -56,8 +57,8 @@ public class SaneEconomyOnlineTime extends SanePlugin implements Listener {
                     }
 
                     if ((onlineSeconds % payout.getReportInterval()) == 0) {
-                        this.getMessenger().sendMessage(player, payout.getMessage(), this.saneEconomy.getEconomyManager().getCurrency().formatAmount(this.reportingAmounts.getOrDefault(player.getUniqueId(), 0.0D)), payout.getReportInterval());
-                        this.reportingAmounts.put(player.getUniqueId(), 0.0D);
+                        this.getMessenger().sendMessage(player, payout.getMessage(), this.saneEconomy.getEconomyManager().getCurrency().formatAmount(this.reportingAmounts.getOrDefault(player.getUniqueId(), BigDecimal.ZERO)), payout.getReportInterval());
+                        this.reportingAmounts.put(player.getUniqueId(), BigDecimal.ZERO);
                     }
                 }
 

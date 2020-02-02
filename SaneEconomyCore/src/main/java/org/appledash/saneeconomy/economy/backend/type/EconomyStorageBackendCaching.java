@@ -64,4 +64,9 @@ public abstract class EconomyStorageBackendCaching implements EconomyStorageBack
 
         this.reloadDatabase();
     }
+
+    @Override
+    public String getLastName(String uuid) {
+        return this.uuidToName.get(uuid);
+    }
 }

@@ -1,5 +1,6 @@
 package org.appledash.saneeconomy.onlinetime;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -8,14 +9,14 @@ import java.util.Map;
  */
 public class Payout {
     private final int secondsInterval;
-    private final double amount;
+    private final BigDecimal amount;
     private final String message;
     private String permission;
     private final long reportInterval;
 
     public Payout(int secondsInterval, double amount, String message, long reportInterval) {
         this.secondsInterval = secondsInterval;
-        this.amount = amount;
+        this.amount = BigDecimal.valueOf(amount);
         this.message = message;
         this.reportInterval = reportInterval;
     }
@@ -24,7 +25,7 @@ public class Payout {
         return this.secondsInterval;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return this.amount;
     }
 

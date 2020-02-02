@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -83,11 +84,11 @@ public class EntityDamageListener implements Listener {
 
             if (offlinePlayer.isOnline()) {
                 Player player = Bukkit.getServer().getPlayer(offlinePlayer.getUniqueId());
-                this.plugin.getMessenger().sendMessage(player, "You have been awarded {1} for doing {2:.2f}% of the damage required to kill that {3}!", this.plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(thisAmount), thisPercent, entity.getName());
+                this.plugin.getMessenger().sendMessage(player, "You have been awarded {1} for doing {2:.2f}% of the damage required to kill that {3}!", this.plugin.getSaneEconomy().getEconomyManager().getCurrency().formatAmount(BigDecimal.valueOf(thisAmount)), thisPercent, entity.getName());
             }
 
             this.plugin.getSaneEconomy().getEconomyManager().transact(new Transaction(
-                        this.plugin.getSaneEconomy().getEconomyManager().getCurrency(), Economable.PLUGIN, Economable.wrap(offlinePlayer), thisAmount, TransactionReason.PLUGIN_GIVE
+                        this.plugin.getSaneEconomy().getEconomyManager().getCurrency(), Economable.PLUGIN, Economable.wrap(offlinePlayer), BigDecimal.valueOf(thisAmount), TransactionReason.PLUGIN_GIVE
                     ));
         }
 
