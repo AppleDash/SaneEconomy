@@ -26,6 +26,7 @@ public final class PlayerUtils {
             return player;
         }
 
+        //noinspection ReuseOfLocalVariable
         player = Bukkit.getServer().getPlayer(playerNameOrUUID);
 
         if (player == null) {

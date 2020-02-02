@@ -44,9 +44,9 @@ public abstract class EconomyStorageBackendCaching implements EconomyStorageBack
     public void reloadTopPlayerBalances() {
         Map<String, BigDecimal> balances = new HashMap<>();
 
-        this.balances.forEach((identifier, balance) -> {
-            balances.put(this.uuidToName.get(identifier), balance);
-        });
+        this.balances.forEach((identifier, balance) ->
+                balances.put(this.uuidToName.get(identifier), balance)
+        );
 
         this.topBalances = MapUtil.sortByValue(balances);
     }

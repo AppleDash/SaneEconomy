@@ -16,7 +16,7 @@ public class EconomableConsole implements Economable {
 
     @Override
     public String getUniqueIdentifier() {
-        return "console:" + CONSOLE_UUID.toString();
+        return "console:" + CONSOLE_UUID;
     }
 
     public static boolean isConsole(Economable economable) {

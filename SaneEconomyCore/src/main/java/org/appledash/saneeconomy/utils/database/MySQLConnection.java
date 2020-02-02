@@ -15,6 +15,7 @@ import java.util.logging.Logger;
  */
 public class MySQLConnection {
     private static final Logger LOGGER = Logger.getLogger("MySQLConnection");
+    public static final int FIVE_SECONDS = 5000;
     private final DatabaseCredentials dbCredentials;
     private final SaneDatabase saneDatabase;
 
@@ -79,7 +80,7 @@ public class MySQLConnection {
     public void waitUntilFlushed() {
         long startTime = System.currentTimeMillis();
         while (!this.saneDatabase.areAllTransactionsDone()) {
-            if ((System.currentTimeMillis() - startTime) > 5000) {
+            if ((System.currentTimeMillis() - startTime) > FIVE_SECONDS) {
                 LOGGER.warning("Took too long to flush all transactions - something has probably hung :(");
                 break;
             }

@@ -19,9 +19,9 @@ public class EconomableTest {
     @Test
     public void testWrapFaction() {
         UUID uuid = UUID.randomUUID();
-        Economable economable = Economable.wrap(String.format("faction-%s", uuid.toString()));
+        Economable economable = Economable.wrap(String.format("faction-%s", uuid));
         Assert.assertEquals(economable.getClass(), EconomableFaction.class);
-        Assert.assertEquals(economable.getUniqueIdentifier(), String.format("faction:%s", uuid.toString()));
+        Assert.assertEquals(economable.getUniqueIdentifier(), String.format("faction:%s", uuid));
     }
 
     @Test
