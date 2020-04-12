@@ -7,6 +7,8 @@ import org.appledash.saneeconomy.economy.transaction.TransactionReason;
 import org.appledash.saneeconomysignshop.util.ItemInfo;
 import org.bukkit.entity.Player;
 
+import java.math.BigDecimal;
+
 /**
  * Created by appledash on 1/1/17.
  * Blackjack is still best pony.
@@ -18,9 +20,9 @@ public class ShopTransaction {
     private final Player player;
     private final ItemInfo item;
     private final int quantity;
-    private final double price;
+    private final BigDecimal price;
 
-    public ShopTransaction(Currency currency, TransactionDirection direction, Player player, ItemInfo item, int quantity, double price) {
+    public ShopTransaction(Currency currency, TransactionDirection direction, Player player, ItemInfo item, int quantity, BigDecimal price) {
         this.currency = currency;
         this.direction = direction;
         this.player = player;
@@ -45,7 +47,7 @@ public class ShopTransaction {
         return this.quantity;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return this.price;
     }
 

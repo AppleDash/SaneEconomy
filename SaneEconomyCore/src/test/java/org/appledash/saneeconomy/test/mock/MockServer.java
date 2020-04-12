@@ -34,6 +34,7 @@ import org.bukkit.loot.LootTable;
  * Created by appledash on 7/15/17.
  * Blackjack is best pony.
  */
+@SuppressWarnings("all")
 public class MockServer implements Server {
     public static MockServer instance;
 
@@ -501,12 +502,12 @@ public class MockServer implements Server {
     }
 
     @Override
-    public CachedServerIcon loadServerIcon(File file) throws Exception {
+    public CachedServerIcon loadServerIcon(File file) {
         return null;
     }
 
     @Override
-    public CachedServerIcon loadServerIcon(BufferedImage bufferedImage) throws Exception {
+    public CachedServerIcon loadServerIcon(BufferedImage bufferedImage) {
         return null;
     }
 

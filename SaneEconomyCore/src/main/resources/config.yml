@@ -30,3 +30,4 @@ multi-server-sync: false # Experimental balance syncing without player rejoins, 
 update-check: true # Whether to check for updates to the plugin and notify admins about them.
 locale-override: false # Whether to force the server's locale to be en_US.
 debug: false # Debug mode, leave this set to false.
+metrics: true # Whether to send anonymous metrics about the plugin's usage back to the developers, useful for fixing crashes.

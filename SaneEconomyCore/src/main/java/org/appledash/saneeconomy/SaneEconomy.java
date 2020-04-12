@@ -36,7 +36,7 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
     private TransactionLogger transactionLogger;
     private GithubVersionChecker versionChecker;
 
-    private final Map<String, SaneCommand> COMMANDS = new HashMap<String, SaneCommand>() {
+    private final Map<String, SaneCommand> commands = new HashMap<String, SaneCommand>() {
         {
             this.put("balance", new BalanceCommand(SaneEconomy.this));
             this.put("ecoadmin", new EconomyAdminCommand(SaneEconomy.this));
@@ -184,7 +184,7 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
 
     private void loadCommands() {
         this.getLogger().info("Initializing commands...");
-        this.COMMANDS.forEach((name, command) -> this.getCommand(name).setExecutor(command));
+        this.commands.forEach((name, command) -> this.getCommand(name).setExecutor(command));
         this.getLogger().info("Initialized commands.");
     }
 

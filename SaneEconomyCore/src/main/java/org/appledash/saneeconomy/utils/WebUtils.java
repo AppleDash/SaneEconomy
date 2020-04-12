@@ -31,7 +31,6 @@ public final class WebUtils {
 
             return out.toString();
         } catch (IOException e) {
-            SaneEconomy.logger().warning("Failed to get contents of URL " + url);
             throw new RuntimeException("Failed to get URL contents!", e);
         }
     }

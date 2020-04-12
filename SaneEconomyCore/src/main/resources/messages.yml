@@ -7,6 +7,9 @@
 # The order of placeholders can be changed. Anything after the :, like the '02d' in {1:02d} is a Java String.format specifier. If you don't know what that is, I recommend leaving it as-is.
 # IMPORTANT: If your translation has a colon ( : ) character inside of it, you must enclose the entire part after "translation: " in single quotes ( ' ).
 # If this file doesn't work for some reason, check your console for errors with "SnakeYAML" included in them.
+####################################################################################################
+########## READ ABOVE IF YOU INTEND TO EDIT THIS FILE, BEFORE ASKING FOR HELP! #####################
+####################################################################################################
 messages:
   - message: "You don't have permission to check the balance of {1}."
   - message: "That player is not online."

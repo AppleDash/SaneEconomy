@@ -18,6 +18,6 @@ public class EconomableGeneric implements Economable {
 
     @Override
     public String getName() {
-        return this.uniqueIdentifier.substring(16);
+        return this.uniqueIdentifier.substring(16); // FIXME: Why 16?
     }
 }

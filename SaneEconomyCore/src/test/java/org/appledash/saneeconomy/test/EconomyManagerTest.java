@@ -45,7 +45,7 @@ public class EconomyManagerTest {
         SaneEcoAssert.assertEquals(BigDecimal.ZERO, this.economyManager.getBalance(playerOne));
         SaneEcoAssert.assertEquals(BigDecimal.ZERO, this.economyManager.getBalance(playerTwo));
 
-        this.economyManager.setBalance(playerOne, new BigDecimal(100.0));
+        this.economyManager.setBalance(playerOne, new BigDecimal("100.0"));
 
         // Now one should have an account, but two should not
         Assert.assertTrue(this.economyManager.accountExists(playerOne));
@@ -56,7 +56,7 @@ public class EconomyManagerTest {
         SaneEcoAssert.assertEquals(BigDecimal.ZERO, this.economyManager.getBalance(playerTwo));
 
         // One should be able to transfer to two
-        Assert.assertSame(this.economyManager.transact(new Transaction(this.economyManager.getCurrency(), playerOne, playerTwo, new BigDecimal(50.0), TransactionReason.PLAYER_PAY)).getStatus(), TransactionResult.Status.SUCCESS);
+        Assert.assertSame(this.economyManager.transact(new Transaction(this.economyManager.getCurrency(), playerOne, playerTwo, new BigDecimal("50.0"), TransactionReason.PLAYER_PAY)).getStatus(), TransactionResult.Status.SUCCESS);
 
         // One should now have only 50 left, two should have 50 now
         SaneEcoAssert.assertEquals("Player one should have 50 dollars", new BigDecimal("50.00"), this.economyManager.getBalance(playerOne));

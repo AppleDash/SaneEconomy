@@ -31,7 +31,7 @@ public class JoinQuitListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent evt) {
         Player player = evt.getPlayer();
         Economable economable = Economable.wrap((OfflinePlayer) player);
-        BigDecimal startBalance = new BigDecimal(this.plugin.getConfig().getDouble("economy.start-balance", 0.0D));
+        BigDecimal startBalance = BigDecimal.valueOf(this.plugin.getConfig().getDouble("economy.start-balance", 0.0D));
 
         /* A starting balance is configured AND they haven't been given it yet. */
         if ((startBalance.compareTo(BigDecimal.ZERO) > 0) && !this.plugin.getEconomyManager().accountExists(economable)) {

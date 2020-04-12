@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -20,8 +21,8 @@ public class SignShop implements Serializable {
     private final SerializableLocation location;
     private final ItemInfo item;
     private final int quantity;
-    private final double buyPrice;
-    private final double sellPrice;
+    private final BigDecimal buyPrice;
+    private final BigDecimal sellPrice;
 
     public SignShop(UUID ownerUuid, Location location, ItemStack item, int quantity, double buyPrice, double sellPrice) {
         if ((ownerUuid == null) || (location == null) || (item == null)) {
@@ -36,8 +37,8 @@ public class SignShop implements Serializable {
         this.location = new SerializableLocation(location);
         this.item = new ItemInfo(item);
         this.quantity = quantity;
-        this.buyPrice = buyPrice;
-        this.sellPrice = sellPrice;
+        this.buyPrice = BigDecimal.valueOf(buyPrice);
+        this.sellPrice = BigDecimal.valueOf(sellPrice);
     }
 
     /**
@@ -68,7 +69,7 @@ public class SignShop implements Serializable {
      * Get the price that the player can buy this item from the server for
      * @return Buy price for this.getQuantity() items
      */
-    public double getBuyPrice() {
+    public BigDecimal getBuyPrice() {
         return this.buyPrice;
     }
 
@@ -76,7 +77,7 @@ public class SignShop implements Serializable {
      * Get the price that the player can sell this item to the server for
      * @return Buy price for this.getQuantity() items
      */
-    public double getSellPrice() {
+    public BigDecimal getSellPrice() {
         return this.sellPrice;
     }
 
@@ -86,8 +87,8 @@ public class SignShop implements Serializable {
      * @param quantity Quantity of items to price
      * @return Price to buy that number of items at this shop
      */
-    public double getBuyPrice(int quantity) {
-        return this.buyPrice * ((float)quantity / (float)this.quantity); // TODO: Is this okay?
+    public BigDecimal getBuyPrice(int quantity) {
+        return this.buyPrice.multiply(BigDecimal.valueOf((double) quantity / this.quantity)); // TODO: Is this okay?
     }
 
     /**
@@ -96,8 +97,8 @@ public class SignShop implements Serializable {
      * @param quantity Quantity of items to price
      * @return Price to sell that number of items at this shop
      */
-    public double getSellPrice(int quantity) {
-        return this.sellPrice * ((float)quantity / (float)this.quantity); // TODO: Is this okay?
+    public BigDecimal getSellPrice(int quantity) {
+        return this.sellPrice.multiply(BigDecimal.valueOf((double) quantity / this.quantity)); // TODO: Is this okay?
     }
 
     /**
@@ -105,7 +106,7 @@ public class SignShop implements Serializable {
      * @return True if they can, false if they can't
      */
     public boolean canBuy() {
-        return this.buyPrice >= 0;
+        return this.buyPrice.compareTo(BigDecimal.ZERO) >= 0;
     }
 
     /**
@@ -113,7 +114,7 @@ public class SignShop implements Serializable {
      * @return True if they can, false if they can't
      */
     public boolean canSell() {
-        return this.sellPrice >= 0;
+        return this.sellPrice.compareTo(BigDecimal.ZERO) >= 0;
     }
 
     /**

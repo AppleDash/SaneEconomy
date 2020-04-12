@@ -25,11 +25,11 @@ public class EconomyStorageBackendJSON extends EconomyStorageBackendCaching {
     @Override
     public void setBalance(Economable economable, BigDecimal newBalance) {
         this.balances.put(economable.getUniqueIdentifier(), newBalance);
+        this.uuidToName.put(economable.getUniqueIdentifier(), economable.getName());
         this.saveDatabase();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void reloadDatabase() {
         if (!this.file.exists()) {
             return;
@@ -42,9 +42,9 @@ public class EconomyStorageBackendJSON extends EconomyStorageBackendCaching {
             this.balances = new ConcurrentHashMap<>();
             this.uuidToName = new ConcurrentHashMap<>(dataHolder.uuidToName);
 
-            dataHolder.balances.forEach((s, bal) -> {
-                this.balances.put(s, new BigDecimal(bal));
-            });
+            dataHolder.balances.forEach((s, bal) ->
+                    this.balances.put(s, new BigDecimal(bal))
+            );
 
             this.saveDatabase();
         } catch (FileNotFoundException e) {
@@ -55,7 +55,7 @@ public class EconomyStorageBackendJSON extends EconomyStorageBackendCaching {
                 this.balances = new ConcurrentHashMap<>(dataHolder.balances);
                 this.uuidToName = new ConcurrentHashMap<>(dataHolder.uuidToName);
             } catch (FileNotFoundException ex) {
-                throw new RuntimeException("Failed to load database!", e);
+                throw new RuntimeException("Failed to load database!", ex);
             }
         }
     }
@@ -74,7 +74,7 @@ public class EconomyStorageBackendJSON extends EconomyStorageBackendCaching {
         }
     }
 
-    @SuppressWarnings("FieldMayBeFinal")
+    @SuppressWarnings({"FieldMayBeFinal", "CanBeFinal"})
     private static class DataHolderOld {
         @SerializedName("balances")
         private Map<String, Double> balances;

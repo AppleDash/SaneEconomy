@@ -4,6 +4,7 @@ import org.appledash.saneeconomy.ISaneEconomy;
 import org.appledash.saneeconomy.SaneEconomy;
 import org.appledash.saneeconomy.economy.backend.EconomyStorageBackend;
 import org.appledash.saneeconomy.economy.economable.Economable;
+import org.appledash.saneeconomy.economy.economable.EconomableConsole;
 import org.appledash.saneeconomy.economy.transaction.Transaction;
 import org.appledash.saneeconomy.economy.transaction.TransactionResult;
 import org.appledash.saneeconomy.event.SaneEconomyTransactionEvent;
@@ -67,7 +68,7 @@ public class EconomyManager {
      * @return Player's balance
      */
     public BigDecimal getBalance(Economable targetPlayer) {
-        if (targetPlayer == Economable.CONSOLE) {
+        if (EconomableConsole.isConsole(targetPlayer)) {
             return new BigDecimal(Double.MAX_VALUE);
         }
 
@@ -82,7 +83,7 @@ public class EconomyManager {
      * @return True if they have requiredBalance or more, false otherwise
      */
     public boolean hasBalance(Economable targetPlayer, BigDecimal requiredBalance) {
-        return (targetPlayer == Economable.CONSOLE) || (this.getBalance(targetPlayer).compareTo(requiredBalance) >= 0);
+        return (EconomableConsole.isConsole(targetPlayer)) || (this.getBalance(targetPlayer).compareTo(requiredBalance) >= 0);
 
     }
 
@@ -120,7 +121,7 @@ public class EconomyManager {
     public void setBalance(Economable targetPlayer, BigDecimal amount) {
         amount = NumberUtils.filterAmount(this.currency, amount);
 
-        if (targetPlayer == Economable.CONSOLE) {
+        if (EconomableConsole.isConsole(targetPlayer)) {
             return;
         }
 

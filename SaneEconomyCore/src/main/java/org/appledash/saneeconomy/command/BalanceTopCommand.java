@@ -48,7 +48,7 @@ public class BalanceTopCommand extends SaneCommand {
             try {
                 page = Math.abs(Integer.parseInt(args[0]));
             } catch (NumberFormatException e) {
-                this.saneEconomy.getMessenger().sendMessage(sender, "{1} is not a valid number.");
+                this.saneEconomy.getMessenger().sendMessage(sender, "{1} is not a valid number.", args[0]);
                 return;
             }
         }
@@ -65,6 +65,12 @@ public class BalanceTopCommand extends SaneCommand {
         AtomicInteger index = new AtomicInteger(offset + 1); /* I know it's stupid, but you can't do some_int++ from within the lambda. */
 
         this.saneEconomy.getMessenger().sendMessage(sender, "Top {1} players on page {2}:", topBalances.size(), page);
-        topBalances.forEach((player, balance) -> this.saneEconomy.getMessenger().sendMessage(sender, "[{1:02d}] {2} - {3}", index.getAndIncrement(), player == null ? "<unknown>" : player, this.saneEconomy.getEconomyManager().getCurrency().formatAmount(balance)));
+        
+        topBalances.forEach((player, balance) ->
+                this.saneEconomy.getMessenger().sendMessage(sender, "[{1:02d}] {2} - {3}",
+                        index.getAndIncrement(),
+                        player == null ? "<unknown>" : player,
+                        this.saneEconomy.getEconomyManager().getCurrency().formatAmount(balance))
+        );
     }
 }

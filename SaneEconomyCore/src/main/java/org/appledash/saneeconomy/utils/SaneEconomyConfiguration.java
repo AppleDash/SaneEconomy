@@ -105,13 +105,15 @@ public class SaneEconomyConfiguration {
     /**
      * Convert one EconomyStorageBackend to another.
      * Right now, this just consists of converting all player balances. Data in the old backend is kept.
+     * Why is this in here?
      * @param oldBackend Old backend
      * @param newBackend New backend
      */
     private void convertBackends(EconomyStorageBackend oldBackend, EconomyStorageBackend newBackend) {
-        oldBackend.getAllBalances().forEach((uniqueId, balance) -> {
-            newBackend.setBalance(new EconomableGeneric(uniqueId), balance);
-        });
+        oldBackend.getAllBalances().forEach((uniqueId, balance) ->
+                newBackend.setBalance(new EconomableGeneric(uniqueId), balance)
+        );
+
         newBackend.waitUntilFlushed();
     }
 

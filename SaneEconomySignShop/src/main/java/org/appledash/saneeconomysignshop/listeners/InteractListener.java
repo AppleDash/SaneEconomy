@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -114,7 +115,7 @@ public class InteractListener implements Listener {
     private void doSell(SignShop shop, Player player) { // TODO: Selling enchanted items
         EconomyManager ecoMan = this.plugin.getSaneEconomy().getEconomyManager();
         int quantity = player.isSneaking() ? 1 : shop.getQuantity();
-        double price = shop.getSellPrice(quantity);
+        BigDecimal price = shop.getSellPrice(quantity);
 
         if (!player.getInventory().containsAtLeast(new ItemStack(shop.getItemStack()), quantity)) {
             this.plugin.getMessenger().sendMessage(player, "You do not have {1} {2}!", quantity, shop.getItemStack().getType().name());

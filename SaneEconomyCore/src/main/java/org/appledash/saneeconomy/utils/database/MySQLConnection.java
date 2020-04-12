@@ -15,12 +15,20 @@ import java.util.logging.Logger;
  */
 public class MySQLConnection {
     private static final Logger LOGGER = Logger.getLogger("MySQLConnection");
+    public static final int FIVE_SECONDS = 5000;
     private final DatabaseCredentials dbCredentials;
     private final SaneDatabase saneDatabase;
+    private boolean canLockTables = true;
 
     public MySQLConnection(DatabaseCredentials dbCredentials) {
         this.dbCredentials = dbCredentials;
         this.saneDatabase = new SaneDatabase(dbCredentials);
+
+        try (Connection conn = this.saneDatabase.getConnection()){
+
+        } catch (SQLException e) {
+            this.canLockTables = false;
+        }
     }
 
     public Connection openConnection() {
@@ -46,6 +54,27 @@ public class MySQLConnection {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public void lockTable(Connection conn, String tableName) throws SQLException {
+        if (!this.canLockTables) {
+            return;
+        }
+
+        try {
+            conn.prepareStatement("LOCK TABLE " + this.getTable(tableName) + " WRITE").execute();
+            this.canLockTables = true;
+        } catch (SQLException e) {
+            this.canLockTables = false;
+        }
+    }
+
+    public void unlockTables(Connection conn) throws SQLException {
+        if (!this.canLockTables) {
+            return;
+        }
+
+        conn.prepareStatement("UNLOCK TABLES").execute();
     }
 
     public void executeAsyncOperation(String tag, Consumer<Connection> callback) {
@@ -79,7 +108,7 @@ public class MySQLConnection {
     public void waitUntilFlushed() {
         long startTime = System.currentTimeMillis();
         while (!this.saneDatabase.areAllTransactionsDone()) {
-            if ((System.currentTimeMillis() - startTime) > 5000) {
+            if ((System.currentTimeMillis() - startTime) > FIVE_SECONDS) {
                 LOGGER.warning("Took too long to flush all transactions - something has probably hung :(");
                 break;
             }
