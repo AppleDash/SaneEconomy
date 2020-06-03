@@ -6,6 +6,7 @@ import org.appledash.saneeconomy.economy.logger.TransactionLogger;
 import org.appledash.saneeconomy.vault.VaultHook;
 
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Created by appledash on 9/18/16.
@@ -25,5 +26,10 @@ public class MockSaneEconomy implements ISaneEconomy {
     @Override
     public VaultHook getVaultHook() {
         return null;
+    }
+
+    @Override
+    public String getLastName(UUID uuid) {
+        return uuid.toString();
     }
 }
