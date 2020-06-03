@@ -68,6 +68,11 @@ public class PayCommand extends SaneCommand {
             return;
         }
 
+        if (!this.saneEconomy.getConfig().getConfigurationSection("economy").getBoolean("pay-offline-players", true) && !toPlayer.isOnline()) {
+            this.saneEconomy.getMessenger().sendMessage(sender, "You cannot pay an offline player.");
+            return;
+        }
+
         String sAmount = args[1];
         BigDecimal amount = NumberUtils.parseAndFilter(ecoMan.getCurrency(), sAmount);
 

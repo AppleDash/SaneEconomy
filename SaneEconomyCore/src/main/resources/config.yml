@@ -25,6 +25,7 @@ economy:
   notify-admin-give: false # Whether to notify players when /ecoadmin give is used on them.
   notify-admin-take: false # Whether to notify players when /ecoadmin take is used on them.
   notify-admin-set: false # Whether to notify players when /ecoadmin set is used on them.
+  pay-offline-players: true # Whether to allow paying offline players or not.
 
 multi-server-sync: false # Experimental balance syncing without player rejoins, across BungeeCord networks.
 update-check: true # Whether to check for updates to the plugin and notify admins about them.
