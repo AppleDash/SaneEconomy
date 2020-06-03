@@ -11,6 +11,7 @@ import org.appledash.saneeconomy.event.SaneEconomyTransactionEvent;
 import org.appledash.saneeconomy.utils.MapUtil;
 import org.appledash.saneeconomy.utils.NumberUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
@@ -192,20 +193,20 @@ public class EconomyManager {
      * @return Map of OfflinePlayer to Double
      */
     public Map<String, BigDecimal> getTopBalances(int amount, int offset) {
-        LinkedHashMap<String, BigDecimal> uuidBalances = this.backend.getTopBalances();
+        LinkedHashMap<String, BigDecimal> playerNamesToBalances = this.backend.getTopBalances();
 
-        /* TODO
-        uuidBalances.forEach((uuid, balance) -> {
-            OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(uuid);
-            if (offlinePlayer != null) {
+        /*uuidBalances.re((uuid, balance) -> {
+            String playerName = this.backend.getLastName(uuid);
+
+            if (playerName != null) {
                 if ((this.saneEconomy.getVaultHook() == null) || !this.saneEconomy.getVaultHook().hasPermission(offlinePlayer, "saneeconomy.balancetop.hide")) {
                     playerBalances.put(Bukkit.getServer().getOfflinePlayer(uuid), balance);
                 }
             }
-        });
-        */
+        });*/
 
-        return MapUtil.skipAndTake(uuidBalances, offset, amount);
+
+        return MapUtil.skipAndTake(playerNamesToBalances, offset, amount);
     }
 
     public EconomyStorageBackend getBackend() {

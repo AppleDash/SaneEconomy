@@ -241,4 +241,9 @@ public class SaneEconomy extends SanePlugin implements ISaneEconomy {
     public VaultHook getVaultHook() {
         return this.vaultHook;
     }
+
+    @Override
+    public String getLastName(UUID uuid) {
+        return this.economyManager.getBackend().getLastName("player:" + uuid.toString());
+    }
 }
