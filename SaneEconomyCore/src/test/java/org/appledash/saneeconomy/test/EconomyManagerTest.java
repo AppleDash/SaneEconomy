@@ -18,6 +18,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /**
@@ -117,4 +118,25 @@ public class EconomyManagerTest {
 
         return true;
     }
+    
+    @Test
+    public void testHasRequiredBalance() {
+    	for (int n = 0; n < 20; n++) { // in the absence of Junit 5's @RepeatedTest
+    		
+    		BigDecimal bigDecimal = randomBigDecimal();
+			// We MUST modify the BigDecimal in some way otherwise the test will always succeed
+    		// See https://github.com/AppleDash/SaneEconomy/issues/100
+			for (int m = 0; m < 20; m++) {
+				bigDecimal = bigDecimal.add(randomBigDecimal()).subtract(randomBigDecimal());
+			}
+			//
+    		
+			Assert.assertTrue("Account must have required balance despite loss of precision (repeat " + n + ")",
+					economyManager.hasBalance(bigDecimal, new BigDecimal(bigDecimal.doubleValue())));
+    	}
+    }
+    
+	private static BigDecimal randomBigDecimal() {
+		return new BigDecimal(ThreadLocalRandom.current().nextDouble());
+	}
 }
