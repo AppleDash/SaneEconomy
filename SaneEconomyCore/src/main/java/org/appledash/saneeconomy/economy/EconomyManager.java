@@ -29,6 +29,8 @@ public class EconomyManager {
     private final Currency currency;
     private final EconomyStorageBackend backend;
     private final String serverAccountName;
+    
+    private static final BigDecimal REQUIRED_BALANCE_ACCURACY = new BigDecimal("0.0001");
 
     public EconomyManager(ISaneEconomy saneEconomy, Currency currency, EconomyStorageBackend backend, String serverAccountName) {
         this.saneEconomy = saneEconomy;
@@ -84,8 +86,25 @@ public class EconomyManager {
      * @return True if they have requiredBalance or more, false otherwise
      */
     public boolean hasBalance(Economable targetPlayer, BigDecimal requiredBalance) {
-        return (EconomableConsole.isConsole(targetPlayer)) || (this.getBalance(targetPlayer).compareTo(requiredBalance) >= 0);
-
+        return (EconomableConsole.isConsole(targetPlayer)) || (hasBalance(this.getBalance(targetPlayer), requiredBalance));
+    }
+    
+    /**
+     * Compare account balance and required balance to a reasonable degree of accuracy. <br>
+     * <b>Visible for testing</b>
+     * 
+     * @param accountBalance account balance
+     * @param requiredBalance required balance
+     * @return true if the account has the required balance to some degree of accuracy, false otherwise
+     */
+    public boolean hasBalance(BigDecimal accountBalance, BigDecimal requiredBalance) {
+    	if (accountBalance.compareTo(requiredBalance) >= 0) {
+    		return true;
+    	}
+    	// Must compare to degree of accuracy
+    	// See https://github.com/AppleDash/SaneEconomy/issues/100
+    	BigDecimal difference = requiredBalance.subtract(accountBalance);
+		return difference.compareTo(REQUIRED_BALANCE_ACCURACY) < 0; // difference < PRECISION
     }
 
     /**
