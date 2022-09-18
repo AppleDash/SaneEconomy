@@ -77,7 +77,7 @@ public class Currency {
      */
     public String formatAmount(BigDecimal amount) {
         return ChatColor.translateAlternateColorCodes('&',
-                MessageUtils.indexedFormat(this.balanceFormat, this.format.format(amount), amount.equals(BigDecimal.ONE) ? this.nameSingular : this.namePlural)
+                MessageUtils.indexedFormat(this.balanceFormat, this.format.format(amount), amount.compareTo(BigDecimal.ONE) == 0 ? this.nameSingular : this.namePlural)
         );
     }
 

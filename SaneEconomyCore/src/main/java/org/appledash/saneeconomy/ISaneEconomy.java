@@ -5,6 +5,7 @@ import org.appledash.saneeconomy.economy.logger.TransactionLogger;
 import org.appledash.saneeconomy.vault.VaultHook;
 
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Created by appledash on 9/18/16.
@@ -27,4 +28,6 @@ public interface ISaneEconomy {
     Optional<TransactionLogger> getTransactionLogger();
 
     VaultHook getVaultHook();
+
+    String getLastName(UUID uuid);
 }

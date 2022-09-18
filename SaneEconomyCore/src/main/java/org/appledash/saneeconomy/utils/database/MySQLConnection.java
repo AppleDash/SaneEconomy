@@ -23,12 +23,6 @@ public class MySQLConnection {
     public MySQLConnection(DatabaseCredentials dbCredentials) {
         this.dbCredentials = dbCredentials;
         this.saneDatabase = new SaneDatabase(dbCredentials);
-
-        try (Connection conn = this.saneDatabase.getConnection()){
-
-        } catch (SQLException e) {
-            this.canLockTables = false;
-        }
     }
 
     public Connection openConnection() {
@@ -65,6 +59,10 @@ public class MySQLConnection {
             conn.prepareStatement("LOCK TABLE " + this.getTable(tableName) + " WRITE").execute();
             this.canLockTables = true;
         } catch (SQLException e) {
+            if (this.canLockTables) {
+                LOGGER.warning("Your MySQL user does not have privileges to LOCK TABLES - this may cause issues if you are running this plugin with the same database on multiple servers.");
+            }
+
             this.canLockTables = false;
         }
     }
