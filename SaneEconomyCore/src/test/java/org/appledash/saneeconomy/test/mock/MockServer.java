@@ -2,7 +2,6 @@ package org.appledash.saneeconomy.test.mock;
 
 import org.bukkit.*;
 import org.bukkit.advancement.Advancement;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.boss.*;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
@@ -14,7 +13,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.help.HelpMap;
 import org.bukkit.inventory.*;
-import org.bukkit.loot.LootTable;
 import org.bukkit.map.MapView;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -29,6 +27,8 @@ import java.io.File;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.loot.LootTable;
 
 /**
  * Created by appledash on 7/15/17.
@@ -625,4 +625,45 @@ public class MockServer implements Server {
     public Set<String> getListeningPluginChannels() {
         return null;
     }
+/*
+	@Override
+	public ItemStack createExplorerMap(World arg0, Location arg1, StructureType arg2) {
+        return null;
+	}
+
+	@Override
+	public ItemStack createExplorerMap(World arg0, Location arg1, StructureType arg2, int arg3, boolean arg4) {
+        return null;
+	}
+
+	@Override
+	public BlockData createBlockData(Material arg0) {
+        return null;
+	}
+
+	@Override
+	public BlockData createBlockData(Material arg0, Consumer<BlockData> arg1) {
+        return null;
+	}
+
+	@Override
+	public BlockData createBlockData(String arg0) throws IllegalArgumentException {
+        return null;
+	}
+
+	@Override
+	public BlockData createBlockData(Material arg0, String arg1) throws IllegalArgumentException {
+        return null;
+	}
+
+	@Override
+	public <T extends Keyed> Tag<T> getTag(String arg0, NamespacedKey arg1, Class<T> arg2) {
+        return null;
+	}
+
+	@Override
+	public LootTable getLootTable(NamespacedKey arg0) {
+        return null;
+	}
+    */
 }
