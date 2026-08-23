@@ -9,23 +9,31 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityFactory;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.SpawnCategory;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.help.HelpMap;
 import org.bukkit.inventory.*;
 import org.bukkit.loot.LootTable;
 import org.bukkit.map.MapView;
+import org.bukkit.packs.DataPackManager;
+import org.bukkit.packs.ResourcePack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.messaging.Messenger;
+import org.bukkit.profile.PlayerProfile;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.structure.StructureManager;
 import org.bukkit.util.CachedServerIcon;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.net.InetAddress;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
@@ -81,12 +89,22 @@ public class MockServer implements Server {
     }
 
     @Override
+    public void setMaxPlayers(int i) {
+
+    }
+
+    @Override
     public int getPort() {
         return 0;
     }
 
     @Override
     public int getViewDistance() {
+        return 0;
+    }
+
+    @Override
+    public int getSimulationDistance() {
         return 0;
     }
 
@@ -106,6 +124,11 @@ public class MockServer implements Server {
     }
 
     @Override
+    public int getMaxWorldSize() {
+        return 0;
+    }
+
+    @Override
     public boolean getAllowEnd() {
         return false;
     }
@@ -116,12 +139,77 @@ public class MockServer implements Server {
     }
 
     @Override
+    public boolean isLoggingIPs() {
+        return false;
+    }
+
+    @Override
+    public List<String> getInitialEnabledPacks() {
+        return List.of();
+    }
+
+    @Override
+    public List<String> getInitialDisabledPacks() {
+        return List.of();
+    }
+
+    @Override
+    public DataPackManager getDataPackManager() {
+        return null;
+    }
+
+    @Override
+    public ServerTickManager getServerTickManager() {
+        return null;
+    }
+
+    @Override
+    public Map<String, String> getCodeOfConducts() {
+        return Map.of();
+    }
+
+    @Override
+    public ResourcePack getServerResourcePack() {
+        return null;
+    }
+
+    @Override
+    public String getResourcePack() {
+        return "";
+    }
+
+    @Override
+    public String getResourcePackHash() {
+        return "";
+    }
+
+    @Override
+    public String getResourcePackPrompt() {
+        return "";
+    }
+
+    @Override
+    public boolean isResourcePackRequired() {
+        return false;
+    }
+
+    @Override
     public boolean hasWhitelist() {
         return false;
     }
 
     @Override
     public void setWhitelist(boolean b) {
+
+    }
+
+    @Override
+    public boolean isWhitelistEnforced() {
+        return false;
+    }
+
+    @Override
+    public void setWhitelistEnforced(boolean b) {
 
     }
 
@@ -162,6 +250,31 @@ public class MockServer implements Server {
 
     @Override
     public int getTicksPerMonsterSpawns() {
+        return 0;
+    }
+
+    @Override
+    public int getTicksPerWaterSpawns() {
+        return 0;
+    }
+
+    @Override
+    public int getTicksPerWaterAmbientSpawns() {
+        return 0;
+    }
+
+    @Override
+    public int getTicksPerWaterUndergroundCreatureSpawns() {
+        return 0;
+    }
+
+    @Override
+    public int getTicksPerAmbientSpawns() {
+        return 0;
+    }
+
+    @Override
+    public int getTicksPerSpawns(SpawnCategory spawnCategory) {
         return 0;
     }
 
@@ -231,6 +344,11 @@ public class MockServer implements Server {
     }
 
     @Override
+    public WorldBorder createWorldBorder() {
+        return null;
+    }
+
+    @Override
     public MapView getMap(int id) {
         return null;
     }
@@ -292,6 +410,36 @@ public class MockServer implements Server {
     }
 
     @Override
+    public Recipe getRecipe(NamespacedKey namespacedKey) {
+        return null;
+    }
+
+    @Override
+    public Recipe getCraftingRecipe(ItemStack[] itemStacks, World world) {
+        return null;
+    }
+
+    @Override
+    public ItemStack craftItem(ItemStack[] itemStacks, World world, Player player) {
+        return null;
+    }
+
+    @Override
+    public ItemStack craftItem(ItemStack[] itemStacks, World world) {
+        return null;
+    }
+
+    @Override
+    public ItemCraftResult craftItemResult(ItemStack[] itemStacks, World world, Player player) {
+        return null;
+    }
+
+    @Override
+    public ItemCraftResult craftItemResult(ItemStack[] itemStacks, World world) {
+        return null;
+    }
+
+    @Override
     public Iterator<Recipe> recipeIterator() {
         return null;
     }
@@ -307,6 +455,11 @@ public class MockServer implements Server {
     }
 
     @Override
+    public boolean removeRecipe(NamespacedKey namespacedKey) {
+        return false;
+    }
+
+    @Override
     public Map<String, String[]> getCommandAliases() {
         return null;
     }
@@ -319,6 +472,26 @@ public class MockServer implements Server {
     @Override
     public void setSpawnRadius(int i) {
 
+    }
+
+    @Override
+    public boolean shouldSendChatPreviews() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnforcingSecureProfiles() {
+        return false;
+    }
+
+    @Override
+    public boolean isAcceptingTransfers() {
+        return false;
+    }
+
+    @Override
+    public boolean getHideOnlinePlayers() {
+        return false;
     }
 
     @Override
@@ -357,6 +530,21 @@ public class MockServer implements Server {
     }
 
     @Override
+    public PlayerProfile createPlayerProfile(UUID uuid, String s) {
+        return null;
+    }
+
+    @Override
+    public PlayerProfile createPlayerProfile(UUID uuid) {
+        return null;
+    }
+
+    @Override
+    public PlayerProfile createPlayerProfile(String s) {
+        return null;
+    }
+
+    @Override
     public Set<String> getIPBans() {
         return null;
     }
@@ -368,6 +556,16 @@ public class MockServer implements Server {
 
     @Override
     public void unbanIP(String s) {
+
+    }
+
+    @Override
+    public void banIP(InetAddress inetAddress) {
+
+    }
+
+    @Override
+    public void unbanIP(InetAddress inetAddress) {
 
     }
 
@@ -447,6 +645,16 @@ public class MockServer implements Server {
     }
 
     @Override
+    public Merchant createMerchant() {
+        return null;
+    }
+
+    @Override
+    public int getMaxChainedNeighborUpdates() {
+        return 0;
+    }
+
+    @Override
     public int getMonsterSpawnLimit() {
         return 0;
     }
@@ -462,7 +670,22 @@ public class MockServer implements Server {
     }
 
     @Override
+    public int getWaterAmbientSpawnLimit() {
+        return 0;
+    }
+
+    @Override
+    public int getWaterUndergroundCreatureSpawnLimit() {
+        return 0;
+    }
+
+    @Override
     public int getAmbientSpawnLimit() {
+        return 0;
+    }
+
+    @Override
+    public int getSpawnLimit(SpawnCategory spawnCategory) {
         return 0;
     }
 
@@ -473,6 +696,16 @@ public class MockServer implements Server {
 
     @Override
     public String getMotd() {
+        return null;
+    }
+
+    @Override
+    public void setMotd(String s) {
+
+    }
+
+    @Override
+    public ServerLinks getServerLinks() {
         return null;
     }
 
@@ -492,7 +725,17 @@ public class MockServer implements Server {
     }
 
     @Override
+    public EntityFactory getEntityFactory() {
+        return null;
+    }
+
+    @Override
     public ScoreboardManager getScoreboardManager() {
+        return null;
+    }
+
+    @Override
+    public Criteria getScoreboardCriteria(String s) {
         return null;
     }
 
@@ -519,6 +762,16 @@ public class MockServer implements Server {
     @Override
     public int getIdleTimeout() {
         return 0;
+    }
+
+    @Override
+    public int getPauseWhenEmptyTime() {
+        return 0;
+    }
+
+    @Override
+    public void setPauseWhenEmptyTime(int i) {
+
     }
 
     @Override
@@ -572,7 +825,7 @@ public class MockServer implements Server {
     }
 
     @Override
-    public BlockData createBlockData(Material material, Consumer<BlockData> consumer) {
+    public BlockData createBlockData(Material material, Consumer<? super BlockData> consumer) {
         return null;
     }
 
@@ -603,6 +856,16 @@ public class MockServer implements Server {
 
     @Override
     public List<Entity> selectEntities(CommandSender sender, String selector) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
+    public StructureManager getStructureManager() {
+        return null;
+    }
+
+    @Override
+    public <T extends Keyed> Registry<T> getRegistry(Class<T> aClass) {
         return null;
     }
 

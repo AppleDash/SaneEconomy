@@ -18,32 +18,31 @@
 
     <repositories>
         <repository>
-            <id>vault</id>
-            <name>Vault</name>
-            <url>http://nexus.hc.to/content/repositories/pub_releases</url>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
         <repository>
-            <id>votuvo</id>
-            <url>https://nexus.sw4t.net/repository/maven-public/</url>
-        </repository>
+	    <id>jitpack.io</id>
+	    <url>https://jitpack.io</url>
+	</repository>
     </repositories>
 
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.14.4-R0.1-SNAPSHOT</version>
+            <version>1.21.11-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.milkbowl.vault</groupId>
+            <groupId>com.github.MilkBowl</groupId>
             <artifactId>VaultAPI</artifactId>
-            <version>1.6</version>
+            <version>1.7.1</version>
         </dependency>
         <dependency>
-            <groupId>org.appledash</groupId>
-            <artifactId>sanelib</artifactId>
-            <version>0.4.1-SNAPSHOT</version>
+            <groupId>com.github.AppleDash</groupId>
+            <artifactId>SaneLib</artifactId>
+            <version>master-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
