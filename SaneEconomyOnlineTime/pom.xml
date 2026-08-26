@@ -17,7 +17,7 @@
         <dependency>
             <groupId>org.appledash</groupId>
             <artifactId>SaneEconomyCore</artifactId>
-            <version>0.17.2-SNAPSHOT</version>
+            <version>0.18.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -41,7 +41,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -51,13 +51,13 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
-                                    <include>org.appledash:sanelib</include>
+                                    <include>com.github.AppleDash:SaneLib</include>
                                 </includes>
                             </artifactSet>
                             <relocations>
                                 <relocation>
                                     <pattern>org.appledash.sanelib</pattern>
-                                    <shadedPattern>org.appledash.saneeconomysignshop.shaded.sanelib</shadedPattern>
+                                    <shadedPattern>org.appledash.saneeconomy.onlinetime.shaded.sanelib</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
