@@ -108,7 +108,7 @@
                 </executions>
                 <configuration>
                     <serverId>votuvo</serverId>
-                    <nexusUrl>https://nexus.votuvo.com/</nexusUrl>
+                    <nexusUrl>https://nexus.sw4t.net/</nexusUrl>
                     <skipStaging>true</skipStaging>
                 </configuration>
             </plugin>

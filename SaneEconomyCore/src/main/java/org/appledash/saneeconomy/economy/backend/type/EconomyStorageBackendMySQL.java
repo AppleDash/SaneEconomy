@@ -55,6 +55,13 @@ public class EconomyStorageBackendMySQL extends EconomyStorageBackendCaching {
             }
 
             if (schemaVersion == 2) {
+                conn.prepareStatement(String.format("CREATE TABLE IF NOT EXISTS `%s` (`key` VARCHAR(32) PRIMARY KEY, `val` TEXT)", this.dbConn.getTable(SANEECONOMY_SCHEMA))).executeUpdate();
+                conn.prepareStatement(String.format("REPLACE INTO %s (`key`, `val`) VALUES ('schema_version', 4)", this.dbConn.getTable(SANEECONOMY_SCHEMA))).executeUpdate();
+                conn.prepareStatement(String.format("CREATE TABLE `%s` (unique_identifier VARCHAR(128) PRIMARY KEY, last_name VARCHAR(16), balance TEXT)", this.dbConn.getTable(SANEECONOMY_BALANCES))).executeUpdate();
+                schemaVersion = 3;
+            }
+
+            if (schemaVersion == 2) {
                 conn.prepareStatement(String.format("ALTER TABLE `%s` ADD `last_name` VARCHAR(16)", this.dbConn.getTable(SANEECONOMY_BALANCES))).executeUpdate();
                 conn.prepareStatement(String.format("REPLACE INTO %s (`key`, `val`) VALUES ('schema_version', 3)", this.dbConn.getTable(SANEECONOMY_SCHEMA))).executeUpdate();
 
